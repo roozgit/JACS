@@ -472,7 +472,7 @@ body > section,
 	Some fun facts
 ==========================================*/
 
-#facts {
+.facts {
 	background-image: url("../img/parallax/abuzar.jpg");
 	background-color: rgba(6,32,51,.8);
 	background-attachment: fixed !important;
@@ -495,9 +495,9 @@ body > section,
 	Demo
 ==========================================*/
 
-#demo {
+.demo {
 	background-image: url("../img/parallax/texas.jpg");
-	
+	background-color:rgba(6,32,51,.7);
 	background-attachment: fixed !important;
 	background-position: center center;
 	background-repeat: no-repeat;
