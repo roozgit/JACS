@@ -193,7 +193,7 @@ body > section,
   top: 30%;
 }
 
-.carousel-caption h2 {
+.carousel-caption h1,h2 {
   font-size: 160px;
   font-weight: 300;
 }
