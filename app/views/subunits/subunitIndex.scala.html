@@ -1,0 +1,109 @@
+@(parentSubunit: Subunits)
+
+@main("Subunit:" + parentSubunit.name) {<div id='tree'></div>} {
+
+	<ol class="breadcrumb">
+	<li><a href="@routes.InstallationApplication.installationIndex()"><strong>@parentSubunit.equipment.section.plant.installation.name</strong></a></li>
+	<li><a href="@routes.PlantApplication.list(0, "name", "asc", "")"><small>@LanguageApplication.message("plants")</small></a></li>
+	<li><a href="@routes.PlantApplication.plantIndex(parentSubunit.equipment.section.plant.id)"><strong>@parentSubunit.equipment.section.plant.name</strong></a></li>
+	<li><a href="@routes.SectionApplication.list(parentSubunit.equipment.section.plant.id,0,"name","asc","")"><small>@LanguageApplication.message("sections")</small></a></li>
+	<li><a href="@routes.SectionApplication.sectionIndex(parentSubunit.equipment.section.id)"><strong>@parentSubunit.equipment.section.name</strong></a></li>
+	<li><a href="@routes.EquipmentApplication.list(parentSubunit.equipment.section.id)"><small>@LanguageApplication.message("equipments")</small></a></li>
+	<li><a href="@routes.EquipmentApplication.equipmentIndex(parentSubunit.equipment.id)"><strong>@parentSubunit.equipment.name</strong></a></li>
+	<li><a href="@routes.SubunitApplication.list(parentSubunit.equipment.id)"><small>@LanguageApplication.message("subunits")</small></a></li>
+	</ol>
+	<div align="center"><h1 class="ltrInRtl"><span class="label label-default">@parentSubunit.name</span></h1></div>
+	<br/>
+	<div class="row"><div class="col-lg-5">
+		<div class="btn btn-group btn-group-justified">
+   	
+		 <a class="btn btn-warning btn-lg"
+		 		href="@routes.SubunitApplication.editSubunit(parentSubunit.id)"><span class="hideInSmall">@LanguageApplication.message("edit")</span>
+		 		<span class="glyphicon glyphicon-edit"></span></a>
+		 		
+		 <!-- Register failure button -->
+				 		<a class="btn btn-danger btn-lg" title="Register failure"
+				 		href="@routes.FailureApplication.createFailure(7,parentSubunit.id)"><span class="hideInSmall">@LanguageApplication.message("registerFailure")</span>
+				 		<span class="fa fa-bolt"></span></a>
+		 		
+		 <a class="btn btn-default btn-lg" title="Back to subunit list"
+			href="@routes.SubunitApplication.list(parentSubunit.equipment.id)">
+			<span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span></a>
+		 </div>
+		 <br />
+		 <div class="btn btn-group btn-group-justified">
+			
+			<a class="btn btn-default btn-lg"
+			href="@routes.ComponentApplication.list(parentSubunit.id)">
+			<span class="hideInSmall">@LanguageApplication.message("components")</span><i class="fa fa-link"></i></a>
+			
+	 		<a class="btn btn-default btn-lg"
+			href="@routes.HistoryApplication.list(7,parentSubunit.id)">
+			<span class="hideInSmall">@LanguageApplication.message("history")</span><i class="fa fa-history"></i></a>
+			
+			<a class="btn btn-default btn-lg"
+				href="@routes.DatasheetApplication.list(7,parentSubunit.id)">
+				<span class="hideInSmall">@LanguageApplication.message("dataSheet")</span><i class="fa fa-info-circle"></i></a>
+	
+		 </div>
+	
+	
+    
+		<br />
+		@if(flash.containsKey("success")) {
+        <div class="alert alert-success">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+    	}
+    @if(flash.containsKey("error")) {
+       <div class="alert alert-danger">
+           <strong>ERROR: </strong> @flash.get("error")
+       </div>
+  		}
+  		<br />
+		<div class="well well-sm"><h4>@parentSubunit.description</h4></div>
+		<br/>
+		@if(parentSubunit.comments!=null && parentSubunit.comments!="") {	
+			<h4>@LanguageApplication.message("comments")</h4>
+		 		<pre>@parentSubunit.comments</pre>
+		 	}
+		<br />
+		<h3>@LanguageApplication.message("dataSources")</h3>
+		<table class="table table-bordered">
+ 		<thead>
+ 			<tr class="success">
+ 				<th>@LanguageApplication.message("name")</th>
+ 				<th>@LanguageApplication.message("type")</th>
+ 				<th></th>
+ 			</tr>
+ 		</thead>
+ 		@if(parentSubunit.files != null) {
+ 			@parentSubunit.files.map { fi =>
+		 		<tbody>
+		 			<tr>
+		 				<td><a href="@routes.Application.download(fi.id)">@fi.name</a></td>
+		 				<td>@fi.tag</td>
+		 				<td><a class="btn btn-danger btn-sm" 
+		 				href="@routes.SubunitApplication.deleteAssociation(parentSubunit.id,fi.id)">
+		 				<span class="fa fa-trash"></span></a></td>
+		 			<tr>
+		 		</tbody>
+		 	}
+		 }
+	 	</table>
+		<br />
+		<h3>@LanguageApplication.message("upload")</h3>
+		<form class="form-inline" role="form" method="POST" enctype="multipart/form-data"
+			action="@routes.SubunitApplication.upload(parentSubunit.id)">
+			<div class="form-group">
+				<input type="file" name="file" class="btn btn-default">
+			</div>
+			<button type="submit" class="btn btn-default btn-md" title="upload">
+				<span class="fa fa-upload"></span>
+			</button>						
+		</form>
+		</div>
+		<h3>@LanguageApplication.message("failureCauseTree")</h3>
+		<div id="tabs-failureCauseTree"><div data-value="7_@parentSubunit.id" id="failTree"></div></div>
+		</div>
+	 }

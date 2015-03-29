@@ -1,0 +1,47 @@
+@(parentSubunitId : Long, componentForm: Form[Components])
+
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("Create component") {@Html("")} {
+	<style>
+	body {
+		background-color: #EDEDED;
+	}
+	</style>
+	@form(action = routes.ComponentApplication.save(parentSubunitId),
+	'class->"form",
+	'role->"form"
+	) {
+		<div class="form-group">
+			<fieldset>
+				<div class="row">
+					<div class="col-lg-6">
+						@inputText(componentForm("name"),
+						'class->"form-control",
+						'_label->LanguageApplication.message("name"),
+						'_showConstraints->true
+						)
+					</div>
+					
+					<div class="col-lg-3">
+						@select(componentForm("componentClass.id"),
+						options(equipment.EquipmentClass.options()),
+						'class->"form-control",
+						'_label->LanguageApplication.message("class"),
+						'_default->""
+						)
+					</div>
+				</div>
+			</fieldset>
+		</div>
+		<div align="center">
+			<input type="submit" value=@LanguageApplication.message("create") 
+			class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+				href="@routes.ComponentApplication.list(parentSubunitId,0,"name","asc","")"
+				class="btn btn-danger btn-lg" role="button">
+				@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+}

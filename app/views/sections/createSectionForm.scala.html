@@ -1,0 +1,37 @@
+@(parentPlantId : Long, sectionForm: Form[Sections])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("New section") {@Html("")} {
+	<style>
+		body {
+			background-color: #EDEDED;
+		}
+	</style>
+	@form(action = routes.SectionApplication.save(parentPlantId),
+	'class->"form-horizontal",
+	'role->"form"
+	)	{
+		<div class="form-group">
+						
+				<div class="col-lg-3">
+					@inputText(sectionForm("name"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("name"),
+					'_showConstraints->true
+					)						
+				</div>
+					
+		</div>
+		
+		<div align="center">
+			<input type="submit" value=@LanguageApplication.message("create") 
+			class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.SectionApplication.list(parentPlantId,0,"name","asc","")" 
+				class="btn btn-danger btn-lg" role="button">
+				@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+
+}

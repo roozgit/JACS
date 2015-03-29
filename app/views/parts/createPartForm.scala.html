@@ -1,0 +1,61 @@
+@(partForm: Form[Parts])
+
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("New part") {@Html("")} {
+	<style>
+		body {
+			background-color: #EDEDED;
+		}
+	</style>
+	@form(action = routes.PartApplication.save(),
+	'class->"form-horizontal",
+	'role->"form"
+	) {	
+		<div class="form-group">
+			<div class="col-lg-4">
+				@inputText(partForm("name"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("name"),
+				'_showConstraints->true
+				)
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-lg-1">
+				@select(partForm("currency"),
+				options(Currencies.values().toList.map(_.toString)),
+				'class->"form-control",
+				'_label->LanguageApplication.message("currency")
+				)
+			</div>
+		</div>
+		<div class="form-group">	
+			<div class="col-lg-2">
+				@select(partForm("measurementUnit.id"),
+				options(MeasurementUnits.options()),
+				'class->"form-control",
+				'_label->LanguageApplication.message("measurementUnit")
+				)
+			</div>
+		</div>
+		
+		<div align="center">
+			<input type="submit" value=@LanguageApplication.message("create") 
+			class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.PartApplication.list()" 
+				class="btn btn-danger btn-lg" role="button">
+				@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("select2.min.js"))'></script>
+	@if(session().get("play_user_lang") == "1") {
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("select2_locale_fa.js"))'></script>}
+	<script>
+		$(document).ready(function() {
+			$("#measurementUnit_id").select2();
+		});
+	</script>
+}

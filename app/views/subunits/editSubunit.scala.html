@@ -1,0 +1,71 @@
+@(id : Long, subunitForm: Form[Subunits])
+
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("Edit subunit") {@Html("")} {
+	<style>
+		body {
+			background-color: #EDEDED;
+		}
+	</style>
+	@form(action = routes.SubunitApplication.update(id),
+	'class->"form-horizontal",
+	'role->"form"
+	) {
+		<div class="form-group">
+				
+			<div class="col-lg-2">		
+				@select(subunitForm("equipment.id"),
+				options(equipment.Equipments.options(subunitForm("equipment.id").value.toLong)),
+				'class->"form-control",
+				'_label->LanguageApplication.message("equipmentTag")
+				)
+			</div>
+					
+			<div class="col-lg-2">
+				@inputText(subunitForm("name"),
+				'_showConstraints->false,
+				'class->"form-control",
+				'_label->LanguageApplication.message("name")
+				)
+			</div>
+		</div>
+		
+		<div class="form-group">			
+			<div class="col-lg-6">
+				@inputText(subunitForm("description"),
+				'_showConstraints->false,
+				'class->"form-control",
+				'_label->LanguageApplication.message("description")
+				)
+			</div>
+					
+			<div class="col-lg-2">		
+				@select(subunitForm("subunitType"),
+				options(SubunitTypes.values().toList.map(_.toString)),
+				'class->"form-control",
+				'_label->LanguageApplication.message("category")
+				)
+			</div>
+		</div>
+				
+		<div class="form-group">
+			<div class="col-lg-6">
+				@textarea(subunitForm("comments"),
+				'class->"form-control",
+				'rows->"5",
+				'_label->LanguageApplication.message("comments")
+				)
+			</div>
+		</div>
+		
+		<div align="center">
+			<input type="submit" value="@LanguageApplication.message("update")" class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.SubunitApplication.subunitIndex(id)" 
+				class="btn btn-danger btn-lg" role="button">
+			@LanguageApplication.message("cancel")</a>
+			</div>
+	}
+}

@@ -1,0 +1,14 @@
+package models.failure;
+
+public enum Severity {
+	NONE,
+	VERY_MINOR,
+	MINOR,
+	VERY_LOW,
+	LOW,
+	MODERATE,
+	HIGH,
+	VERY_HIGH,
+	HAZARDOUS_WITH_WARNING,
+	HAZARDOUS_WITHOUT_WARNING
+}

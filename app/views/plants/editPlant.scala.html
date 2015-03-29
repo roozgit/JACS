@@ -1,0 +1,51 @@
+@(id : Long, plantForm: Form[Plants])
+
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("Edit plant") {@Html("")} {
+	<style>
+		body {
+			background-color: #EDEDED;
+		}
+	</style>
+	@form(action = routes.PlantApplication.update(id),
+	'class->"form-horizontal",
+	'role->"form"
+	) {
+		<div class="form-group">
+			<div class="col-lg-3">
+				@inputText(plantForm("name"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("name"),
+				'_showConstraints->true
+				)
+			</div>
+		
+			<div class="col-lg-6">
+				@inputText(plantForm("description"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("description"),
+				'_showConstraints->true
+				)
+			</div>
+		</div>			
+		<div class="form-group">
+			<div class="col-lg-6">
+				@textarea(plantForm("comments"),
+				'class->"form-control",
+				'rows->"5",
+				'_label->LanguageApplication.message("comments")
+				)
+			</div>
+		</div>
+		
+		<div align="center">
+			<input type="submit" value="@LanguageApplication.message("update")" class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.PlantApplication.plantIndex(id)" 
+				class="btn btn-danger btn-lg" role="button">
+			@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+}

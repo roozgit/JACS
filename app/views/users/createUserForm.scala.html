@@ -1,0 +1,64 @@
+@(newUserForm : Form[Users])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("New user") {@Html("")} {
+	<style>
+		body {
+			background-color: #EDEDED;
+		}
+	</style>
+	@form(action = routes.UserApplication.save(),
+	'class->"form-horizontal",
+	'role->"form"
+	) {
+		<div class="form-group">
+			
+			<div class="col-lg-3">
+			@inputText(newUserForm("userName"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("userId"),
+				'_showConstraints->true
+				)
+			</div>
+		</div>
+		<div class="form-group">		
+			<div class="col-lg-3">
+			@inputPassword(newUserForm("password"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("password"),
+				'_showConstraints->true
+				)
+			</div>
+				
+			<div class="col-lg-3">
+			@inputPassword(newUserForm("repeatPassword"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("repeatPassword"),
+				'_showConstraints->true,
+				'_error -> newUserForm.error("password")
+				)
+			</div>
+						
+		</div>
+			
+		<div class="form-group">
+			<div class="col-lg-2">
+				@select(newUserForm("discipline.id"),
+				options(Disciplines.options()),
+				'_label->LanguageApplication.message("discipline"),
+				'class->"form-control"
+				)
+			</div>
+		</div>
+		
+		<div align="center">
+			<input type="submit" value=@LanguageApplication.message("create") 
+			class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.UserApplication.list(0,"userName","asc","")" 
+				class="btn btn-danger btn-lg" role="button">
+				@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+}

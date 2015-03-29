@@ -1,0 +1,52 @@
+@(rtool : RepairTools)
+
+@main(rtool.name) {@Html("")} {
+
+	<div class="btn btn-group">
+		<a class="btn btn-warning btn-lg" href="@routes.RepairToolApplication.editRepairTool(rtool.id)">@LanguageApplication.message("edit")
+		<span class="glyphicon glyphicon-edit"></span></a>
+		<a class="btn btn-default btn-lg" href="@routes.RepairToolApplication.list()">
+		<span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span></a>
+	</div>
+	<br />
+	
+	<table class="table table-bordered">
+		<tr>
+			<th>@LanguageApplication.message("name")</th>			
+			<th>@LanguageApplication.message("serial")</th>
+			<th>@LanguageApplication.message("ownerDiscipline")</th>
+			
+		</tr>
+		<tr>
+			<td>@rtool.name</td>
+			<td>@rtool.serialNo</td>
+			<td>@if(rtool.owner==null) {<em>-</em>} else {@rtool.owner.name}</td>
+		</tr>
+	</table>
+	<br />	
+	<p>@LanguageApplication.message("comments")</p>
+	<pre>@rtool.comments</pre>
+	<br />
+		<h3>@LanguageApplication.message("dataSources")</h3>
+		<table class="table-bordered">
+ 		<thead>
+ 			<tr>
+ 				<th>@LanguageApplication.message("name")</th>
+ 				<th>@LanguageApplication.message("type")</th>
+ 				<th>@LanguageApplication.message("date")</th>
+ 			</tr>
+ 		</thead>
+ 		@if(rtool.files != null) {
+ 			@rtool.files.map { fi =>
+		 		<tbody>
+		 			<tr>
+		 				<td><a href="@routes.Application.download(fi.id)">@fi.name</a></td>
+		 				<td>@fi.tag</td>
+		 				<td>@myUtils.DateTimeUtils.getIranianDateTime(fi.creationDate)</td>
+		 			<tr>
+		 		</tbody>
+		 	}
+		 }
+	 	</table>
+		<br />
+}

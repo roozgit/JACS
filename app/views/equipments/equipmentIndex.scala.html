@@ -1,0 +1,517 @@
+@(parentEquipment: equipment.Equipments)
+
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import be.objectify.deadbolt.java.views.html._
+
+@****************************************************
+*helper generating buttons on top and bottom of page*
+****************************************************@
+@buttonGroup = {
+	<div class="btn btn-group btn-group-justified">
+			
+			<a class="btn btn-default btn-lg" title="@LanguageApplication.message("subunits")"
+    		href="@routes.SubunitApplication.list(parentEquipment.id)">
+    		<span class="hideInSmall">@LanguageApplication.message("subunits")</span><i class="fa fa-link"></i></a>
+    	
+			<a class="btn btn-default btn-lg" title="@LanguageApplication.message("history")"
+			href="@routes.HistoryApplication.list(6,parentEquipment.id)">
+			<span class="hideInSmall">@LanguageApplication.message("history")</span><i class="fa fa-history"></i></a>
+			
+			<a class="btn btn-default btn-lg" title="@LanguageApplication.message("pmRoutines")"
+			href="@routes.PreventiveMaintenanceApplication.list(6,parentEquipment.id)">
+			<span class="hideInSmall">@LanguageApplication.message("pmRoutines")</span><i class="fa fa-check"></i></a>
+			
+			<a class="btn btn-default btn-lg" title="@LanguageApplication.message("dataSheet")"
+				href="@routes.DatasheetApplication.list(6,parentEquipment.id)">
+				<span class="hideInSmall">@LanguageApplication.message("dataSheet")</span><i class="fa fa-info-circle"></i></a>
+			<!-- FME button -->
+			<a class="btn btn-default btn-lg" title="Failure Modes and effects" 
+			href="@routes.FailureApplication.list(parentEquipment.id)">
+			<span class="hideInSmall">FME</span><i class="fa fa-bolt"></i></a>
+		</div>
+}
+
+
+@main(parentEquipment.name) {<div id='tree'></div>} {
+		<ol class="breadcrumb">
+		<li><a href="@routes.InstallationApplication.installationIndex()"><strong>@parentEquipment.section.plant.installation.name</strong></a></li>
+		<li><a href="@routes.PlantApplication.list(0, "name", "asc", "")"><small>@LanguageApplication.message("plants")</small></a></li>
+		<li><a href="@routes.PlantApplication.plantIndex(parentEquipment.section.plant.id)"><strong>@parentEquipment.section.plant.name</strong></a></li>
+		<li><a href="@routes.SectionApplication.list(parentEquipment.section.plant.id,0,"name","asc","")"><small>@LanguageApplication.message("sections")</small></a></li>
+		<li><a href="@routes.SectionApplication.sectionIndex(parentEquipment.section.id)"><strong>@parentEquipment.section.name</strong></a></li>
+		<li><a href="@routes.EquipmentApplication.list(parentEquipment.section.id)"><small>@LanguageApplication.message("equipments")</small></a></li>
+		</ol>
+		<div align="center"><h1 class="ltrInRtl"><span class="label label-default">@parentEquipment.name</span></h1></div>
+		<br/>
+		<div class="row">
+		<div class="col-lg-5">
+    		<div class="btn btn-group btn-group-justified">
+    			@restrict(la(as("admin"), as("creator"), as("editor"))) {
+					<a class="btn btn-warning btn-lg" title="Edit equipment"
+			 		href="@routes.EquipmentApplication.editEquipment(parentEquipment.id)"><span class="hideInSmall">@LanguageApplication.message("edit")</span>
+			 		<span class="glyphicon glyphicon-edit"></span></a>		 
+			 
+					<a class="btn btn-primary btn-lg" title="Copy/move equipment"
+					 	data-toggle="modal" data-target="#myModalEq">
+					 	<span class="hideInSmall">@LanguageApplication.message("copyEquipment")</span>
+					 	<span class="fa fa-copy"></span>
+					</a>
+					}
+					
+			 		<!-- Isuue work request button -->
+			 		<a class="btn btn-info btn-lg" title="Issue work requeset"
+			 		href="@routes.MaintenanceApplication.createMaintenance(parentEquipment.section.id, parentEquipment.id)">
+			 		<span class="hideInSmall">@LanguageApplication.message("issueWorkRequest")</span>
+			 		<span class="fa fa-wrench"></span></a>
+			 		
+			 		 <!-- Register failure button -->
+			 		<a class="btn btn-danger btn-lg" title="Register failure"
+			 		href="@routes.FailureApplication.createFailure(6,parentEquipment.id)">
+			 		<span class="hideInSmall">@LanguageApplication.message("registerFailure")</span>
+			 		<span class="fa fa-bolt"></span></a>
+				</div>
+				@restrict(la(as("admin"), as("creator"), as("editor"))) {
+				<!-- modal -->
+				<div class="modal fade" id="myModalEq" tabinex=-1 role="dialog" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+									&times;
+								</button>
+							<h4 class="modal-title">@LanguageApplication.message("componentModalTitle")</h4>
+							<div class="modal-body">
+								<form class="form" role="form"
+								action="@routes.EquipmentApplication.copyEquipment(parentEquipment.id)">
+								<input type="hidden" name="eId" value="@parentEquipment.id">
+								  	<div class="form-group">
+								  		<label for="section.id">@LanguageApplication.message("sectionModalTitle")</label>
+										<select name="section.id" id="section_id" class="form-control">
+											@models.Sections.options(1).map {se =>
+												<option value="@se._1">@se._2</option>
+												}
+										</select>
+									</div>
+									<button type="submit" class="btn btn btn-success">
+									@LanguageApplication.message("submit")
+									</button>
+								</form>
+								<br />
+								<form class="form" role="form" 
+								action="@routes.EquipmentApplication.copyEquipmentAsComponent(parentEquipment.id)">
+								<input type="hidden" name="eId" value="@parentEquipment.id">
+								  	<div class="form-group">
+								  		<label for="subunit.id">@LanguageApplication.message("copyAsComponent")</label>
+										<select name="subunit.id" id="subunit_id" class="form-control">
+											@Subunits.options().map {su =>
+												<option value="@su._1">@su._2</option>
+												}
+										</select>
+									</div>
+									<button type="submit" class="btn btn btn-success">
+									@LanguageApplication.message("submit")
+									</button>
+								</form>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger" data-dismiss="modal">
+								@LanguageApplication.message("cancel")
+								</button>
+							</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- end of modal -->}
+		
+		 <br />
+		 
+		 @buttonGroup
+		 
+		 <br />
+		 @if(flash.containsKey("success")) {
+        <div class="alert alert-success">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+	    }
+	    @if(flash.containsKey("error")) {
+	       <div class="alert alert-danger">
+	           <strong>ERROR: </strong> @flash.get("error")
+	       </div>
+	       <br />
+	  		}
+		 
+		 <div class="well well-sm"><h4>@parentEquipment.description</h4>
+			 @if(parentEquipment.drivenEquipment!=null) {
+			 	@LanguageApplication.message("drives") :<a style="display:inline" 
+			 	href="@routes.EquipmentApplication.equipmentIndex(parentEquipment.drivenEquipment.id)">
+			 	@parentEquipment.drivenEquipment.name</a>
+			 	}
+		 	<br />
+		 	@if(parentEquipment.driverEquipment!=null) {
+		 	@LanguageApplication.message("drivenBy") :<a style="display:inline" 
+		 	href="@routes.EquipmentApplication.equipmentIndex(parentEquipment.driverEquipment.id)"> 
+		 	@parentEquipment.driverEquipment.name</a>
+		 	}
+		 </div>
+		 
+	</div>
+	<div class="col-lg-7">		
+		<!-- tabs -->
+		<div id="tab-container" class="tab-container">
+			<ul class="etabs">
+				<li class="tab"><a href="#tabs-basic">@LanguageApplication.message("basicInfo")</a></li>
+				<li class="tab"><a href="#tabs-model">@LanguageApplication.message("vendorInfo")</a></li>
+				<li class="tab"><a href="#tabs-guarantee">@LanguageApplication.message("guaranteeInfo")</a></li>
+				<li class="tab"><a href="#tabs-currentService">@LanguageApplication.message("serviceInfo")</a></li>
+				<li class="tab"><a href="#tabs-maintAspects">@LanguageApplication.message("maintAspects")</a></li>
+				<li class="tab"><a href="#tabs-operationAspects">@LanguageApplication.message("operationAspects")</a></li>
+				<li class="tab"><a href="#tabs-comments">@LanguageApplication.message("comments")</a></li>
+				<li class="tab"><a href="#tabs-indices">@LanguageApplication.message("indices")</a></li>
+				<li class="tab"><a href="#tabs-failureCauseTree">@LanguageApplication.message("failureCauseTree")</a></li>
+				<li class="tab"><a href="#tabs-upTimeChart">@LanguageApplication.message("upTimeChart")</a></li>
+				<li class="tab"><a href="#tabs-sources">@LanguageApplication.message("dataSources")</a></li>
+			</ul>
+			
+			<div id="tabs-basic">
+				<table class="table">
+					<tr>
+						<th>@LanguageApplication.message("class")</th>
+						<th>@LanguageApplication.message("autoGenCode")</th>
+						<th>@LanguageApplication.message("assetNo")</th>
+					</tr>
+					<tr>
+						<td><a href="@routes.EquipmentClassApplication.equipmentClassIndex(parentEquipment.equipmentClass.id)">
+						@parentEquipment.equipmentClass.name
+						---
+						@parentEquipment.equipmentClass.ecTypeCode</a></td>
+						<td>@parentEquipment.equipmentAutoGeneratedCode</td>
+						<td>@parentEquipment.assetNo</td>
+					</tr>
+				</table>
+			</div>
+
+			<!-- vendor info -->
+			<div id="tabs-model">
+				<table class="table">
+		 			<tr>
+				 		<th>@LanguageApplication.message("vendor")</th>
+				 		<th>@LanguageApplication.message("modelDesignation")</th>
+				 		<th>@LanguageApplication.message("manufactureDate")</th>
+				 		<th>@LanguageApplication.message("purchaseDate")</th>
+				 		<th>@LanguageApplication.message("serial")</th>
+		 			</tr>
+		 			<tr>
+		 				<td>
+						 	@if(parentEquipment.manufacturerCompany != null) {
+						 		<a href=
+						 		"@routes.CompanyApplication.companyIndex(parentEquipment.manufacturerCompany.id)">
+						 		@parentEquipment.manufacturerCompany.name</a>} else {-}
+						</td>
+		 				<td>@parentEquipment.manufacturerModelDesignation</td>
+		 				<td>@myUtils.DateTimeUtils.getIranianYear(parentEquipment.manufactureDate)</td>
+		 				<td>@myUtils.DateTimeUtils.getIranianDate(parentEquipment.purchaseDate)</td>
+		 				<td>@parentEquipment.equipmentSerialNo</td>
+		 			</tr>
+ 				</table>
+			</div>
+			
+			<!-- Guarantee info -->
+			<div id="tabs-guarantee">
+				<table class="table table-bordered">
+		 			<tr>
+				 		<th>@LanguageApplication.message("guaranteeDescription")</th>
+				 		<th>@LanguageApplication.message("guaranteeEndDate")</th>	
+		 			</tr>
+		 			<tr>
+				 		<td>@parentEquipment.guarantee</td>
+				  		<td>@myUtils.DateTimeUtils.getIranianDate(parentEquipment.guaranteeEndDate)</td> 
+		 			</tr>
+				</table>
+			</div>
+			
+			<!-- service info -->
+			<div id="tabs-currentService">
+				<table class="table">
+					<tr>
+						<th>@LanguageApplication.message("initialCommissioningDate")</th>
+						<th>@LanguageApplication.message("currentServiceStartDate")</th>
+						<th>@LanguageApplication.message("currentServiceEndDate")</th>
+						<th>@LanguageApplication.message("initialUpTime")</th>
+					</tr>
+					<tr>
+						<td>@myUtils.DateTimeUtils.getIranianDate(parentEquipment.initialCommissioningDate)</td>
+						<td>@myUtils.DateTimeUtils.getIranianDate(parentEquipment.currentServiceStartDate)</td>
+						<td>@myUtils.DateTimeUtils.getIranianDate(parentEquipment.currentServiceEndDate)</td>
+						<td>@parentEquipment.initialUpTime</td>
+					</tr>
+				</table>
+				<br />
+				<table class="table">
+					<thead>
+						<tr>
+							<th>@LanguageApplication.message("serviceParams")</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th class="col-sm-3">@LanguageApplication.message("operationMode")</th>
+							<th class="col-sm-3">@LanguageApplication.message("criticality")</th>
+							<th class="col-sm-3">@LanguageApplication.message("redundancyRatio")</th>
+						</tr>
+						<tr>
+							<td>@parentEquipment.operationMode</td>
+							<td>@parentEquipment.criticality</td>
+							<td>@parentEquipment.redundancyRatio</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
+			<!-- Maintenance aspects -->
+			<div id="tabs-maintAspects">
+			
+				<label>@LanguageApplication.message("maintMethod")</label>
+		 		@if(parentEquipment.maintenaceMethod!=null && parentEquipment.maintenaceMethod!="") {	
+		 		<pre>@parentEquipment.maintenaceMethod</pre>
+		 		} else {<em>-</em>}
+				<br />
+				
+				<label>@LanguageApplication.message("maintSafety")</label>
+				@if(parentEquipment.maintenaceSafetyRequirements!=null && parentEquipment.maintenaceSafetyRequirements!="") {	
+		 		<pre>@parentEquipment.maintenaceSafetyRequirements</pre>
+		 		} else {<em>-</em>}
+		 		<br />
+		 		<table class="table-bordered">
+				<thead><tr><th>@LanguageApplication.message("repairTools")</th></tr></thead>
+				@if(!parentEquipment.specialTools.isEmpty()) {					
+					<tbody>
+						@parentEquipment.specialTools.map { rtli =>
+						<td>@rtli.name</td>
+						}
+					</tbody>
+				}
+				</table>
+				<br />
+			</div>
+			
+			<!-- Operation aspects -->
+			<div id="tabs-operationAspects">
+			
+				<label>@LanguageApplication.message("operationMethod")</label>
+				@if(parentEquipment.operationMethod!=null && parentEquipment.operationMethod!="") {	
+		 		<pre>@parentEquipment.operationMethod</pre>
+		 		} else {<em>-</em>}
+		 		<br />
+		 		
+				<label>@LanguageApplication.message("operationSafety")</label>
+				@if(parentEquipment.operationSafetyRequirements!=null && parentEquipment.operationSafetyRequirements!="") {	
+		 		<pre>@parentEquipment.operationSafetyRequirements</pre>
+		 		} else {<em>-</em>}
+		 		<br />
+		 		
+		 		<label>@LanguageApplication.message("hseRisks")</label>
+		 		@if(parentEquipment.hseRisks!=null && parentEquipment.hseRisks!="") {	
+		 		<pre>@parentEquipment.hseRisks</pre>
+		 		} else {<em>-</em>}
+			</div>
+			
+			<div id="tabs-comments">
+				@if(parentEquipment.comments!=null && parentEquipment.comments!="") {
+		 		<pre>@parentEquipment.comments</pre>
+		 	} else {<em>-</em>}
+			</div>
+			
+			<!-- index calculation tabs -->
+			<div id="tabs-indices">
+				<a id="mtbf" class="btn btn-default">MTBF,MTTF</a>
+				<a id="mttr" class="btn btn-default">MTTR</a>
+			</div>
+			
+			<!-- Failure cause tree tab -->
+			  	<div id="tabs-failureCauseTree"><div data-value="6_@parentEquipment.id" id="failTree"></div></div>
+			
+			<!-- up time chart tab -->
+				<div id="tabs-upTimeChart">
+					<a id="upTimeChartDisplay" class="btn btn-default btn-lg"><i class="fa fa-line-chart"></i></a>
+					<div class="flotchart-container">
+					<div id="placeholder-upTimeChart" class="flotchart-placeholder"></div>
+					</div>
+					<div class="flotchart-container" style="height:150px;">
+					<div id="flotchart-overview" class="flotchart-placeholder"></div>
+					</div>
+				</div>
+			
+			 	
+			<!-- data resources tab -->
+			<div id="tabs-sources">
+				<table class="table table-bordered">
+			 		<thead>
+			 			<tr class="success">
+			 				<th>@LanguageApplication.message("name")</th>
+			 				<th>@LanguageApplication.message("type")</th>
+			 				<th></th>
+			 			</tr>
+			 		</thead>
+ 					@if(parentEquipment.files != null) {
+		 				@parentEquipment.files.map { fi =>
+				 		<tbody>
+				 			<tr>
+				 				<td><a href="@routes.Application.download(fi.id)">@fi.name</a></td>
+				 				<td>@fi.tag</td>
+				 				<td><a class="btn btn-danger btn-sm" 
+				 				href="@routes.EquipmentApplication.deleteAssociation(parentEquipment.id,fi.id)">
+				 				<span class="fa fa-trash"></span></a></td>
+				 			<tr>
+				 		</tbody>
+				 	}
+				 }
+			 	</table>
+				<br />
+				<h4>@LanguageApplication.message("upload")</h4>
+				<form class="form-inline" role="form" method="POST" enctype="multipart/form-data"
+					action="@routes.EquipmentApplication.upload(parentEquipment.id)">
+						<div class="form-group">
+							<input type="file" name="file" class="btn btn-default">
+						</div>
+						<button type="submit" class="btn btn-default btn-md" title="upload">
+							<span class="fa fa-upload"></span>
+						</button>
+				</form>
+			</div>
+	</div>
+	</div>
+			</div>
+	
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.flot.min.js"))'></script>
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.flot.time.min.js"))'></script>
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.flot.selection.min.js"))'></script>
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.flot.resize.min.js"))'></script>
+	<script type="text/javascript">
+	$(document).ready(function() {
+		var data = [];
+		var plot;
+		var overview;
+		var options = {
+				legend: {
+					show: false
+				},
+				series: {
+					lines: {
+						show: true,
+						steps:true,
+						fill: true
+					},
+					points: {
+						show: true
+					}
+				},
+				xaxis: {
+					mode: "time",
+					timeformat: "%y/%m/%d"
+				},
+				yaxis: {
+					show:false,
+					ticks: 3,
+					min:-2.1,
+					max:2.1
+				},
+				selection: {
+					mode: "x"
+				},
+				grid: {
+			        clickable: true
+			    }
+			};
+		
+		//mtbf calc
+		$("#mtbf").click(function() {
+			jQuery.ajax({
+			url:jsRoutes.controllers.FailureApplication.mtbf(@parentEquipment.id).url
+			}).done(function(data) {
+				$("#mtbf").text("MTBF="+data.mtbf+" hours & MTTF="+data.mttf+" hours");
+				$("#mtbf").addClass('disabled');
+			});
+		});
+		//mttr calc
+		$("#mttr").click(function() {
+			jQuery.ajax({
+			url:jsRoutes.controllers.MaintenanceApplication.mttr(@parentEquipment.id).url
+			}).done(function(data) {
+				$("#mttr").text("MTTR="+data.mttr+" hours");
+				$("#mttr").addClass('disabled');
+			});
+		});
+		
+		//chart plot
+		$("#upTimeChartDisplay").click(function() {
+			jQuery.ajax({
+				url: jsRoutes.controllers.EquipmentApplication.flotEquipmentUpTimeJson(@parentEquipment.id).url,
+				type: "GET",
+				dataType: "json",
+				success: function(series) {
+					data.push(series);
+					plot = $.plot("#placeholder-upTimeChart", data, options);
+					overview = $.plot("#flotchart-overview", data, {
+						series: {
+							lines: {
+								show: true,
+								steps:true,
+								fill:true,
+								lineWidth: 1
+							},
+							shadowSize: 0
+						},
+						xaxis: {
+							ticks: [],
+							mode: "time"
+						},
+						yaxis: {
+							ticks: [],
+							min: -2,
+							autoscaleMargin: 0.1
+						},
+						selection: {
+							mode: "x"
+						}
+					});
+				}
+			});
+			
+			$("#placeholder-upTimeChart").bind("plotclick", function (event, pos, item) {
+		        if (item) {
+		        	var dt = new Date(item.datapoint[0]);
+		        	//dt = Date.UTC(dt);
+		            alert(dt.toLocaleFormat("%y/%m/%d-%H:%M"));
+		            plot.highlight(item.series, item.datapoint);
+		        }
+		    });
+			
+			$("#placeholder-upTimeChart").bind("plotselected", function (event, ranges) {
+
+				// do the zooming
+				$.each(plot.getXAxes(), function(_, axis) {
+					var opts = axis.options;
+					opts.min = ranges.xaxis.from;
+					opts.max = ranges.xaxis.to;
+				});
+				plot.setupGrid();
+				plot.draw();
+				plot.clearSelection();
+
+				// don't fire event on the overview to prevent eternal loop
+
+				overview.setSelection(ranges, true);
+			});
+
+			$("#flotchart-overview").bind("plotselected", function (event, ranges) {
+				plot.setSelection(ranges);
+			});
+			$("#upTimeChartDisplay").hide();
+		});
+	});
+	</script>
+	
+		
+	
+ }

@@ -1,0 +1,10 @@
+package models.maintenance;
+
+public enum MaintenanceCategories{
+	CORRECTIVE_MAINTENANCE,
+	PREVENTIVE_MAINTENANCE,
+	PREDICTIVE_MAINTENANCE,
+	PRESERVATION,
+	MODIFICATION,
+	OTHER
+	}

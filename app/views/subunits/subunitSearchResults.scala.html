@@ -1,0 +1,21 @@
+@(sbs : com.avaje.ebean.Page[Subunits])
+
+@main("Subunit search results:") {<div id='tree'></div>} {
+	<style>
+	.searchListResult {
+	direction:ltr;
+	@if(session().get("play_user_lang") == "1") {text-align:right;} else {text-align:left;} 
+	}
+	</style>
+	@sbs.getList.groupBy(_.equipment).map {
+		case (equipment,subu) => {
+			<p><label class="label-success"><a href="@routes.EquipmentApplication.equipmentIndex(equipment.id)">@equipment.name</a></label></p>
+			<ul>
+			@subu.toList.map { sb =>
+				<li class="searchListResult"><a href="@routes.SubunitApplication.subunitIndex(sb.id)">@sb.name</a></li>
+			}
+        	</ul>
+		}
+	}
+ }
+ 

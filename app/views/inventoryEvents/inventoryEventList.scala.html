@@ -1,0 +1,13 @@
+@(ieList : List[InventoryEvents])
+
+@main("Inventory events") {@Html("")} {
+		<a class="btn btn-primary btn-lg" href="@routes.InventoryEventApplication.createInventoryEvent()"
+		 title="Add new inventory event">@LanguageApplication.message("addInventoryEvent")
+				<span class="glyphicon glyphicon-plus"></span></a>
+
+		<ol>
+		@ieList.map {ie =>
+			<li><a href="@routes.InventoryEventApplication.editInventoryEvent(ie.id)">@ie.name</a></li>
+		}
+		</ol>
+}

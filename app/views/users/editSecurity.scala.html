@@ -1,0 +1,45 @@
+@(id : Long, user : Users)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("Edit security roles and permissions") {@Html("")} {
+	<style>
+		body {
+			background-color: #EDEDED;
+		}
+	</style>
+	
+	
+	<p>@LanguageApplication.message("roles")</p>
+	<ul>
+	@user.roles.map { urol =>
+		<li>@urol.name : @urol.description</li>
+	}
+	</ul>
+	<br />
+	@form(action = routes.UserApplication.updateSecurity(id),
+	'class->"form",
+	'role->"form"
+	) {
+		<label>@LanguageApplication.message("selectRoles")</label>
+		<div class="form-group">
+			<div class="row">
+				<div class="col-lg-5">
+					<select name="roles" multiple="multiple" size="8">
+						@SecurityRole.find.all().map { sr =>
+						<option>@sr.getName()</option>
+						}
+					</select>
+				</div>
+				</div>
+		</div>
+		
+		<div align="center">
+			<input type="submit" value="@LanguageApplication.message("update")" class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.UserApplication.userIndex(id)" 
+				class="btn btn-danger btn-lg" role="button">
+			@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+}

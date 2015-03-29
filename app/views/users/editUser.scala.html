@@ -1,0 +1,258 @@
+@(id : Long, userForm : Form[Users])
+
+@import helper._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import be.objectify.deadbolt.java.views.html._
+
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("Edit user") {@Html("")} {
+	<style>
+	body {
+		background-color: #EDEDED;
+	}
+	</style>
+	@form(action = routes.UserApplication.update(id),
+	'class->"form-horizontal",
+	'role->"form"
+	) {
+	<fieldset>
+		<legend><span class="label label-default">@LanguageApplication.message("basicInfo")</span></legend>
+		@restrictOr(la(as("admin"))) {
+		<div class="form-group">
+			<div class="col-lg-2">
+				@inputText(userForm("userName"),
+				'_showConstraints->true,
+				'class->"form-control",
+				'_label->LanguageApplication.message("userId")
+				)
+			</div>
+		</div>} {
+		
+				@inputText(userForm("userName"),
+				'_showConstraints->false,
+				'hidden->true,
+				'_label->""
+				)
+			}
+		<div class="form-group">
+		
+			<div class="col-lg-3">
+				@inputText(userForm("firstName"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("firstName"),
+				'_showConstraints->true
+				)
+			</div>
+			
+			<div class="col-lg-3">
+				@inputText(userForm("lastName"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("lastName"),
+				'_showConstraints->true
+				)
+			</div>
+			
+			<div class="col-lg-2">
+				@inputText(userForm("personnelNumber"),
+					'_label->LanguageApplication.message("personnelNumber"),
+					'class->"form-control",
+					'_showConstraints->true
+					)
+			</div>
+		
+		</div>
+	
+	</fieldset>
+	
+	<fieldset>
+		<legend><span class="label label-default">@LanguageApplication.message("workInfo")</span></legend>
+		<div class="form-group">
+			<div class="col-lg-3">
+				@select(userForm("hiringCompany.id"),
+					options(Companies.options()),
+					'_label->LanguageApplication.message("hiringCompany"),
+					'class->"form-control"
+					)
+			</div>
+			
+			<div class="col-lg-2">
+				@select(userForm("discipline.id"),
+				options(Disciplines.options()),
+				'_label->LanguageApplication.message("discipline"),
+				'class->"form-control",
+				'_default->""
+				)
+			</div>
+				
+		</div>
+		
+		<div class="form-group">
+			<div class="col-lg-2">
+				@inputText(userForm("organizationalGrade"),
+				'_label->LanguageApplication.message("organizationalGrade"),
+				'class->"form-control",
+				'_showConstraints->true
+				)
+			</div>
+			
+			<div class="col-lg-2">
+				@inputText(userForm("organizationalPost"),
+				'_label->LanguageApplication.message("organizationalPost"),
+				'class->"form-control",
+				'_showConstraints->true
+				)
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-lg-2">
+				@select(userForm("hiringType.id"),
+				options(HiringTypes.options()),
+				'_label->LanguageApplication.message("hiringType"),
+				'class->"form-control",
+				'_default->""
+				)
+			</div>
+			
+			<div class="col-lg-2">
+				@select(userForm("isOnShift"),
+					options( ("true",LanguageApplication.message("yes")),("false",LanguageApplication.message("no")) ),
+					'_label->LanguageApplication.message("shiftPersonnel"),
+					'class->"form-control"
+					)
+			</div>
+			
+			@restrict(la(as("admin"), as("planner"))) {
+			<div class="col-lg-2">
+				@select(userForm("skill"),
+				options(SkillLevels.values().toList.map(_.toString)),
+				'class->"form-control",
+				'_label->LanguageApplication.message("skillLevel")
+				)
+			</div>
+			}
+			
+		</div>
+	</fieldset>
+	<fieldset>
+		<legend><span class="label label-default">@LanguageApplication.message("contactInfo")</span></legend>
+		<div class="form-group">
+			
+			<div class="col-lg-3">
+				@inputText(userForm("residenceCity"),
+				'_label->LanguageApplication.message("residenceCity"),
+				'class->"form-control",
+				'_showConstraints->true
+				)
+			</div>
+			<div class="col-lg-3">
+				@inputText(userForm("flightOrigin"),
+				'_label->LanguageApplication.message("flightOrigin"),
+				'class->"form-control",
+				'_showConstraints->true
+				)
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-lg-3">
+				@inputText(userForm("mobilePhone"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("mobilePhone"),
+				'_showConstraints->true
+				)
+			</div>
+			
+			<div class="col-lg-3">
+				@inputText(userForm("mobilePhone2"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("mobilePhone"),
+				'_showConstraints->true
+				)
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-lg-3">
+				@inputText(userForm("homePhone"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("homePhone"),
+					'_showConstraints->true
+					)
+			</div>
+			
+			<div class="col-lg-3">
+				@inputText(userForm("homePhone2"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("homePhone"),
+					'_showConstraints->true
+					)
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-lg-3">
+				@inputText(userForm("email"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("email"),
+				'_showConstraints->true
+				)
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-lg-6">
+				@textarea(userForm("address"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("address")
+				)
+			</div>
+		</div>
+		
+		
+		<div class="form-group">
+			<div class="col-lg-2">
+				@inputText(userForm("camp"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("camp"),
+				'_showConstraints->true
+				)
+			</div>
+				
+			<div class="col-lg-2">
+				@inputText(userForm("suite"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("suite"),
+				'_showConstraints->true
+				)
+			</div>
+				
+			<div class="col-lg-2">
+				@inputText(userForm("suitePhoneNumber"),
+				'_label->LanguageApplication.message("suitePhoneNumber"),
+				'class->"form-control",
+				'_showConstraints->true
+				)
+			</div>
+		</div>
+	</fieldset>
+	
+		<div class="form-group">
+			<div class="col-lg-6">
+			@textarea(userForm("comments"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("comments")
+				)
+			</div>
+		</div>
+	
+	<div align="center">
+			<input type="submit" value="@LanguageApplication.message("update")" class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.UserApplication.userIndex(id)" 
+				class="btn btn-danger btn-lg" role="button">
+			@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+}

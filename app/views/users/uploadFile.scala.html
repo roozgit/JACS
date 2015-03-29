@@ -1,0 +1,34 @@
+@(blobList : List[UserBlobs])
+
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("Upload file") {@Html("")} {
+	<table class="table table-striped">
+		<thead>
+			<tr class="success">
+				<th>@LanguageApplication.message("name")</th>
+				<th>@LanguageApplication.message("type")</th>
+				<th>@LanguageApplication.message("category")</th>
+				<th>@LanguageApplication.message("creator")</th>
+				<th>@LanguageApplication.message("date")</th>
+				<th></th>
+			</tr>
+		</thead>
+	<tbody>
+	
+	@blobList.map {bl =>
+	<tr>
+		<td><a class="glyphicon glyphicon-file" href="@routes.UserBlobApplication.download(bl.id)">@bl.name</a></td>
+		<td>@bl.extension</td>
+		<td><a href="@routes.UserBlobApplication.editFile(bl.id)">@bl.tag</td>
+		<td>@bl.owner.userName</td>
+		<td>@myUtils.DateTimeUtils.getIranianDateTime(bl.creationDate)</td>	
+		<td><a href="@routes.UserBlobApplication.delete(bl.id)" class="btn btn-danger btn-sm">
+		<span class="fa fa-trash"></span></a></td>
+	</tr>
+	}
+	</tbody>
+	</table>
+
+}

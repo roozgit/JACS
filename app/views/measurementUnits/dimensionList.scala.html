@@ -1,0 +1,23 @@
+@(dlist : List[Dimensions])
+
+@main("Dimensions") {@Html("")} {
+	<br />
+	<a title="New dimension" class="btn btn-primary btn-lg" href="@routes.MeasurementUnitApplication.createDimensionForm()">
+	<span class="glyphicon glyphicon-plus"></span></a>
+			
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>@LanguageApplication.message("name")</th>
+				<th>@LanguageApplication.message("comments")</th>
+			</tr>
+		</thead>
+		<tbody>
+			@dlist.map {dl =>
+			<tr>
+				<td><a href="@routes.MeasurementUnitApplication.editDimensionForm(dl.id)">@dl.name</a></td>
+				<td>@dl.comments</td>
+			</tr>}
+		</tbody>
+	</table>		
+}

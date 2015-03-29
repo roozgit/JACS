@@ -1,0 +1,52 @@
+@(id : Long, blobForm : Form[UserBlobs])
+
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("Edit tag") {@Html("")} {
+	<style>
+		body {
+			background-color: #EDEDED;
+		}
+	</style>
+	
+	@form(action = routes.UserBlobApplication.update(id),
+	'class->"form-horizontal",
+	'role->"form"
+	)	{
+	
+	@inputText(blobForm("extension"),
+	'_type->"hidden",
+	'style->"display:none;",
+	'showConstraints->false,
+	'class->"form-control",	
+	'_label->""
+	)
+	
+		<div class="form-group">
+			<div class="col-lg-4">
+				@inputText(blobForm("name"),
+				'class->"form-control",
+				'showConstraints->false,
+				'_label->LanguageApplication.message("name")
+				)
+			</div>
+			
+			<div class="col-lg-2">
+				@select(blobForm("tag"),
+				options(Tags2.values().toList.map(_.toString)),
+				'class->"form-control",
+				'_label->LanguageApplication.message("category")
+				)
+			</div>
+		</div>
+		
+		<div align="center">
+			<input type="submit" value="@LanguageApplication.message("update")" class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.UserBlobApplication.uploadForm()" 
+				class="btn btn-danger btn-lg" role="button">
+			@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+}

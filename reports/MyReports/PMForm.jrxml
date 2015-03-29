@@ -1,0 +1,914 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version last-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PMForm" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="0" uuid="bdb3267e-ca99-4f33-a12d-6cca43125e9d">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="net.sf.jasperreports.export.xls.collapse.row.span" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.cell.border" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.cell.background" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.image.border.fix.enabled" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.create.custom.palette" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.size.fix.enabled" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.white.page.background" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.wrap.text" value="true"/>
+	<parameter name="equipmentCode" class="java.lang.String"/>
+	<parameter name="equipmentName" class="java.lang.String"/>
+	<parameter name="today" class="java.lang.String"/>
+	<parameter name="interval" class="java.lang.String"/>
+	<parameter name="location" class="java.lang.String"/>
+	<parameter name="routineName" class="java.lang.String"/>
+	<parameter name="discipline" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="row" class="java.lang.Integer"/>
+	<field name="item" class="java.lang.String"/>
+	<pageHeader>
+		<band height="130" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<frame>
+				<reportElement x="-1" y="0" width="555" height="110" uuid="050eb6c3-55f9-413c-9318-317ad964a4b7"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<image>
+					<reportElement x="430" y="1" width="125" height="60" uuid="b1311673-9406-43b0-aee4-5b53ced64f56">
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA["./images/oicoLogo.png"]]></imageExpression>
+				</image>
+				<image>
+					<reportElement x="1" y="1" width="125" height="60" uuid="d2c0bd91-128a-4777-ac32-ff8bee43eea7">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<imageExpression><![CDATA["./images/ioocLogo.png"]]></imageExpression>
+				</image>
+				<frame>
+					<reportElement x="126" y="0" width="304" height="61" uuid="94078b4c-d4b0-4259-9d54-7e9dafd2d18e">
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<staticText>
+						<reportElement x="0" y="0" width="304" height="15" uuid="71ecb2c8-b29d-4ed6-86fd-971673276876">
+							<property name="local_mesure_unity" value="pixel"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="0.5"/>
+							<leftPen lineWidth="0.5"/>
+							<bottomPen lineWidth="0.5"/>
+							<rightPen lineWidth="0.5"/>
+						</box>
+						<textElement textAlignment="Center">
+							<font fontName="Arial" size="11" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Siri island Gas Gathering and NGL recovery project]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="0" y="15" width="304" height="20" uuid="f3f18652-41ed-449f-b996-4d37fc5c7dc2">
+							<property name="local_mesure_unity" value="pixel"/>
+							<property name="local_mesure_unitx" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.x" value="px"/>
+							<property name="com.jaspersoft.studio.unit.y" value="px"/>
+							<property name="local_mesure_unitheight" value="pixel"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="0.5"/>
+							<leftPen lineWidth="0.5"/>
+							<bottomPen lineWidth="0.5"/>
+							<rightPen lineWidth="0.5"/>
+						</box>
+						<textElement textAlignment="Center">
+							<font fontName="Arial" size="14" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Preventive Maintenance work order]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="130" y="35" width="174" height="26" uuid="694c6d44-a1d5-4b82-aaab-80b723e6ce86">
+							<property name="local_mesure_unity" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.y" value="px"/>
+							<property name="local_mesure_unitheight" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="local_mesure_unitx" value="pixel"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="0.5"/>
+							<leftPen lineWidth="0.5"/>
+							<bottomPen lineWidth="0.5"/>
+							<rightPen lineWidth="0.5"/>
+						</box>
+						<textElement textAlignment="Right" verticalAlignment="Top">
+							<font fontName="Arial" size="12" pdfFontName="./reports/MyReports/fonts/BZAR.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+						</textElement>
+						<text><![CDATA[شماره:]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="0" y="35" width="130" height="26" uuid="fd2cfc5f-164f-4838-8c8c-17d3cf117254">
+							<property name="local_mesure_unity" value="pixel"/>
+							<property name="local_mesure_unitheight" value="pixel"/>
+							<property name="local_mesure_unitx" value="pixel"/>
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="0.5"/>
+							<leftPen lineWidth="0.5"/>
+							<bottomPen lineWidth="0.5"/>
+							<rightPen lineWidth="0.5"/>
+						</box>
+						<textElement textAlignment="Right" verticalAlignment="Top">
+							<font fontName="Arial" size="12" pdfFontName="./reports/MyReports/fonts/BZAR.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+						</textElement>
+						<text><![CDATA[تاریخ:]]></text>
+					</staticText>
+				</frame>
+				<staticText>
+					<reportElement x="430" y="61" width="125" height="29" uuid="d41c98c5-6a4d-41c7-81fb-12d8b791866e">
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Top">
+						<font fontName="Arial" size="12" pdfFontName="./reports/MyReports/fonts/BZAR.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[نام تجهیز:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="391" y="61" width="39" height="29" uuid="673d9d26-b484-4a0f-8d83-b1d383f727db">
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Top">
+						<font fontName="Arial" size="12" pdfFontName="./reports/MyReports/fonts/BZAR.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[کد تجهیز:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="90" y="61" width="100" height="29" uuid="66ec925e-2532-4372-a9dd-22010c6ca71a">
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Top">
+						<font fontName="Arial" size="12" pdfFontName="./reports/MyReports/fonts/BZAR.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[محل استقرار:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1" y="61" width="89" height="49" uuid="ee1402df-95ba-4d5d-9a96-cd71b4447739">
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Top">
+						<font fontName="Arial" size="12" pdfFontName="./reports/MyReports/fonts/BZAR.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[تناوب PM:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="190" y="90" width="365" height="20" uuid="c637248c-e9b8-4461-a86b-b046e5ddb5a7">
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Top">
+						<font fontName="Arial" size="12" pdfFontName="./reports/MyReports/fonts/trado.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[تاريخ PM قبلی تجهيز:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="90" y="90" width="50" height="20" uuid="8922b3b0-4bea-4485-a4ad-59dc23acdf38">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[OFF]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="141" y="90" width="49" height="20" uuid="f38cb6fc-91f6-48b0-8de2-51bb6b05d6b8">
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[ON]]></text>
+				</staticText>
+			</frame>
+			<textField isBlankWhenNull="true">
+				<reportElement x="189" y="61" width="201" height="29" uuid="6e363b14-059c-42d2-b05f-45954bd19e02"/>
+				<textFieldExpression><![CDATA[$P{equipmentCode}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="429" y="70" width="125" height="20" uuid="5f3ce2b3-5878-4da6-b562-9a970d353977"/>
+				<textFieldExpression><![CDATA[$P{equipmentName}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="89" y="70" width="100" height="20" uuid="f303f4e2-1176-4b88-b2dc-85f81ed8c2e2"/>
+				<textFieldExpression><![CDATA[$P{location}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="125" y="35" width="105" height="26" uuid="5d1443fb-6560-41da-87bf-a5db4595bd55"/>
+				<textFieldExpression><![CDATA[$P{today}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="80" width="89" height="30" uuid="8eef0f4b-006e-446e-a326-589850228307"/>
+				<textFieldExpression><![CDATA[$P{interval}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="189" y="110" width="291" height="20" uuid="15f9d7e6-5696-4128-9de5-16b05d543921"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{routineName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="110" width="189" height="20" uuid="fecbe9be-b00c-4690-ad3e-06176683b571"/>
+				<textElement>
+					<font fontName="Times New Roman" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{discipline}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<frame>
+				<reportElement x="0" y="0" width="555" height="20" uuid="50b36c2d-a1f4-4ead-afe1-e2c007980f3b">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<staticText>
+					<reportElement mode="Opaque" x="530" y="0" width="25" height="20" backcolor="#BFBFBF" uuid="059b75d6-301b-4c0f-ba92-da4edc6c1d84">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="./reports/MyReports/fonts/BZAR.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[ردیف]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="260" y="0" width="271" height="20" backcolor="#BFBFBF" uuid="4174d0fd-b9f4-47fa-9437-767379581be6">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+						<font fontName="Arial" size="10" pdfFontName="./reports/MyReports/fonts/BZAR.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[شرح کار تعمیراتی]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="190" y="0" width="70" height="20" backcolor="#BFBFBF" uuid="0dd33321-c882-4aaa-82de-7d4575a6fbe6">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="./reports/MyReports/fonts/BZAR.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[وضعیت]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="0" width="190" height="20" backcolor="#BFBFBF" uuid="b2804c27-50db-4c80-a010-d1ab942ee220">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="./reports/MyReports/fonts/BZAR.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[توضیحات]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="25" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<frame>
+				<reportElement x="0" y="0" width="555" height="25" isPrintWhenDetailOverflows="true" uuid="3ac8c48a-8dcc-40a9-95e9-fbfda6408310">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textField>
+					<reportElement stretchType="RelativeToBandHeight" x="531" y="0" width="24" height="25" uuid="07716234-e018-4aaf-b4bc-fc7e03d06db9">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{row}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement x="260" y="0" width="271" height="25" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="bff5f73d-fb2d-485f-bd9e-52c60574721a">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" markup="html">
+						<font size="12" pdfFontName="./reports/MyReports/fonts/trado.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+						<paragraph firstLineIndent="0" leftIndent="0" rightIndent="0"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{item}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<summary>
+		<band height="230" splitType="Immediate">
+			<frame>
+				<reportElement x="0" y="0" width="555" height="140" uuid="a0982048-0b89-4b4b-bfc6-d3a97d628ffe">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<frame>
+					<reportElement x="260" y="0" width="295" height="140" uuid="d74cf403-9412-487d-8684-989a1e946adf">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<staticText>
+						<reportElement x="148" y="0" width="147" height="20" uuid="33c477e7-478b-499e-8e3f-1f02b01a9b66">
+							<property name="local_mesure_unity" value="pixel"/>
+							<property name="local_mesure_unitheight" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="local_mesure_unitx" value="pixel"/>
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="10" pdfFontName="./reports/MyReports/fonts/BZAR.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+						</textElement>
+						<text><![CDATA[مشخصات پرسنلی و زمان صرف شده]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="0" y="0" width="147" height="20" uuid="74488c54-4847-4f89-b21b-dbc3140a726e">
+							<property name="local_mesure_unity" value="pixel"/>
+							<property name="local_mesure_unitheight" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="local_mesure_unitx" value="pixel"/>
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.x" value="px"/>
+							<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="10" pdfFontName="./reports/MyReports/fonts/BZAR.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+						</textElement>
+						<text><![CDATA[قطعات / مواد مصرفی]]></text>
+					</staticText>
+					<line>
+						<reportElement x="147" y="40" width="1" height="100" uuid="9ada1d18-38e8-42af-8bb6-fa29dced3e16">
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="local_mesure_unitx" value="pixel"/>
+							<property name="local_mesure_unitheight" value="pixel"/>
+							<property name="local_mesure_unity" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						</reportElement>
+					</line>
+					<line>
+						<reportElement x="0" y="40" width="295" height="1" uuid="06376ca3-ad14-45d9-8d3a-14c0037dcdfa">
+							<property name="local_mesure_unitheight" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="local_mesure_unity" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						</reportElement>
+					</line>
+					<line>
+						<reportElement x="0" y="60" width="295" height="1" uuid="0eda0385-918e-4ec5-bfa6-214d17b244e3">
+							<property name="local_mesure_unitheight" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="local_mesure_unitx" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.x" value="px"/>
+							<property name="local_mesure_unity" value="pixel"/>
+						</reportElement>
+					</line>
+					<line>
+						<reportElement x="0" y="80" width="295" height="1" uuid="1b3d0c24-9d5f-4dec-b117-e96bc6588397">
+							<property name="local_mesure_unitheight" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="local_mesure_unitx" value="pixel"/>
+							<property name="local_mesure_unity" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						</reportElement>
+					</line>
+					<line>
+						<reportElement x="0" y="100" width="295" height="1" uuid="391364e4-eac2-44a0-945a-39a8b189408a">
+							<property name="local_mesure_unitheight" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="local_mesure_unitx" value="pixel"/>
+							<property name="local_mesure_unity" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						</reportElement>
+					</line>
+					<line>
+						<reportElement x="0" y="120" width="295" height="1" uuid="1c9250cb-d889-4461-b6e9-638264758cdd">
+							<property name="local_mesure_unitheight" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="local_mesure_unitx" value="pixel"/>
+							<property name="local_mesure_unity" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						</reportElement>
+					</line>
+					<staticText>
+						<reportElement x="195" y="20" width="100" height="20" uuid="00aede56-8387-47d5-8e68-c5d12875ecbf">
+							<property name="local_mesure_unity" value="pixel"/>
+							<property name="local_mesure_unitheight" value="pixel"/>
+							<property name="local_mesure_unitx" value="pixel"/>
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.y" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="10" pdfFontName="./reports/MyReports/fonts/BZAR.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+						</textElement>
+						<text><![CDATA[نام و نام خانوادگی]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="48" y="20" width="100" height="20" uuid="177834de-9f40-4283-bb89-d3508ef051b9">
+							<property name="local_mesure_unity" value="pixel"/>
+							<property name="local_mesure_unitheight" value="pixel"/>
+							<property name="local_mesure_unitx" value="pixel"/>
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.y" value="px"/>
+							<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="10" pdfFontName="./reports/MyReports/fonts/BZAR.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+						</textElement>
+						<text><![CDATA[نام]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="148" y="20" width="47" height="20" uuid="ef0dca7c-b6ce-452c-944a-7837b45cc931">
+							<property name="local_mesure_unity" value="pixel"/>
+							<property name="local_mesure_unitheight" value="pixel"/>
+							<property name="local_mesure_unitx" value="pixel"/>
+							<property name="local_mesure_unitwidth" value="pixel"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="10" pdfFontName="./reports/MyReports/fonts/BZAR.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+						</textElement>
+						<text><![CDATA[مدت زمان]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="0" y="20" width="48" height="20" uuid="6871fa6d-fae7-4111-908e-d875eeee3a85">
+							<property name="local_mesure_unity" value="pixel"/>
+							<property name="local_mesure_unitheight" value="pixel"/>
+							<property name="local_mesure_unitx" value="pixel"/>
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="10" pdfFontName="./reports/MyReports/fonts/BZAR.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+						</textElement>
+						<text><![CDATA[تعداد / مقدار]]></text>
+					</staticText>
+					<line>
+						<reportElement x="195" y="40" width="1" height="100" uuid="befa3668-00fa-4d35-a29a-1339a2566525">
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="local_mesure_unitx" value="pixel"/>
+							<property name="local_mesure_unitheight" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.x" value="px"/>
+							<property name="local_mesure_unity" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.y" value="px"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+					</line>
+					<line>
+						<reportElement x="48" y="40" width="1" height="80" uuid="0ab1a84a-4abf-4f5f-aa10-146066434076">
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="local_mesure_unitx" value="pixel"/>
+							<property name="local_mesure_unitheight" value="pixel"/>
+							<property name="local_mesure_unity" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.y" value="px"/>
+							<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						</reportElement>
+					</line>
+					<staticText>
+						<reportElement x="195" y="120" width="100" height="20" uuid="35a348fb-659d-44f7-82b7-49a9fba26a61">
+							<property name="local_mesure_unity" value="pixel"/>
+							<property name="local_mesure_unitheight" value="pixel"/>
+							<property name="local_mesure_unitx" value="pixel"/>
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Arial" size="10" pdfFontName="./reports/MyReports/fonts/BZAR.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+						</textElement>
+						<text><![CDATA[کل زمان صرف شده:]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="48" y="120" width="100" height="20" uuid="3a14ca78-1ab2-4f68-b877-91592c0c2fa3">
+							<property name="local_mesure_unity" value="pixel"/>
+							<property name="local_mesure_unitheight" value="pixel"/>
+							<property name="local_mesure_unitx" value="pixel"/>
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right" verticalAlignment="Middle">
+							<font fontName="Arial" size="10" pdfFontName="./reports/MyReports/fonts/BZAR.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+						</textElement>
+						<text><![CDATA[ تاریخ پایان کار:]]></text>
+					</staticText>
+				</frame>
+				<line>
+					<reportElement x="0" y="20" width="260" height="1" uuid="217dace3-eefa-4594-873e-d2012c7eca4f">
+						<property name="local_mesure_unitheight" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.25" lineStyle="Dotted"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="0" y="40" width="260" height="1" uuid="2ab3b125-6938-4ce5-99c7-ec6441c70c7a">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.25" lineStyle="Dotted"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="0" y="60" width="260" height="1" uuid="f0d92161-0d8e-4d20-a3de-88f1eca6c7cf">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unity" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.25" lineStyle="Dotted"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="0" y="80" width="260" height="1" uuid="9cb2cba8-da91-4848-8eb5-eedb867827db">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.25" lineStyle="Dotted"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="0" y="100" width="260" height="1" uuid="68e7df47-a7d6-4cba-9934-11bf29706a7d">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unity" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.25" lineStyle="Dotted"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="0" y="120" width="260" height="1" uuid="c965bce3-353c-4958-a4d1-41b5217c0273">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unity" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.25" lineStyle="Dotted"/>
+					</graphicElement>
+				</line>
+			</frame>
+			<staticText>
+				<reportElement x="140" y="140" width="139" height="70" uuid="c42c2f5b-5f34-4be7-8a69-ebb2341de8c6">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="Arial" size="12" pdfFontName="./reports/MyReports/fonts/BZAR.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[ سرپرست برنامه ریزی تعمیرات:
+    تاریخ:
+    امضا:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="140" width="140" height="70" uuid="017f71b7-a94c-4dff-adf8-9b6b86a4b113">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="Arial" size="12" pdfFontName="./reports/MyReports/fonts/BZAR.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[ رییس تعمیرات:
+    تاریخ:
+    امضا:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="279" y="140" width="138" height="70" uuid="ea67f6e8-d9db-4411-b491-d290f0f25dbc">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="Arial" size="12" pdfFontName="./reports/MyReports/fonts/BZAR.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[ سرپرست واحد تعمیرات:
+    تاریخ:
+    امضا:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="417" y="140" width="138" height="70" uuid="b3656c2a-941b-401e-9bd6-c4440f1ae905">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="Arial" size="12" pdfFontName="./reports/MyReports/fonts/BZAR.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[ مسوول محوطه:
+    تاریخ:
+    امضا:]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

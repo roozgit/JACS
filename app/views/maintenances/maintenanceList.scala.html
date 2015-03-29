@@ -1,0 +1,267 @@
+@(currentPage : com.avaje.ebean.Page[maintenance.Maintenances], currentSortBy: String, currentOrder: String, currentFilter1: String, currentFilter2: String, currentFilter3: String, currentFilter4: String, currentFilter5: String, currentFilter6: String, currentFilter7: String, currentFilter8 : String, currentFilter9 : String)
+
+@abbrev(cat : String) = @{
+	var p = cat
+	if(cat=="CORRECTIVE_MAINTENANCE")
+		p="CM"
+	else if(cat=="PREVENTIVE_MAINTENANCE")
+		p="PM"
+	else if(cat=="PREDICTIVE_MAINTENANCE")
+		p="PdM"
+	else p=cat
+	
+	// Outpuy
+	p
+}
+
+@****************************************
+* Helper generating navigation links    *
+****************************************@
+@link(newPage:Int, newSortBy:String) = @{
+    
+    var sortBy = currentSortBy
+    var order = currentOrder
+    
+    if(newSortBy != null) {
+        sortBy = newSortBy
+        if(currentSortBy == newSortBy) {
+            if(currentOrder == "asc") {
+                order = "desc"
+            } else {
+                order = "asc"
+            }
+        } else {
+            order = "asc"
+        }
+    }
+    
+    // Generate the link
+    routes.MaintenanceApplication.list(newPage, sortBy, order, currentFilter1, currentFilter2, currentFilter3, currentFilter4, currentFilter5, currentFilter6, currentFilter7, currentFilter8, currentFilter9)    
+}
+
+@**********************************
+* Helper generating table headers *
+***********************************@
+@header(key:String, title:String) = {
+    <th style="font-size:.8em" class="@if(key=="workOrderDescription") {col-lg-3} else {col-lg-1}">
+    	<span id="@key">@title</span>
+        <a href="@link(0, key)">
+        <span class="glyphicon @if(currentSortBy == key) {
+        	@if(currentOrder == "asc") {glyphicon-sort-by-attributes} else {glyphicon-sort-by-attributes-alt}
+        	} else {glyphicon-sort}"></span>
+        </a>
+    </th>
+}
+
+@**********************************
+*Pager helper                     *
+**********************************@
+@pager = {<div id="pager" class="pager">
+	            <ul>
+	           		<li class="previous">
+	           		<a href="@link(0,null)"><span @if(session().get("play_user_lang") == "0") {class="fa fa-fast-backward"} else {class ="fa fa-fast-forward"}></span>
+	           		</a></li>
+	            	@if(currentPage.hasPrev) {
+	                    <li class="previous">
+	                        <a href="@link(currentPage.getPageIndex - 1, null)">
+	                        @if(session().get("play_user_lang") == "0") {&larr; @LanguageApplication.message("previous")} else {&rarr; @LanguageApplication.message("previous") }
+	                        </a>
+	                    </li>
+	                } else {
+	                    <li class="previous disabled">
+	                        <a>
+	                        @if(session().get("play_user_lang") == "0") {&larr; @LanguageApplication.message("previous")} else {&rarr; @LanguageApplication.message("previous") }
+	                        </a>
+	                    </li>
+	                }
+	                <li class="current">
+	                    <a>@LanguageApplication.message("displaying") @currentPage.getDisplayXtoYofZ(" " + LanguageApplication.message("to")+" "," "+LanguageApplication.message("of")+" ")</a>
+	                </li>
+	                <li class="next"><a href="@link(currentPage.getTotalPageCount-1,null)">
+	                <span @if(session().get("play_user_lang") == "1") {class="fa fa-fast-backward"} else {class ="fa fa-fast-forward"}></span></a></li>
+	                @if(currentPage.hasNext) {
+	                    <li class="next">
+	                        <a href="@link(currentPage.getPageIndex + 1, null)">
+	                        @if(session().get("play_user_lang") == "1") {@LanguageApplication.message("next") &larr;} else {@LanguageApplication.message("next") &rarr;}
+	                        </a>
+	                    </li>
+	                } else {
+	                    <li class="next disabled">
+	                        <a>
+	                        @if(session().get("play_user_lang") == "1") {@LanguageApplication.message("next") &larr;} else {@LanguageApplication.message("next") &rarr;}
+	                        </a>
+	                    </li>
+	                }
+	                
+	            </ul>
+	        </div>
+	       }
+
+@main("Maintenance list") {@Html("")} {
+	
+    <div style="background-image:url(@routes.Assets.at("images/gearConcept.jpg"));">
+	<a title="New maintenance"
+	class="btn btn-primary btn-lg" href="@routes.MaintenanceApplication.createMaintenance(-1L)">@LanguageApplication.message("newWorkOrder")
+			<span class="glyphicon glyphicon-plus"></span></a>
+	</div>
+	@if(flash.containsKey("success")) {
+        <div class="alert alert-success">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+        <br />
+	    }
+ 	@if(flash.containsKey("error")) {
+      <div class="alert alert-danger">
+          <strong>ERROR: </strong> @flash.get("error")
+      </div>
+      <br />
+    }
+	<br />
+	<form id="filterForm" class="form-inline" role="form" action="@link(0, "name")" method="GET">
+		<div class="form-group">
+			<input class="form-control" type="search" id="workOrderSerial" name="f1" value="@currentFilter1" placeholder=@LanguageApplication.message("workOrderSerial")>
+			<input class="form-control" type="search" id="maintainedSection" name="f2" value="@currentFilter2" placeholder=@LanguageApplication.message("section")>
+			<input class="form-control" type="search" id="maintainedEquipment" name="f3" value="@currentFilter3" placeholder=@LanguageApplication.message("equipmentTag")>
+			<input class="form-control" type="search" id="workOrderDescription" name="f4" value="@currentFilter4" placeholder=@LanguageApplication.message("description")>
+			
+			<select id="maintenanceCategory" class="form-control" name="f5">
+				<option></option>
+			    @for(cType <- maintenance.MaintenanceCategories.values()){
+			        <option @if(cType.name()==currentFilter5) {selected}>@cType.name()</option>
+			    }
+			</select>
+			<input class="form-control" type="search" id="responsibleDiscipline_name" name="f6" value="@currentFilter6" placeholder=@LanguageApplication.message("discipline")>
+			<input class="form-control" type="search" id="requestDate" name="f7" value="@currentFilter7" placeholder=@LanguageApplication.message("requestDate")>
+			<select id="maintenanceStatus" class="form-control" name="f8">
+			    <option></option>
+			    @for(cType <- maintenance.MaintenanceStatus.values()){
+			        <option @if(cType.name()==currentFilter8) {selected}>@cType.name()</option>
+			    }
+			</select>
+			<select id="holdReason" class="form-control" name="f9">
+			    <option></option>
+			    @for(cType <- maintenance.HoldReasons.values()){
+			        <option @if(cType.name()==currentFilter9) {selected}>@cType.name()</option>
+			    }
+			</select>
+		</div>
+		<div class="form-group">
+			<input type="submit" id="searchsubmit" value="@LanguageApplication.message("filter")" class="btn btn-success">
+			@LanguageApplication.message("filterGuide")
+		</div>
+	</form>
+	<br />
+	@if(currentPage.getTotalRowCount == 0) {
+		<div class="well well-lg">
+	  		<em>@LanguageApplication.message("nothingToDisplay")</em>
+	    </div> 
+	   } else {
+	   		@pager
+			<table class="table table-striped">			
+				<thead>
+					<tr>
+						@header("workOrderSerial", LanguageApplication.message("serial"))
+						@header("maintainedSection", LanguageApplication.message("section"))
+						@header("maintainedEquipment", LanguageApplication.message("equipmentTag"))
+						@header("workOrderDescription",LanguageApplication.message("description"))
+						@header("maintenanceCategory", LanguageApplication.message("maintenanceCategory"))						
+						@header("responsibleDiscipline.name", LanguageApplication.message("discipline"))
+						@header("requestDate", LanguageApplication.message("requestDate"))
+						@header("maintenanceStatus", LanguageApplication.message("maintenanceStatus"))
+						@header("holdReason",LanguageApplication.message("holdReason"))
+					</tr>
+				</thead>
+				<tbody>	
+					@currentPage.getList.map { cl =>
+					<tr>
+						<td><a href="@routes.MaintenanceApplication.maintenanceIndex(cl.id)">@cl.workOrderSerial</a></td>
+						
+						<td>
+							@if(cl.maintainedSection==null) {
+								<em>-</em>
+							} else {@cl.maintainedSection.name}
+						</td>
+						
+						<td @if(session().get("play_user_lang") == "1") {style="direction:ltr;text-align:right"}>
+							@if(cl.maintainedEquipment==null) {
+								<em>-</em>
+							} else {@cl.maintainedEquipment.name}
+						</td>
+						
+						<td>
+							@if(cl.workOrderDescription==null) {
+								<em>-</em>
+							} else {@cl.workOrderDescription}
+						</td>
+						
+						<td>
+							@if(cl.maintenanceCategory==null) {
+								<em>-</em>
+							} else {@abbrev(cl.maintenanceCategory.toString)}
+						</td>
+						
+						<td>
+							@if(cl.responsibleDiscipline==null) {
+								<em>-</em>
+							} else {@cl.responsibleDiscipline.name}
+						</td>
+						
+						<td>@if(cl.requestDate==null) {
+								<em>-</em>
+							} else {@myUtils.DateTimeUtils.getIranianDate(cl.requestDate)}
+							</td>
+						
+						<td>
+							@if(cl.maintenanceStatus==null) {
+								<em>-</em>
+							} else {@cl.maintenanceStatus}
+						</td>
+						
+						<td>
+							@if(cl.holdReason==null) {
+								<em>-</em>
+							} else {@cl.holdReason}
+						</td>
+					</tr>
+				}
+				</tbody>
+			</table>
+			@pager
+			
+	}
+	<script>
+	$(document).ready(function() {
+		@if(currentPage.getTotalRowCount != 0) {
+		var allInputs = $("#filterForm *").filter(":input");
+		allInputs.hide();
+		}
+		$(":input[type='submit']").show();
+		$(document).on('click', 'th > span:first-child', function () {
+			var ps = $(this).parent().offset();
+			var iwidth = $(this).parent().width();
+			var topa = ps.top-80;
+			if(this.id=='requestDate') {
+				iwidth = iwidth + 65;
+				topa = ps.top -120;
+			}
+				
+			var spanId = this.id;
+			//contains() is not supported in chrome
+			if(spanId.indexOf('.') > -1)
+					spanId= spanId.replace(".","_");
+			var spanInput = $(':input#'+spanId);
+			$(spanInput).css({
+			    position: "absolute",
+			    top: topa,
+			    left: ps.left,
+			    width : iwidth
+			});
+		   $(spanInput).toggle();
+		});
+		$("#filterForm select").change(function() {
+			  this.form.submit(); 
+		   });
+
+	});
+	</script>
+}

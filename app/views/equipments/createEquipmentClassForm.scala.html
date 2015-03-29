@@ -1,0 +1,75 @@
+@(newEquipmentClassForm : Form[equipment.EquipmentClass])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("New equipment class") {@Html("")} {
+	<style>
+		body {
+			background-color: #EDEDED;
+		}
+	</style>
+	@form(action = routes.EquipmentClassApplication.save(),
+	'class->"form-horizontal",
+	'role->"form"
+	) {
+			<div class="form-group">
+				<div class="col-lg-4">
+					@inputText(newEquipmentClassForm("name"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("name"),
+					'_showConstraints->true
+					)
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<div class="col-lg-4">
+					@inputText(newEquipmentClassForm("nameCode"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("classCode"),
+					'_showConstraints->true
+					)
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<div class="col-lg-4">
+					@inputText(newEquipmentClassForm("ecType"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("classSubType"),
+					'_showConstraints->true
+					)
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<div class="col-lg-4">
+					@inputText(newEquipmentClassForm("ecTypeCode"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("classSubTypeCode"),
+					'_showConstraints->true
+					)
+				</div>
+			</div>
+				
+			<div class="form-group">
+				<div class="col-lg-4">
+					@select(newEquipmentClassForm("equipmentCategory.id"),
+					options(equipment.EquipmentCategory.options()),
+					'_showConstraints->true,
+					'class->"form-control",
+					'_label->LanguageApplication.message("category")
+					)
+				</div>
+			</div>
+			
+			<div align="center">
+			<input type="submit" value=@LanguageApplication.message("create") 
+			class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+				href="@routes.EquipmentClassApplication.list()"
+				class="btn btn-danger btn-lg" role="button">
+				@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+}

@@ -1,0 +1,7 @@
+@main("Roles") {@Html("")} {
+	<ul>
+	@SecurityRole.find.all().map { sr =>
+						<li>@sr.getName() : @sr.description</li><br/>
+						}
+	</ul>
+ }

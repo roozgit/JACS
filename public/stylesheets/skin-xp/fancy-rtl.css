@@ -1,0 +1,19 @@
+  /*optional: reverse title letters 
+  .fancytree-container.fancytree-rtl .fancytree-title {
+   unicode-bidi: bidi-override; 
+    }
+   */
+    ul.fancytree-container.fancytree-rtl ul {
+      padding: 0 16px 0 0;
+    }
+    ul.fancytree-container.fancytree-rtl li {
+      background-position: right 0;
+      background-image: url("vline-rtl.gif");
+    }
+    .fancytree-container.fancytree-rtl span.fancytree-connector,
+    .fancytree-container.fancytree-rtl span.fancytree-expander,
+    .fancytree-container.fancytree-rtl span.fancytree-icon,
+    .fancytree-container.fancytree-rtl span.fancytree-drag-helper-img,
+    .fancytree-container.fancytree-rtl #fancytree-drop-marker {
+      background-image: url("icons-rtl.gif");
+    }

@@ -1,0 +1,27 @@
+@(cos : com.avaje.ebean.Page[Components])
+
+@main("Found components:") {<div id='tree'></div>} {
+<style>
+	.searchListResult {
+	direction:ltr;
+	@if(session().get("play_user_lang") == "1") {text-align:right;} else {text-align:left;} 
+	}
+	</style>
+<h5>Results format: Component | Subunit | Equipment</h5>
+	<ol>
+	@cos.getList.map {comp =>
+			<li class="searchListResult">
+			<a href="@routes.ComponentApplication.componentIndex(comp.id)">
+			@comp.name</a>
+			| @comp.subunit.name | @comp.subunit.equipment.name
+			</li><br />
+		}
+	</ol>
+ }
+ 
+ 
+ 
+ 
+ 
+ 
+ 

@@ -1,0 +1,74 @@
+@(userId : Long, editShiftForm: Form[Shifts])
+
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("New shift") {@Html("")} {
+	<style>
+		body {
+			background-color: #EDEDED;
+		}
+	</style>
+	@form(action = routes.ShiftApplication.save(userId),
+	'class->"form-horizontal",
+	'role->"form") {
+		<div class="form-group">
+			<div class="col-lg-3">
+				@inputText(editShiftForm("start"),						
+				'class->"form-control",
+				'_showConstraints->false,
+				'_label->LanguageApplication.message("start"),
+				'placeholder->"YYYY/MM/DD"
+				)
+			</div>
+			<script type="text/javascript">
+			Calendar.setup({
+			inputField     :    "start",   // id of the input field
+			button         :    "start",   // trigger for the calendar (button ID)
+       		ifFormat       :    "%Y/%m/%d",       // format of the input field
+      		dateType	   :	'jalali',
+			weekNumbers    : true
+			});
+			</script>
+
+		</div>
+				
+			<div class="form-group">					
+				<div class="col-lg-3">
+					@inputText(editShiftForm("end"),						
+					'class->"form-control",
+					'_showConstraints->false,
+					'_label->LanguageApplication.message("end"),
+					'placeholder->"YYYY/MM/DD"
+					)
+				</div>
+				<script type="text/javascript">
+				Calendar.setup({
+				inputField     :    "end",   // id of the input field
+				button         :    "end",   // trigger for the calendar (button ID)
+	       		ifFormat       :    "%Y/%m/%d",       // format of the input field
+       			dateType	   :	'jalali',
+				weekNumbers    : true
+				});
+				</script>
+			</div>
+			
+			<div class="form-group">					
+				<div class="col-lg-2">
+					@select(editShiftForm("workType.id"),
+					options(WorkTypes.options()),
+					'class->"form-control",
+					'_label->"Work type"
+					)
+				</div>
+			</div>
+			<div align="center">
+			<input type="submit" value=@LanguageApplication.message("create") 
+			class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.ShiftApplication.shiftCalendar(userId)" 
+				class="btn btn-danger btn-lg" role="button">
+				@LanguageApplication.message("cancel")</a>
+		</div>
+		}
+	}

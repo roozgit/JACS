@@ -1,0 +1,160 @@
+@(maintCat : String, wfList : List[maintenance.WorkflowTree], wftForm : Form[maintenance.WorkflowTree])
+
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import be.objectify.deadbolt.java.views.html._
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("Workflow chart") {<div id='adminTree'>
+	<ul id='treeData' style='display: none;'>
+		<li id="workflow" class="folder">@LanguageApplication.message("workflow")
+			<ul>
+				<li id="CMWorkflow"><a 
+				href="@routes.WorkflowApplication.workflowIndex(maintenance.MaintenanceCategories.CORRECTIVE_MAINTENANCE.toString())">
+				Corrective Maintenance(CM)</a></li>
+				
+				<li id="PMWorkflow"><a 
+				href="@routes.WorkflowApplication.workflowIndex(maintenance.MaintenanceCategories.PREVENTIVE_MAINTENANCE.toString())">
+				Preventive Maintenance(PM)</a></li>
+				
+				<li id="PdMWorkflow"><a 
+				href="@routes.WorkflowApplication.workflowIndex(maintenance.MaintenanceCategories.PREDICTIVE_MAINTENANCE.toString())">
+				Predictive Maintenance(PdM)</a></li>
+				
+				<li id="modification"><a 
+				href="@routes.WorkflowApplication.workflowIndex(maintenance.MaintenanceCategories.MODIFICATION.toString())">
+				Modification</a></li>
+
+				<li id="preservation"><a 
+				href="@routes.WorkflowApplication.workflowIndex(maintenance.MaintenanceCategories.PRESERVATION.toString())">
+				Preservation</a></li>
+			</ul>
+		</li>
+		
+		<li><a href="@routes.Application.securityRoleList()">@LanguageApplication.message("viewRoles")</a></li>
+		
+		<li><a 
+		href="@routes.DisciplineApplication.createDiscipline()">
+		@LanguageApplication.message("addDiscipline")</a></li>
+		
+		<li><a 
+		href="@routes.UserApplication.createUser()">
+		@LanguageApplication.message("addPersonnel")</a></li>
+		
+		<li><a 
+		href="@routes.MeasurementUnitApplication.dimensionList()">
+		@LanguageApplication.message("dimensions")</a></li>
+		
+		<li><a 
+		href="@routes.MeasurementUnitApplication.list()">
+		@LanguageApplication.message("measurementUnits")</a></li>
+		
+		<li><a 
+		href="@routes.Application.resolveDBInconsistencies()">@LanguageApplication.message("resolveDBIncosistencies")</a></li>
+		            
+	</ul>
+</div>} {
+	@restrict(la(as("admin"))) {
+		@form(action = routes.WorkflowApplication.save(maintCat),
+	'class->"form",
+	'role->"form"
+	) {
+		<div class="form-group">
+			<fieldset>
+				<div class="row">
+					<div class="col-sm-2">
+						@select(wftForm("treeCategory"),
+						options(maintenance.MaintenanceCategories.values().toList.map(_.toString)),
+						'_label->"Category",
+						'class->"form-control"
+						)
+					</div>
+					
+					<div class="col-sm-2">
+						@select(wftForm("decidingRole.id"),
+						options(SecurityRole.options()),
+						'_label->"Deciding role",
+						'class->"form-control"
+						)
+					</div>
+					
+					<div class="col-sm-2">
+						@select(wftForm("referringRole.id"),
+						options(SecurityRole.options()),
+						'_label->"Referring role",
+						'_default->"",
+						'class->"form-control"
+						)
+					</div>
+					
+					<div class="col-sm-2">
+						@select(wftForm("receivingRole.id"),
+						options(SecurityRole.options()),
+						'_label->"Receiving role",
+						'_default->"",
+						'class->"form-control"
+						)
+					</div>
+					
+					<div class="col-sm-2">
+						@inputText(wftForm("description"),
+						'_label->"Description",
+						'class->"form-control"
+						)
+					</div>
+					
+				</div>
+			</fieldset>
+		</div>
+		<input type="submit" value="@LanguageApplication.message("newWorkflowStage")" class="btn btn-success btn-lg">
+			
+		}
+	}
+	<br /><br/>
+	@if(wfList.size !=0) {
+	@restrict(la(as("admin"))) {
+	<a class="btn btn-danger" id="delWorkflow" href="@routes.WorkflowApplication.deleteWorkflow(wfList(0).treeCategory.toString)">@LanguageApplication.message("deleteWorkflow")</a>
+	<p>@LanguageApplication.message("delWorkflowWarning")</p>}
+	
+	<div id='flowTree'></div>
+	
+	<table class="table table-striped">
+		<thead>
+			<tr>
+			<th>@wfList(0).treeCategory</th>
+			</tr>
+			<tr>
+				<th>Decider</th>
+				<th>Referred by</th>
+				<th>Send to</th>
+				<th>Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			@wfList.map { wfl =>
+			<tr>
+			@if(wfl.decidingRole !=null) {
+			<td>@SecurityRole.find.byId(wfl.decidingRole.id).name</td>
+			} else {<td>NULL</td>}
+			
+			@if(wfl.referringRole !=null) {
+			<td>@SecurityRole.find.byId(wfl.referringRole.id).name</td>
+			} else {<td>NULL</td>}
+			
+			@if(wfl.receivingRole !=null) {
+			<td>@SecurityRole.find.byId(wfl.receivingRole.id).name</td>
+			} else {<td>NULL</td>}
+			
+			<td><a href="@routes.WorkflowApplication.editWorkflow(wfl.id)">@wfl.description</a></td>
+			</tr>
+		}
+		</tbody>
+	} else {<p>No workflow defined</p>}
+	@if(session.get("play_user_lang")=="1") {
+	<script type="text/javascript">
+		$(document).ready(function () {
+				$("#flowTree").find(".fancytree-container").attr("DIR", "RTL").addClass("fancytree-rtl");
+				$("#treeCategory").val("@maintCat");
+		});
+	</script>}
+}

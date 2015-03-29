@@ -1,0 +1,169 @@
+@(parentEquipmentId : Long, currentPage : com.avaje.ebean.Page[Subunits], currentSortBy: String, currentOrder: String, currentFilter: String)
+
+@****************************************
+* Helper generating navigation links    *
+****************************************@
+@link(newPage:Int, newSortBy:String) = @{
+    
+    var sortBy = currentSortBy
+    var order = currentOrder
+    
+    if(newSortBy != null) {
+        sortBy = newSortBy
+        if(currentSortBy == newSortBy) {
+            if(currentOrder == "asc") {
+                order = "desc"
+            } else {
+                order = "asc"
+            }
+        } else {
+            order = "asc"
+        }
+    }
+    
+    // Generate the link
+    routes.SubunitApplication.list(parentEquipmentId,newPage, sortBy, order, currentFilter)    
+}
+
+@**********************************
+* Helper generating table headers *
+***********************************@
+@header(key:String, title:String) = {
+    <th class="@if(key=="name") {col-lg-3} @if(key=="description") {col-lg-5} @if(key=="subunitType") {col-lg-2}">
+        <a href="@link(0, key)">@title
+        <span class="glyphicon @if(currentSortBy == key) {
+        	@if(currentOrder == "asc") {glyphicon-sort-by-attributes} else {glyphicon-sort-by-attributes-alt}
+        	} else {glyphicon-sort}"></span>
+        </a>
+    </th>
+}
+
+@**********************************
+*Pager helper                     *
+**********************************@
+@pager = {<div id="pager" class="pager">
+	            <ul>
+	           		<li class="previous">
+	           		<a href="@link(0,null)"><span @if(session().get("play_user_lang") == "0") {class="fa fa-fast-backward"} else {class ="fa fa-fast-forward"}></span>
+	           		</a></li>
+	            	@if(currentPage.hasPrev) {
+	                    <li class="previous">
+	                        <a href="@link(currentPage.getPageIndex - 1, null)">
+	                        @if(session().get("play_user_lang") == "0") {&larr; @LanguageApplication.message("previous")} else {&rarr; @LanguageApplication.message("previous") }
+	                        </a>
+	                    </li>
+	                } else {
+	                    <li class="previous disabled">
+	                        <a>
+	                        @if(session().get("play_user_lang") == "0") {&larr; @LanguageApplication.message("previous")} else {&rarr; @LanguageApplication.message("previous") }
+	                        </a>
+	                    </li>
+	                }
+	                <li class="current">
+	                    <a>@LanguageApplication.message("displaying") @currentPage.getDisplayXtoYofZ(" " + LanguageApplication.message("to")+" "," "+LanguageApplication.message("of")+" ")</a>
+	                </li>
+	                <li class="next"><a href="@link(currentPage.getTotalPageCount-1,null)">
+	                <span @if(session().get("play_user_lang") == "1") {class="fa fa-fast-backward"} else {class ="fa fa-fast-forward"}></span></a></li>
+	                @if(currentPage.hasNext) {
+	                    <li class="next">
+	                        <a href="@link(currentPage.getPageIndex + 1, null)">
+	                        @if(session().get("play_user_lang") == "1") {@LanguageApplication.message("next") &larr;} else {@LanguageApplication.message("next") &rarr;}
+	                        </a>
+	                    </li>
+	                } else {
+	                    <li class="next disabled">
+	                        <a>
+	                        @if(session().get("play_user_lang") == "1") {@LanguageApplication.message("next") &larr;} else {@LanguageApplication.message("next") &rarr;}
+	                        </a>
+	                    </li>
+	                }
+	                
+	            </ul>
+	        </div>
+	       }
+	       
+@main("Subunit list: "+currentFilter) {<div id='tree'></div>} {
+
+	<ol class="breadcrumb">
+	<li><a href="@routes.InstallationApplication.installationIndex()"><strong>@equipment.Equipments.find.byId(parentEquipmentId).section.plant.installation.name</strong></a></li>
+	<li><a href="@routes.PlantApplication.list(0, "name", "asc", "")"><small>@LanguageApplication.message("plants")</small></a></li>
+	<li><a href="@routes.PlantApplication.plantIndex(equipment.Equipments.find.byId(parentEquipmentId).section.plant.id)"><strong>@equipment.Equipments.find.byId(parentEquipmentId).section.plant.name</strong></a></li>
+	<li><a href="@routes.SectionApplication.list(equipment.Equipments.find.byId(parentEquipmentId).section.plant.id,0,"name","asc","")"><small>@LanguageApplication.message("sections")</small></a></li>
+	<li><a href="@routes.SectionApplication.sectionIndex(equipment.Equipments.find.byId(parentEquipmentId).section.id)"><strong>@equipment.Equipments.find.byId(parentEquipmentId).section.name</strong></a></li>
+	<li><a href="@routes.EquipmentApplication.list(equipment.Equipments.find.byId(parentEquipmentId).section.id)"><small>@LanguageApplication.message("equipments")</small></a></li>
+	<li><a href="@routes.EquipmentApplication.equipmentIndex(parentEquipmentId)"><strong>@equipment.Equipments.find.byId(parentEquipmentId).name</strong></a></li>
+	<li><small>@LanguageApplication.message("subunits")</small></li>
+	</ol>
+	<br />
+
+	<a title="New subunit"
+	class="btn btn-primary btn-lg" href="@routes.SubunitApplication.createSubunit(parentEquipmentId)">@LanguageApplication.message("addSubunit")
+			<span class="glyphicon glyphicon-plus"></span></a>
+	<br />	
+	@if(flash.containsKey("success")) {
+        <div class="alert alert-success">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+	    }
+	 @if(flash.containsKey("error")) {
+       <div class="alert alert-danger">
+           <strong>ERROR: </strong> @flash.get("error")
+       </div>
+  		}
+	<br />
+	
+	<form class="form-inline" role="form" action="@link(0, "name")" method="GET">
+		<div class="form-group">
+			<input type="hidden" value="@parentEquipmentId" name="peid">			
+			<input class="form-control" type="search" id="searchbox" name="f" value="@currentFilter" placeholder="@LanguageApplication.message("filterBy")">
+		</div>
+		<div class="form-group">
+			<input type="submit" id="searchsubmit" value=@LanguageApplication.message("filter") class="btn btn-success">
+		</div>
+	</form>
+	<br />
+	
+	@if(currentPage.getTotalRowCount == 0) {
+		<div class="well well-lg">
+	  		<em>@LanguageApplication.message("nothingToDisplay")</em>
+	    </div> 
+	   } else {   
+			<table class="table table-striped">			
+				<thead>
+					<tr>
+						@header("name", LanguageApplication.message("name"))
+						@header("description", LanguageApplication.message("description"))
+						@header("subunitType", LanguageApplication.message("category"))
+					</tr>
+				</thead>
+				<tbody>	
+					@currentPage.getList.map { cl =>
+					<tr>
+						<td @if(session.get("play_user_lang") == "1") {style="direction:ltr; text-align:right;"}>
+							<a href="@routes.SubunitApplication.subunitIndex(cl.id)">@cl.name</a>
+						</td>
+						
+						<td>
+							@if(cl.description==null) {
+								<em>-</em>
+							} else {@cl.description}
+						</td>
+						
+						<td>
+							@if(cl.subunitType==null) {
+								<em>-</em>
+							} else {@cl.subunitType}
+						</td>
+						
+						<td>
+							<a class="btn btn-danger btn-sm"
+							href="@routes.SubunitApplication.delete(parentEquipmentId, cl.id)">
+							<span class="fa fa-trash"></span></a>
+						</td>
+					</tr>
+				}
+				</tbody>
+			</table>
+			@pager
+	}
+}

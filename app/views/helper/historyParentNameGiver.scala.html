@@ -1,0 +1,41 @@
+@(history : History)
+
+@{
+var pl:Integer=3
+var pi:Long=1
+if(history.parentInstallation!=null) {
+	pl=3
+	pi=1
+	Installations.find.byId(pi).name  + "--L3"
+	} else {
+	if(history.parentPlant!=null) {
+		pl=4
+		pi=history.parentPlant.id
+		Plants.find.byId(pi).name + "--L4"
+		} else {
+		if(history.parentSection!=null) {
+			pl=5
+			pi = history.parentSection.id
+			Sections.find.byId(pi).name + "--L5"
+			} else {
+			if(history.parentEquipment!=null) {
+				pl=6
+				pi=history.parentEquipment.id
+				equipment.Equipments.find.byId(pi).name + "--L6"
+				} else {
+				if(history.parentSubunit!=null) {
+					pl=7
+					pi=history.parentSubunit.id
+					Subunits.find.byId(pi).name + "--L7"
+					} else {
+					if(history.parentComponent!=null) {
+						pl=8
+						pi=history.parentComponent.id
+						Components.find.byId(pi).name + "--L8"
+						}
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,34 @@
+@(id : Long, mid : Long, mpForm: Form[maintenance.MaintenancesParts])
+
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("Edit maintenance<->part") {@Html("")} {
+	<style>
+		body {
+			background-color: #EDEDED;
+		}
+	</style>
+	@form(action = routes.MaintenanceApplication.updateMaintenancesParts(id, mid),
+	'class->"form-horizontal",
+	'role->"form"
+	) {
+		<div class="form-group">
+			<div class="col-lg-2">
+				@inputText(mpForm("quantity"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("quantity"),
+				'_showConstraints->true
+				)
+			
+			</div>
+		</div>
+		<div align="center">
+			<input type="submit" value="@LanguageApplication.message("update")" class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="/maint?maintID=@mid#tabs-maintenanceReport" 
+				class="btn btn-danger btn-lg" role="button">
+			@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+}

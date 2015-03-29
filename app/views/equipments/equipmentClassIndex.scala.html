@@ -1,0 +1,152 @@
+@(ec: equipment.EquipmentClass, eqs : List[equipment.Equipments]) 
+
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import be.objectify.deadbolt.java.views.html._
+
+@main(ec.name) {@Html("")} {
+	<div class="text-center">
+	<h1>
+		<span class="label label-default">@ec.name</span>
+	</h1>
+	<h2>@ec.ecType</h2>
+	</div>
+	<br />
+	
+	<div class="col-lg-6">
+		<div class="btn btn-group">
+			@restrict(la(as("admin"),as("planner"))) {
+				<a class="btn btn-warning btn-lg"  title="Edit class"
+					href="@routes.EquipmentClassApplication.editEquipmentClass(ec.id)">@LanguageApplication.message("edit")
+					<span class="glyphicon glyphicon-edit"></span></a>}
+					
+				<a class="btn btn-lg btn-default" title="Back to class list"
+						href="@routes.EquipmentClassApplication.list()">
+						<span 
+					class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}">
+						</span></a>
+			</div>
+			<br />	
+			@if(flash.containsKey("success")) {
+		        <div class="alert alert-success">
+		            <strong>Done!</strong> @flash.get("success")
+		        </div>
+			    }
+		 	@if(flash.containsKey("error")) {
+		      <div class="alert alert-danger">
+		          <strong>ERROR: </strong> @flash.get("error")
+		      </div>
+		    }
+		    <br />
+		    <p>@LanguageApplication.message("boundary")</p>
+		    <img alt="class boundary" class="img-responsive"
+		    src ="@routes.Assets.at("images/ec/"+ec.name.toLowerCase()+"-boundary.jpg")"></img>
+		    <br />
+		    <p>@LanguageApplication.message("subdivision")</p>
+		    <img alt="class subdivision" class="img-responsive"
+		    src ="@routes.Assets.at("images/ec/"+ec.name.toLowerCase()+"-subdivision.jpg")"></img>
+	</div>
+	
+	<div class="col-lg-6">
+		 <!-- tabs -->
+		<div id="tab-container" class="tab-container">
+			<ul class="etabs">
+				<li class="tab"><a href="#tabs-equipments-list">@LanguageApplication.message("classEquipments")</a>
+				<li class="tab"><a href="#tabs-gen-fail">@LanguageApplication.message("failAspects")</a></li>			
+				<li class="tab"><a href="#tabs-gen-maint">@LanguageApplication.message("maintAspects")</a></li>
+				<li class="tab"><a href="#tabs-gen-operation">@LanguageApplication.message("operationAspects")</a></li>
+				<li class="tab"><a href="#tabs-classLevelPMs">@LanguageApplication.message("pmRoutines")</a></li>
+				<li class="tab"><a href="#tabs-description">@LanguageApplication.message("description")</a></li>
+			</ul>
+			
+			<!-- Equipment list -->
+			<div id="tabs-equipments-list">
+				<a href="#" class="list-group-item active text-center">@LanguageApplication.message("equipments")</a>
+ 				@eqs.map { eq =>
+ 				<a class="list-group-item text-left" style="direction:ltr;"
+ 				href="@routes.EquipmentApplication.equipmentIndex(eq.id)">@eq.name</a>
+ 			}
+			</div>
+			<!-- Failure aspects -->
+			<div id="tabs-gen-fail">
+				<label>@LanguageApplication.message("possibleFailureModes")</label>
+				@if(ec.possibleFailureModes==null) {
+				<em>-</em>} else {
+					<ul>
+					@ec.possibleFailureModes.map { pfm =>
+					<li>@pfm.failureModeCode : @pfm.description</li>
+					}
+					</ul>
+				}
+			</div>
+			
+			<!-- Maintenance aspects -->
+			<div id="tabs-gen-maint">
+				<label>@LanguageApplication.message("generalMaintMethod")</label>
+					@if(ec.generalMaintenaceMethod==null) {
+						<em>-</em>} else {
+						<pre>@ec.generalMaintenaceMethod</pre>
+					}
+				<br />
+				<label>@LanguageApplication.message("generalMaintSafety")</label>
+					@if(ec.generalMaintenaceSafetyRequirements==null) {
+						<em>-</em>} else {
+						<pre>@ec.generalMaintenaceSafetyRequirements</pre>
+					}
+				
+				<br />
+				<label>@LanguageApplication.message("generalMaintCourses")</label>
+					@if(ec.generalMaintenanceRequiredCourses==null) {
+						<em>-</em>} else {
+						<pre>@ec.generalMaintenanceRequiredCourses</pre>
+					}
+			</div>
+			
+			<!-- Operation aspects -->
+			<div id="tabs-gen-operation">
+				<label>@LanguageApplication.message("generalOperationMethod")</label>
+				@if(ec.generalOperationMethod==null) {
+					<em>-</em>} else {
+					<pre>@ec.generalOperationMethod</pre>
+				}
+				<br />
+				<label>@LanguageApplication.message("generalOperationSafety")</label>
+				@if(ec.generalOperationSafetyRequirements==null) {
+					<em>-</em>} else {
+					<pre>@ec.generalOperationSafetyRequirements</pre>
+				}
+				<br />
+				<label>@LanguageApplication.message("generalOperationCourses")</label>
+				@if(ec.generalOperatorRequiredCourses==null) {
+					<em>-</em>} else {
+					<pre>@ec.generalOperatorRequiredCourses</pre>
+				}
+			</div>
+			
+			<!-- Class level PMs -->
+			<div id="tabs-classLevelPMs">
+				@if(ec.classPMList==null) {
+					<em>-</em>} else {
+					<ul>
+					@ec.classPMList.map {cpl => 
+						<li><a href="@routes.PreventiveMaintenanceApplication.pmIndex(cpl.id)">
+						@cpl.name</a></li>
+					}
+					</ul>
+					<br />
+				<a class="btn btn-success" 
+				href="@routes.PreventiveMaintenanceApplication.createPM(-1,ec.id)">
+				@LanguageApplication.message("newRoutine")</a>
+				}
+			</div>
+			
+			<div id="tabs-description">
+				<label>@LanguageApplication.message("description")</label>
+				@if(ec.ecTypeDescription==null) {
+					<em>-</em>} else {
+					<pre>@ec.ecTypeDescription</pre>
+				}
+			</div>
+						
+		</div>
+	</div>
+ }

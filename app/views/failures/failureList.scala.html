@@ -1,0 +1,257 @@
+@(equipmentId : Long, currentPage : com.avaje.ebean.Page[failure.Failures], currentSortBy: String, currentOrder: String, currentFilter1: String, currentFilter2: String, currentFilter3: String, currentFilter4: String, currentFilter5: String, currentFilter6: String, currentFilter7: String, currentFilter8: String,currentFilter9 : String)
+
+@****************************************
+* Helper generating navigation links    *
+****************************************@
+@link(newPage:Int, newSortBy:String) = @{
+    
+    var sortBy = currentSortBy
+    var order = currentOrder
+    
+    if(newSortBy != null) {
+        sortBy = newSortBy
+        if(currentSortBy == newSortBy) {
+            if(currentOrder == "asc") {
+                order = "desc"
+            } else {
+                order = "asc"
+            }
+        } else {
+            order = "asc"
+        }
+    }
+    
+    // Generate the link
+    routes.FailureApplication.list(equipmentId, newPage, sortBy, order, currentFilter1, currentFilter2, currentFilter3, currentFilter4, currentFilter5, currentFilter6, currentFilter7,currentFilter8,currentFilter9)    
+}
+
+@**********************************
+* Helper generating table headers *
+***********************************@
+@header(key:String, title:String) = {
+    <th style="font-size:.8em" class=col-lg-1">
+    	<span id="@key">@title</span>
+        <a href="@link(0, key)">
+        <span class="glyphicon @if(currentSortBy == key) {
+        	@if(currentOrder == "asc") {glyphicon-sort-by-attributes} else {glyphicon-sort-by-attributes-alt}
+        	} else {glyphicon-sort}"></span>
+        </a>
+    </th>
+}
+
+@**********************************
+*Pager helper                     *
+**********************************@
+@pager = {<div id="pager" class="pager">
+	            <ul>
+	           		<li class="previous">
+	           		<a href="@link(0,null)"><span @if(session().get("play_user_lang") == "0") {class="fa fa-fast-backward"} else {class ="fa fa-fast-forward"}></span>
+	           		</a></li>
+	            	@if(currentPage.hasPrev) {
+	                    <li class="previous">
+	                        <a href="@link(currentPage.getPageIndex - 1, null)">
+	                        @if(session().get("play_user_lang") == "0") {&larr; @LanguageApplication.message("previous")} else {&rarr; @LanguageApplication.message("previous") }
+	                        </a>
+	                    </li>
+	                } else {
+	                    <li class="previous disabled">
+	                        <a>
+	                        @if(session().get("play_user_lang") == "0") {&larr; @LanguageApplication.message("previous")} else {&rarr; @LanguageApplication.message("previous") }
+	                        </a>
+	                    </li>
+	                }
+	                <li class="current">
+	                    <a>@LanguageApplication.message("displaying") @currentPage.getDisplayXtoYofZ(" " + LanguageApplication.message("to")+" "," "+LanguageApplication.message("of")+" ")</a>
+	                </li>
+	                <li class="next"><a href="@link(currentPage.getTotalPageCount-1,null)">
+	                <span @if(session().get("play_user_lang") == "1") {class="fa fa-fast-backward"} else {class ="fa fa-fast-forward"}></span></a></li>
+	                @if(currentPage.hasNext) {
+	                    <li class="next">
+	                        <a href="@link(currentPage.getPageIndex + 1, null)">
+	                        @if(session().get("play_user_lang") == "1") {@LanguageApplication.message("next") &larr;} else {@LanguageApplication.message("next") &rarr;}
+	                        </a>
+	                    </li>
+	                } else {
+	                    <li class="next disabled">
+	                        <a>
+	                        @if(session().get("play_user_lang") == "1") {@LanguageApplication.message("next") &larr;} else {@LanguageApplication.message("next") &rarr;}
+	                        </a>
+	                    </li>
+	                }
+	                
+	            </ul>
+	        </div>
+	       }
+
+@main("Failure list") {@Html("")} {
+	
+	<form id="filterForm" class="form-inline" role="form" action="@link(0, "name")" method="GET">
+		<div class="form-group">
+			<input type="hidden" id="eqId" name="eqId" value=@equipmentId>
+			<input class="form-control" type="search" id="failHistory_start" name="f1" value="@currentFilter1" placeholder=@LanguageApplication.message("start")>
+			<select id="severity" class="form-control" name="f2">
+				<option></option>
+			    @for(cType <- failure.Severity.values()){
+			        <option @if(cType.name()==currentFilter2) {selected}>@cType.name()</option>
+			    }
+			</select>
+			
+			<select id="functionImpact" class="form-control" name="f3">
+				<option></option>
+			    @for(cType <- Impacts.values()){
+			        <option @if(cType.name()==currentFilter3) {selected}>@cType.name()</option>
+			    }
+			</select>
+			
+			<select id="operationImpact" class="form-control" name="f4">
+				<option></option>
+			    @for(cType <- Impacts.values()){
+			        <option @if(cType.name()==currentFilter4) {selected}>@cType.name()</option>
+			    }
+			</select>
+			
+			<select id="safetyImpact" class="form-control" name="f5">
+				<option></option>
+			    @for(cType <- Impacts.values()){
+			        <option @if(cType.name()==currentFilter5) {selected}>@cType.name()</option>
+			    }
+			</select>
+			
+			<select id="failureMode_failureModeCode" class="form-control" name="f6">
+				<option></option>
+			    @failure.FailureModes.options().map { fm =>
+			        <option value=@fm._1 @if(fm._1==currentFilter6) {selected}>@fm._2</option>
+			    }
+			</select>
+			
+			<select id="failureMechanism_notation" class="form-control" name="f7">
+				<option></option>
+			    @failure.FailureMechanisms.options().map { fm2 =>
+			        <option value=@fm2._1 @if(fm2._1==currentFilter7) {selected}>@fm2._2</option>
+			    }
+			</select>
+			
+			<select id="detectionMethod" class="form-control" name="f8">
+				<option></option>
+			    @for(cType <- failure.DetectionMethods.values()){
+			        <option @if(cType.name()==currentFilter8) {selected}>@cType.name()</option>
+			    }
+			</select>
+			
+			<input class="form-control" type="search" id="comments" name="f9" value="@currentFilter9" placeholder=@LanguageApplication.message("comments")>
+		</div>
+		<div class="form-group">
+			<input type="submit" id="searchsubmit" value="@LanguageApplication.message("filter")" class="btn btn-success">
+			@LanguageApplication.message("filterGuide")
+		</div>
+	</form>
+	<br />
+	@if(currentPage.getTotalRowCount == 0) {
+		<div class="well well-lg">
+	  		<em>@LanguageApplication.message("nothingToDisplay")</em>
+	    </div> 
+	   } else {
+	   		@pager
+			<table class="table table-striped">			
+				<thead>
+					<tr>
+						@header("id","ID")
+						@header("failHistory.start", LanguageApplication.message("start"))
+						@header("failHistory.end", LanguageApplication.message("end"))
+						@header("severity", LanguageApplication.message("severity"))
+						@header("functionImpact",LanguageApplication.message("functionImpact"))
+						@header("operationImpact", LanguageApplication.message("operationImpact"))						
+						@header("safetyImpact", LanguageApplication.message("safetyImpact"))
+						@header("failureMode.failureModeCode", LanguageApplication.message("failureModeCode"))
+						@header("failureMechanism.notation", LanguageApplication.message("failureMechanism"))
+						@header("detectionMethod",LanguageApplication.message("detectionMethod"))
+						@header("comments",LanguageApplication.message("comments"))
+						<th>Level</th>
+					</tr>
+				</thead>
+				<tbody>	
+					@currentPage.getList.map { cl =>
+					<tr>
+						<td>@cl.id</td>
+						<td>
+						@if(cl.failHistory.parentEquipment!=null) {<a href="@routes.FailureApplication.failureIndex(6,equipmentId, cl.id)">
+							@myUtils.DateTimeUtils.getIranianDateTime(cl.failHistory.start)</a>
+							}
+						@if(cl.failHistory.parentSubunit!=null) {<a href="@routes.FailureApplication.failureIndex(7,cl.failHistory.parentSubunit.id, cl.id)">
+							@myUtils.DateTimeUtils.getIranianDateTime(cl.failHistory.start)</a>
+							}
+						@if(cl.failHistory.parentComponent!=null) {<a href="@routes.FailureApplication.failureIndex(8,cl.failHistory.parentComponent.id, cl.id)">
+							@myUtils.DateTimeUtils.getIranianDateTime(cl.failHistory.start)</a>
+						}
+						</td>
+						
+						<td>@myUtils.DateTimeUtils.getIranianDateTime(cl.failHistory.end)</td>
+						<td>@cl.severity</td>
+						<td>@cl.functionImpact</td>
+						<td>@cl.operationImpact</td>
+						<td>@cl.safetyImpact</td>
+						<td>
+							@if(cl.failureMode==null) {
+								<em>-</em>
+							} else {@cl.failureMode.failureModeCode}
+						</td>
+						
+						<td>
+							@if(cl.failureMechanism==null) {
+								<em>-</em>
+							} else {@cl.failureMechanism.notation - @cl.failureMechanism.subdivisionNotation}
+						</td>
+						
+						<td>@cl.detectionMethod</td>
+						<td>@cl.comments</td>
+						<td class="ltrInRtl">@if(cl.failHistory.parentEquipment!=null) {<a href="@routes.EquipmentApplication.equipmentIndex(cl.failHistory.parentEquipment.id)">
+							@cl.failHistory.parentEquipment.name</a>--L6}
+							
+							@if(cl.failHistory.parentSubunit!=null) {<a href="@routes.SubunitApplication.subunitIndex(cl.failHistory.parentSubunit.id)">
+							@cl.failHistory.parentSubunit.name</a>--L7}
+							
+							@if(cl.failHistory.parentComponent!=null) {<a href="@routes.ComponentApplication.componentIndex(cl.failHistory.parentComponent.id)">
+							@cl.failHistory.parentComponent.name</a>--L8}
+						</td>
+					</tr>
+				}
+				</tbody>
+			</table>
+			@pager
+			
+	}
+	<script>
+	$(document).ready(function() {
+		@if(currentPage.getTotalRowCount != 0) {
+		var allInputs = $("#filterForm *").filter(":input");
+		allInputs.hide();
+		}
+		$(":input[type='submit']").show();
+		$(document).on('click', 'th > span:first-child', function () {
+			var ps = $(this).parent().offset();
+			var iwidth = $(this).parent().width();
+			var topa = ps.top-80;				
+			var spanId = this.id;
+			if(this.id=='failHistory.start') {
+				iwidth = iwidth + 65;
+				topa = ps.top -120;
+			}
+			//contains() is not supported in chrome
+			if(spanId.indexOf('.') > -1)
+					spanId= spanId.replace(".","_");
+			var spanInput = $(':input#'+spanId);
+			$(spanInput).css({
+			    position: "absolute",
+			    top: topa,
+			    left: ps.left,
+			    width : iwidth
+			});
+		   $(spanInput).toggle();
+		});
+		$("#filterForm select").change(function() {
+			  this.form.submit(); 
+		   });
+
+	});
+	</script>
+}

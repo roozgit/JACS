@@ -1,0 +1,135 @@
+@(company : Companies,repsList : List[Companies])
+
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import be.objectify.deadbolt.java.views.html._
+
+@main(company.name) {@Html("")} {
+	<div class="row">
+	<div class="col-lg-10">
+		<div align="center">
+			<h1><span class="label label-default">@company.name</span></h1>
+			 <h3>@company.companyType</h3>
+		</div>
+		<div class="btn btn-group">
+			<a class="btn btn-warning btn-lg"
+				 		href="@routes.CompanyApplication.editCompany(company.id)">@LanguageApplication.message("edit")
+				 		<span class="glyphicon glyphicon-edit"></span></a>
+		
+			<a class="btn btn-default btn-lg" title="Back to company list"
+			href="@routes.CompanyApplication.list()">
+			<span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span></a>
+		</div>
+	</div>
+	<div class=" col-lg-2 pull-left">
+		<img class="img-responsive" src="@routes.CompanyApplication.renderImage(company.id)"
+		height=100 width=100 alt="Logo"></img>
+		@if(company.companyLogo!=null) {
+		@restrict(la(as("admin"))) {
+		<a class="btn btn-sm" style="display:inline;" href="@routes.CompanyApplication.deleteAssociation(company.id)">
+		<span class="glyphicon glyphicon-remove"></span></a>}}
+	</div>
+	</div>
+	<br />
+	@if(flash.containsKey("success")) {
+        <div class="alert alert-success">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+	    }
+ 	@if(flash.containsKey("error")) {
+      <div class="alert alert-danger">
+          <strong>ERROR: </strong> @flash.get("error")
+      </div>
+    }
+    <br/>
+    <div class="row">
+    	<div class="col-lg-6">
+    		<div class="well well-sm"><h4>@company.description</h4></div>
+    	</div>
+    	<div class="col-lg-6">
+    		<p>@LanguageApplication.message("country"): @company.country</p>
+    		<p>@LanguageApplication.message("website"): @company.website</p>
+    		@LanguageApplication.message("contactPerson"): @company.contactPerson</p>
+    	</div>
+    </div>
+    <div class="row">
+    	<div class="col-lg-6">
+    		<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>@LanguageApplication.message("tel")</th>
+						<th>@LanguageApplication.message("fax")</th>
+						<th>@LanguageApplication.message("email")</th>
+					</tr>
+				</thead>
+				<tbody>
+				<tr>
+					<td>@company.telephone1</td>
+					<td>@company.fax1</td>
+					<td rowspan="3">@company.email</td>
+				</tr>
+				<tr>
+					<td>@company.telephone2</td>
+					<td>@company.fax2</td>
+					
+				</tr>
+				<tr>
+					<td>@company.telephone3</td>
+					<td>@company.fax3</td>
+					
+				</tr>	
+				</tbody>
+			</table>
+    	</div>
+    	<div class="col-lg-6">
+    		<table class="table">
+    			<tr><td colspan="3">@LanguageApplication.message("address"):@company.address1</td></tr>
+				<tr><td colspan="3">@LanguageApplication.message("address"):@company.address2</td></tr>
+				<tr><td colspan="3">@LanguageApplication.message("address"):@company.address3</td></tr>
+    		</table>
+    	</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-6">
+			<p>@LanguageApplication.message("comments"):</p>
+			<pre>@company.comments</pre>
+		</div>
+		
+	
+		<div class="col-lg-3">
+			<h4>@LanguageApplication.message("representatives"):</h4>
+			@repsList.map { rcom =>
+			<ul>
+				<li>@rcom.name</li>
+			</ul>
+			}
+			
+		</div>
+		<div class="col-lg-3">
+		<h4>@LanguageApplication.message("headcompanies"):</h4>
+			@company.headCompanies.map { hcom =>
+			<ul>
+				<li>@hcom.name</li>
+			</ul>
+				}
+		</div>
+	</div>
+	<!-- Upload image form -->
+	
+	@if(company.companyLogo==null) {
+	<div class="row">
+		<div class="col-lg-12"><hr></div>
+			<div class="col-lg-8">
+			<h4>@LanguageApplication.message("uploadLogo")</h4>
+			<form class="form-inline" role="form" method="POST" enctype="multipart/form-data"
+				action="@routes.CompanyApplication.upload(company.id)">
+				<div class="form-group">
+					<input type="file" name="file" class="btn btn-default">
+				</div>
+				<button type="submit" class="btn btn-default btn-md" title=@LanguageApplication.message("upload")>
+					<span class="fa fa-upload"></span>
+				</button>
+			</form>
+			</div>
+	</div>
+	}
+}

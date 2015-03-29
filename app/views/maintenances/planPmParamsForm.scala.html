@@ -1,0 +1,90 @@
+@(level : String, pmParentId : Long, pmRoutineId : Long)
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("PM planning parameters") {@Html("")} {
+
+	@if(flash.containsKey("error")) {
+      <div class="alert alert-danger">
+          <strong>ERROR: </strong> @flash.get("error")
+      </div>
+      <br />
+    }
+    
+    @if(flash.containsKey("success")) {
+      <div class="alert alert-success">
+          <strong>SUCCESS: </strong> @flash.get("success")
+      </div>
+      <br />
+    }
+	<h6>@LanguageApplication.message("selectPmParams") <a href="@routes.PreventiveMaintenanceApplication.pmIndex(pmParentId)">@LanguageApplication.message("return")</a></h6>
+		 <form class="form-horizontal" role="form" id="pmPlanForm" 
+		 method="POST" action="#">
+		
+			<div class="form-group">
+				<div class="col-lg-2">
+				<label for="start">@LanguageApplication.message("start")</label>
+				<input type="text" id="start" name="start">
+					
+				</div>
+				<script type="text/javascript">
+					Calendar.setup({
+					inputField     :    "start",   // id of the input field
+					button         :    "start",   // trigger for the calendar (button ID)
+		       		ifFormat       :    "%Y/%m/%d",       // format of the input field
+        			dateType	   :	'jalali',
+					weekNumbers    : true
+					});
+				</script>
+			
+				<div class="col-lg-2">
+				<label for="end">@LanguageApplication.message("end")</label>
+					<input type="text" id="end" name="end">
+				</div>
+				<script type="text/javascript">
+					Calendar.setup({
+					inputField     :    "end",   // id of the input field
+					button         :    "end",   // trigger for the calendar (button ID)
+		       		ifFormat       :    "%Y/%m/%d",       // format of the input field
+	       			dateType	   :	'jalali',
+					weekNumbers    : true
+					});
+				</script>
+			</div>
+			<div class="form-group">
+				<div class="col-lg-4">
+					<label for="pmPerDay">@LanguageApplication.message("possiblePmsPerDay")</label>
+					<input class="form-control" id="pmPerDay" name="pmPerDay" placeholder="Number of PMs per day">
+				</div>
+				<div class="col-lg-4">
+					<label for="pmPerDay">@LanguageApplication.message("ttr")</label>
+					<input class="form-control" id="routineTTR" name="routineTTR" placeholder="TTR">
+				</div>
+			</div>	
+			
+			<input type="submit" class = "btn btn-success btn-lg" value="@LanguageApplication.message("showProposedPmCalendar")">
+			</form>
+			<br/>
+			<div id='pmPlanCalendar'></div>
+			<br />
+			<p>@LanguageApplication.message("savePlanGuide")
+			<!-- save plan form -->
+			<form id="savePlanGroup" action="" class="form-horizontal" style="display:none;">
+				<div class="form-group">
+					<div class="col-lg-4">
+						<label for="periods">@LanguageApplication.message("periods")</label>
+						<input class="form-control" id="periods" name="periods" placeholder="Number of PM periods">
+					</div>
+					<div class="col-lg-4">
+						<label for="isProject">@LanguageApplication.message("isProject")</label>
+						<input type="checkbox" id="isProject" name="isProject" value="">
+					</div>
+				</div>				
+				<input type=submit class="btn btn-success btn-lg" id="submitJsonCal" value="@LanguageApplication.message("accept")">
+			</form> <!-- End of save plan form -->
+			
+			<!-- SCRIPTS -->
+    		<script type="text/javascript" src="@routes.Assets.at("jfullcalendar/fullcalendar/fullcalendar.min.js")"></script>
+   			<script type="text/javascript" src="@routes.Assets.at("javascripts/renderCalendar.js")"></script>
+	
+	}

@@ -1,0 +1,112 @@
+@(id : Long, installationForm: Form[Installations])
+
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("Edit installation") {@Html("")} {
+	<style>
+		body {
+			background-color: #EDEDED;
+		}
+	</style>
+	
+	@form(action = routes.InstallationApplication.update(id),
+		'class->"form-horizontal",
+		'role->"form"	 
+	 ) {
+	
+		<div class="form-group">
+			<div class="col-lg-3">
+				@inputText(installationForm("name"),
+				'class->"form-control",
+				'_showConstraints->true,
+				'_label->LanguageApplication.message("name")
+				)
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-lg-8">
+				@inputText(installationForm("description"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("description")
+				)
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-lg-2">
+				@inputText(installationForm("soilType"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("soilType")
+					)
+			</div>
+			
+			<div class="col-lg-2">
+				@select(installationForm("soilCorrosiveness"),
+					options(Corrosiveness.values().toList.map(_.toString)),
+					'class->"form-control",
+					'_label->LanguageApplication.message("soilCorrosiveness")
+					)
+			</div>
+			
+			<div class="col-lg-2">
+				@inputText(installationForm("earthquakeZone"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("earthquakeZone")
+					)
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-lg-3">
+				@inputText(installationForm("minHumidity"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("minHumidity"),
+					'_showConstraints->true
+					)
+			</div>
+			
+			<div class="col-lg-3">
+				@inputText(installationForm("maxHumidity"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("maxHumidity"),
+					'_showConstraints->true
+					)
+			</div>
+			
+			<div class="col-lg-3">
+				@inputText(installationForm("minTemperature"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("minTemperature"),
+					'_showConstraints->true
+					)
+			</div>
+			
+			<div class="col-lg-3">
+				@inputText(installationForm("maxTemperature"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("maxTemperature"),
+					'_showConstraints->true
+					)
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-lg-6">
+				@textarea(installationForm("comments"),
+				'class->"form-control",
+				'rows->"5",
+				'_label->LanguageApplication.message("comments")
+				)
+			</div>
+		</div>
+		
+		<div align="center">
+			<input type="submit" value="@LanguageApplication.message("update")" class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.InstallationApplication.installationIndex()" 
+				class="btn btn-danger btn-lg" role="button">
+			@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+}

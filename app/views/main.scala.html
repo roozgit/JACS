@@ -1,0 +1,372 @@
+@(title: String)(sidebar : Html=Html(""))(content: Html)
+
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import be.objectify.deadbolt.java.views.html._
+
+<!DOCTYPE HTML>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<html>
+<head>
+	<link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">	
+	
+	
+	<link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("css/bootstrap.min.css"))'>
+    <link rel="stylesheet" media="screen" href='@routes.WebJarAssets.at(WebJarAssets.locate("css/bootstrap-theme.min.css"))'>
+    <link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("jquery-ui/1.11.2/jquery-ui.min.css"))'>
+    <link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("jquery-ui.theme.css"))'>
+    <link rel="stylesheet" type="text/css" media="screen" href='@routes.WebJarAssets.at(WebJarAssets.locate("css/font-awesome.min.css"))'>
+
+	@if(session().get("play_user_lang") == "1") {
+		<link rel="stylesheet" type="text/css" media="screen"
+		href="@routes.Assets.at("stylesheets/skin-xp/fancy-rtl.css")">
+		<link rel="stylesheet" type="text/css" media="screen"
+		href="@routes.Assets.at("stylesheets/bootstrap-rtl.min.css")">
+	}
+	
+	<link rel="stylesheet" type="text/css" media="screen"
+		href='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.contextMenu.css"))'>
+		
+	
+	<link rel="stylesheet" type="text/css" media="screen"
+		href="@routes.Assets.at("stylesheets/aqua/theme.css")">
+	
+	<link rel="stylesheet" type="text/css" media="screen"
+		href="@routes.Assets.at("stylesheets/skin-xp/ui.fancytree.css")">
+	
+	<link rel="stylesheet" type="text/css" media="screen"
+		href="@routes.Assets.at("stylesheets/skin-xp/ui.fancytree-org.css")">
+
+	<link rel="stylesheet" media="screen" 
+	href="@routes.Assets.at("jfullcalendar/fullcalendar/fullcalendar.css")">
+	
+	<link rel="stylesheet" type="text/css" media="screen"
+		href='@routes.WebJarAssets.at(WebJarAssets.locate("select2.css"))'>
+	
+	<link rel="stylesheet" type="text/css" media="screen"
+		href='@routes.WebJarAssets.at(WebJarAssets.locate("select2-bootstrap.css"))'>
+	
+	<link rel="stylesheet" type="text/css" media="screen"
+		href='@routes.WebJarAssets.at(WebJarAssets.locate("css/bootstrap-editable.css"))'>
+		
+	<link rel="stylesheet" type="text/css"
+		href="@routes.Assets.at("stylesheets/main.css")">
+
+<!-- SCRIPTS -->
+	<script type="text/javascript" src="@routes.Application.javascriptRoutes()" defer></script>
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))'></script>
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery-ui.min.js"))'></script>
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap.min.js"))'></script>
+	<script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.fancytree.min.js")"></script>
+	<script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.easytabs.min.js")"></script>
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.cookie.js"))'></script>
+	<script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.fancytree.persist.js")"></script>
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.contextMenu.js"))'></script>
+	<script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.fancytree.contextMenu.js")"></script>
+	<script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.fancytree.dnd.js")"></script>
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap-editable.min.js"))'></script>
+	
+	<script type="text/javascript" src="@routes.Assets.at("javascripts/jalali.js")"></script>
+	
+	<script type="text/javascript" src="@routes.Assets.at("javascripts/calendar.js")"></script>
+	
+	<script type="text/javascript" src="@routes.Assets.at("javascripts/calendar-setup.js")"></script>
+	
+	<script type="text/javascript" src="@routes.Assets.at("javascripts/calendar-en.js")"></script>
+	
+	<script type="text/javascript" src="@routes.Assets.at("javascripts/ftree.js")"></script>
+	
+	
+	<script type="text/javascript" charset="utf-8" src="@routes.WebSocketApplication.wsJs(session.get("userName"))" defer></script>
+	<!-- If there is a sidebar manage it's being hidden and shown -->
+	
+	@if(session.get("play_user_lang") == "1") {
+		<script type="text/javascript" defer>
+		$(document).ready(function () {
+			
+			if($(".sidebar").html().length <20) {
+				$(".sidebar").remove();
+				$("#mySidebarToggle").hide();
+				$("#contentArea").removeClass("col-lg-9 col-lg-offset-3").addClass("col-lg-12");
+				} else {
+					if(!jQuery.cookie('showSideBar')) $.cookie("showSideBar","1");
+					
+					if($.cookie('showSideBar')=="1") {
+						$(".sidebar").show();
+						$(".sidebar").css("left", $(document).width()-$(".col-lg-3").width()-40);
+						$("#contentArea").removeClass("col-lg-12").addClass("col-lg-9 col-lg-offset-3");
+					} else {
+						$(".sidebar").hide();
+						$("#contentArea").removeClass("col-lg-9 col-lg-offset-3").addClass("col-lg-12");
+					}
+					
+					$("#mySidebarToggle").click(function() {
+						$(".sidebar").slideToggle("fast", function() {
+							if($.cookie('showSideBar')=="1") {
+								$("#contentArea").removeClass("col-lg-offset-3");
+								$.cookie("showSideBar","0");
+							} else {
+								$(".sidebar").css("left", $(document).width()-$(".col-lg-3").width()-40);
+								$("#contentArea").addClass("col-lg-offset-3");
+								$.cookie("showSideBar","1");
+							}
+							$("#contentArea").toggleClass("col-lg-12 col-lg-9");
+						});
+						
+					});
+				}
+			$("#tab-container").easytabs();
+			$("#tree").find(".fancytree-container").attr("DIR", "RTL").addClass("fancytree-rtl");
+			$("#failTree").find(".fancytree-container").attr("DIR", "RTL").addClass("fancytree-rtl");
+			$("#adminTree").find(".fancytree-container").attr("DIR", "RTL").addClass("fancytree-rtl");
+		});
+		</script>
+	} else {
+	<script type="text/javascript" defer>
+		$(document).ready(function () {
+			
+			//console.log($(".sidebar").html().length);
+			if($(".sidebar").html().length <20) {
+				$(".sidebar").remove();
+				$("#mySidebarToggle").hide();
+				$("#contentArea").removeClass("col-lg-9 col-lg-offset-3").addClass("col-lg-12");
+				} else {
+					if(!jQuery.cookie('showSideBar')) $.cookie('showSideBar',"1");
+					if($.cookie('showSideBar')=="1") {
+						$(".sidebar").show();
+						$("#contentArea").removeClass("col-lg-12").addClass("col-lg-9 col-lg-offset-3");
+					} else {
+						$(".sidebar").hide();
+						$("#contentArea").removeClass("col-lg-9 col-lg-offset-3").addClass("col-lg-12");
+					}
+					
+					$("#mySidebarToggle").click(function() {
+						$(".sidebar").slideToggle("fast", function() {
+							if($.cookie('showSideBar')=="1") {
+								$("#contentArea").removeClass("col-lg-offset-3");
+								$.cookie("showSideBar","0");
+							} else {
+								$("#contentArea").addClass("col-lg-offset-3");
+								$.cookie("showSideBar","1");
+							}
+							$("#contentArea").toggleClass("col-lg-12 col-lg-9");
+						});
+						
+					});
+				}
+			$("#tab-container").easytabs();
+			//$('#tabs').easytabs({uiTabs: true});
+			
+		});
+		</script>
+	}	
+	
+
+	<title>@title</title>
+</head>
+ 
+ <body>
+		<nav class="navbar-wrapper navbar-inverse navbar-fixed-top" role="navigation">
+			<div class="container-fluid">
+			<!-- Brand and toggle get grouped for better mobile display -->
+		    <div class="navbar-header">
+		      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+		        <span class="sr-only">@LanguageApplication.message("toggleNav")</span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		      </button>
+		     		      
+		      <a class="navbar-brand" href="@routes.Application.index2()" title=@LanguageApplication.message("dashboard")>
+				<span class="fa fa-dashboard"></span></a>
+		    </div>
+		
+			<!-- Collect the nav links, forms, and other content for toggling -->
+		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		      <ul class="nav navbar-nav">
+		      
+		      <!-- Dropdown for equipments -->
+		        <li class="dropdown">
+		          <a href="#" title=@LanguageApplication.message("equipments") class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-gear fa-2x"></span><b class="caret"></b></a>
+		          <ul class="dropdown-menu">
+		        	<li><a href="@routes.InstallationApplication.installationIndex()">@LanguageApplication.message("installations")</a></li>
+		           	<li><a href="@routes.SearchApplication.searchForm()">@LanguageApplication.message("search")</a></li>
+		           	<li><a href="@routes.CompanyApplication.list()">@LanguageApplication.message("vendors")</a></li>
+		            <li class="divider"></li>
+		        	<li><a href="@routes.EquipmentClassApplication.list()">@LanguageApplication.message("equipmentClasses")</a></li>
+		            @restrict(la(as("admin"),as("planner"))) {
+		            <li><a href="@routes.EquipmentClassApplication.createEquipmentClass()">
+		            @LanguageApplication.message("newClass")</a></li>}
+		          </ul>
+		        </li>
+		        <li>
+		        <form class="navbar-form" role="search" action="@routes.Application.fastSearch()">
+			  	<div class="form-group">
+					<input type="text" class="form-control" name="searchParam" placeholder="@LanguageApplication.message("searchEquipments")">
+				</div>
+				<button type="submit" class="btn btn-default">
+				<span class="glyphicon glyphicon-search"></span>
+				</button>
+			  </form>
+			  </li>
+			  
+		        <!-- Dropdown for maintenances -->
+		        <li class="dropdown">
+		          <a href="#" title=@LanguageApplication.message("maintenances") class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-wrench fa-2x"></span><b class="caret"></b></a>
+		          <ul class="dropdown-menu">
+		            <li><a href="@routes.MaintenanceApplication.list()">@LanguageApplication.message("list")</a></li>
+		            <li><a href="@routes.MaintenanceApplication.showUnloggedMaintenances()">@LanguageApplication.message("systemMessages")</a></li>
+		            <li><a href="@routes.HistoryApplication.plannedMaintsHistoryList()">@LanguageApplication.message("plannedMaints")</a></li>
+		            <li class="divider"></li>
+		            <li><a href="@routes.MaintenanceApplication.createMaintenance(-1L,-1L)">@LanguageApplication.message("newWorkOrder")</a></li>
+		          	<li class="divider"></li>
+		          	<li><a href="@routes.MaintenanceGroupApplication.maintenanceGroupList()">@LanguageApplication.message("maintProjects")</a></li>
+		          </ul>
+		        </li>
+		        
+		        <!-- Dropdown for failures -->
+		        <li class="dropdown">
+		          <a href="#" title="@LanguageApplication.message("failures")" class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-bolt fa-2x"></span><b class="caret"></b></a>
+		          <ul class="dropdown-menu">
+		            <li><a href="@routes.FailureApplication.failureModeList()">@LanguageApplication.message("failureModes")</a></li>
+		            <li><a href="@routes.FailureApplication.failureCausesList()">@LanguageApplication.message("failureCauses")</a></li>
+             		<li><a href="@routes.FailureApplication.failureMechanismsList()">@LanguageApplication.message("failureMechanism")</a></li>
+		          </ul>
+		        </li>
+		        
+		        <!-- Dropdown for parts -->
+		        <li class="dropdown">
+		          <a href="#" title="@LanguageApplication.message("parts")" 
+		          class="dropdown-toggle" data-toggle="dropdown">
+		          <span class="fa-stack fa-lg">
+		          	<i class="fa fa-cogs fa-stack-1x"></i>
+		          	<i class="fa fa-square-o fa-stack-2x"></i>
+		          	</span>		       
+		          	<b class="caret"></b></a>
+		          <ul class="dropdown-menu">
+		            <li><a href="@routes.PartApplication.list()">@LanguageApplication.message("partList")</a></li>
+		            <li><a href="@routes.CompanyApplication.list()">@LanguageApplication.message("vendors")</a></li>
+		            <li class="divider"></li>
+		            @restrict(la(as("admin"),as("creator"),as("planner"),as("warehouse"))) {
+		            <li><a href="@routes.PartApplication.createPart()">
+		            @LanguageApplication.message("newPart")</a></li>}
+		            <li class="divider"></li>
+		            <li><a href="@routes.PartApplication.viewPartRequests()">@LanguageApplication.message("requestList")</a></li>
+		            <li><a href="@routes.PartHistoryApplication.list(-1L)">@LanguageApplication.message("buyRequestList")</a>
+		            @restrict(la(as("admin"))) {
+		            <li><a href="@routes.InventoryEventApplication.list()">@LanguageApplication.message("inventoryEventList")</a></li>
+		            }
+		            <li class="divider"></li>
+		            <li><a href="@routes.RepairToolApplication.list()">@LanguageApplication.message("tools")</a></li>
+		            <li><a href="@routes.RepairToolApplication.createRepairTool()">@LanguageApplication.message("newTool")</a></li>
+		          </ul>
+		        </li>
+		        
+		        <!-- Dropdown for organization -->
+		        <li class="dropdown">
+		          <a href="#" title=@LanguageApplication.message("organization") 
+		          class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-group fa-2x"></span><b class="caret"></b></a>
+		          <ul class="dropdown-menu">
+		            <li><a href="@routes.DisciplineApplication.list()">@LanguageApplication.message("disciplines")</a></li>
+		            @restrict(la(as("admin"))) {
+		            <li><a href="@routes.DisciplineApplication.createDiscipline()">@LanguageApplication.message("addDiscipline")</a></li>}		            
+		            <li class="divider"></li>
+		            <li><a href="@routes.UserApplication.list()">@LanguageApplication.message("personnel")</a></li>
+		            @restrict(la(as("admin"))) {
+		            <li><a href="@routes.UserApplication.createUser()">@LanguageApplication.message("addPersonnel")</a></li>}
+		          </ul>
+		        </li>
+		        
+		        <!-- Dropdown for reports -->
+		        <li>
+		          <a href="@routes.ReportApplication.reportSelector()" title=@LanguageApplication.message("reports")><span class="fa fa-book fa-2x"></span></a>
+		         </li>
+		        
+		        <!-- Dropdown for files -->
+		        <li class="dropdown">
+		          <a href="#" title=@LanguageApplication.message("files") class="dropdown-toggle" data-toggle="dropdown">
+		          <span class="fa fa-database fa-2x"></span><b class="caret"></b></a>
+		          <ul class="dropdown-menu">
+		            <li><a href="@routes.Application.list()">@LanguageApplication.message("techFiles")</a></li>
+		            <li><a href="@routes.UserBlobApplication.uploadForm()">@LanguageApplication.message("persFiles")</a></li>
+		          </ul>
+		        </li>
+		        
+		      	<!-- Dropdown for chat -->
+		        <li id="wsChatter">
+		          <a href="#" title=@LanguageApplication.message("chat")><span class="fa fa-comments fa-2x"></span></a>
+		         </li>
+		         
+		         <!-- Dropdown for help -->
+		        <li id="help">
+		          <a target="_blank" href="http://www.cmmsjacs.ir"><span class="fa fa-question fa-2x"></span></a>
+		         </li>
+		        
+		       
+		      </ul>      
+		      
+			  <!--  Current user -->  
+			  <ul class="nav navbar-nav @if(session().get("play_user_lang") == "1") {navbar-left} else {navbar-right}">
+			        <li><a href="@routes.UserApplication.userIndex(Users.findByUserName(session.get("userName")).id)">@session.get("userName")</a></li>
+			        @if(session().get("play_user_lang") == "0") {
+			        <li><a title="LOG OUT" href="@routes.AuthApplication.logout()"><span class="fa fa-sign-out fa-2x"></span></a></li>
+			        } else {
+			        <li><a href="@routes.AuthApplication.logout()">@LanguageApplication.message("logOut")</a></li>			        
+			        }
+			      </ul>
+		      
+		      <!--  Language change -->
+		      <ul id="langChanger" class="nav navbar-nav @if(session().get("play_user_lang") == "1") {navbar-left} else {navbar-right}">
+			  	<li>
+                	@for(lang <- LanguageApplication.otherLanguageItems()){
+        			<a href="@lang.switchUrl">@lang.name</a>
+    				}
+              	</li>
+			  </ul>
+		    </div><!-- /.navbar-collapse -->
+		</div><!-- /.container-fluid -->
+	</nav>
+	
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-lg-3 sidebar">
+					@sidebar
+				</div>
+			
+				<div class="col-lg-9 col-lg-offset-3" id="contentArea">
+				<br />
+				<a id="mySidebarToggle" class="btn btn-link btn-lg"><span class="glyphicon glyphicon-align-justify"></span>&nbsp @LanguageApplication.message("toggleSidebar")
+				</a>
+	    			@content
+	    		</div>
+			</div>
+   
+    <!-- Modal -->
+    <div class="modal fade" id ="chatModal">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	        <h4 class="modal-title">@LanguageApplication.message("messages")</h4>
+	      </div>
+	      <div class="modal-body">
+	        <div id="onChat" class="row">
+		        <div class="span10" id="main">
+		            <div id="messages">
+		            </div>
+		            <textarea id="talk" placeholder="Type something and press ENTER"></textarea>
+		        </div>
+    		</div>
+	      </div>
+	      <div class="modal-footer">
+	      	<button id="clearMsgs" type="button" class="btn btn-danger">@LanguageApplication.message("clearMessages")</button>
+	        <button type="button" class="btn btn-default" data-dismiss="modal">@LanguageApplication.message("close")</button>
+	      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+    
+		</div>
+
+</body>
+</html>

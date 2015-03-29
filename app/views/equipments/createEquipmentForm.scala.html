@@ -1,0 +1,47 @@
+@(parentSectionId : Long, equipmentForm: Form[equipment.Equipments])
+
+-@import helper._
+-@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("New equipment") {@Html("")} {
+	<style>
+	body {
+		background-color: #EDEDED;
+	}
+	</style>
+	<br />
+	@form(action = routes.EquipmentApplication.save(parentSectionId),
+	'class->"form-horizontal",
+	'role->"form") {
+				
+		<div class="form-group">
+				
+					<div class="col-lg-4">
+						@inputText(equipmentForm("name"),
+						'class->"form-control",
+						'_label->LanguageApplication.message("equipmentTag"),
+						'_showConstraints->true
+						)
+					</div>
+					
+					<div class="col-lg-8">		
+						@select(equipmentForm("equipmentClass.id"),
+						options(equipment.EquipmentClass.options()),
+						'class->"form-control",
+						'_label->LanguageApplication.message("class"),
+						'_showConstraints->true
+						)
+					</div>		
+					
+		</div>
+		
+		<div align="center">
+			<input type="submit" value=@LanguageApplication.message("create") 
+			class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.EquipmentApplication.list(parentSectionId,0,"name","asc","")" 
+				class="btn btn-danger btn-lg" role="button">
+				@LanguageApplication.message("cancel")</a>
+		</div>
+	}	
+}

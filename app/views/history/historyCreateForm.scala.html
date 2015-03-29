@@ -1,0 +1,118 @@
+@(parentLevel : Integer, parentId : Long, maintenanceId : Long, failureId : Long, editHistoryForm: Form[History])
+
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("New history") {@Html("")} {
+	<style>
+		body {
+			background-color: #EDEDED;
+		}
+	</style>
+	@form(action = routes.HistoryApplication.save(parentLevel, parentId,maintenanceId,failureId),
+	'class->"form-horizontal",
+	'role->"form") {
+	@for(error <- editHistoryForm.errors) {
+		<p class="bg-danger">@error._2.get(0).message</p>
+		}
+			<div class="form-group">
+				<div class="col-lg-2">
+					@inputText(editHistoryForm("start"),						
+					'class->"form-control",
+					'_showConstraints->false,
+					'_label->LanguageApplication.message("start"),
+					'placeholder->"YYYY/MM/DD HH:mm"
+					)
+				</div>
+				<button id="cal-button-1"><span class="fa fa-calendar"></span></button>
+				<script type="text/javascript">
+					Calendar.setup({
+					inputField     :    "start",   // id of the input field
+					button         :    "cal-button-1",   // trigger for the calendar (button ID)
+		       		ifFormat       :    "%Y/%m/%d %H:%M",       // format of the input field
+		       		showsTime      :    true,
+        			dateType	   :	'jalali',
+        			timeFormat     :    "24",
+					weekNumbers    : false
+					});
+				</script>
+			</div>
+				
+			<div class="form-group">
+				<div class="col-lg-2">
+					@inputText(editHistoryForm("end"),						
+					'class->"form-control",
+					'_showConstraints->false,
+					'_label->LanguageApplication.message("end"),
+					'placeholder->"YYYY/MM/DD HH:mm"
+					)
+				</div>
+				<button id="cal-button-2"><span class="fa fa-calendar"></span></button>
+				<script type="text/javascript">
+					Calendar.setup({
+					inputField     :    "end",   // id of the input field
+					button         :    "cal-button-2",   // trigger for the calendar (button ID)
+		       		ifFormat       :    "%Y/%m/%d %H:%M",       // format of the input field
+		       		showsTime      :    true,
+	       			dateType	   :	'jalali',
+	       			timeFormat     :    "24",
+					weekNumbers    : false
+					});
+				</script>
+			</div>
+				
+			<div class="form-group">
+				<div class="col-lg-2">
+				    @select(editHistoryForm("allDay"),
+				    options(("false","NO"),("true","YES")),
+				    'class->"form-control",
+				    '_label->LanguageApplication.message("allDayEvent")
+				    )
+				</div>
+				
+				<div class="col-lg-2">
+					@select(editHistoryForm("state"),
+					options(OperationStates.values().toList.map(_.toString)),
+					'class->"form-control",
+					'_label->LanguageApplication.message("stateDuringEvent")
+					)
+				</div>
+				
+				@if(maintenanceId == -1 && failureId == -1) {
+				<div class="col-lg-2">
+					@select(editHistoryForm("eventType"),
+					options(EventTypes.values().toList.map(_.toString)),
+					'class->"form-control",
+					'_label->LanguageApplication.message("eventType")
+					)
+				</div>
+				}
+				<div class="col-lg-2">
+					@select(editHistoryForm("isHappened"),
+					options(("true","Actual"),("false","Planned")),
+					'class->"form-control",
+					'_label->LanguageApplication.message("actualPlanned")
+					)
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-lg-6">
+					@textarea(editHistoryForm("comments"),
+					'class->"form-control",
+					'rows->"5",
+					'_label->LanguageApplication.message("comments")
+					)
+				</div>
+			</div>
+		
+		<div align="center">
+			<input type="submit" value=@LanguageApplication.message("create") 
+			class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.HistoryApplication.list(parentLevel, parentId)" 
+				class="btn btn-danger btn-lg" role="button">
+				@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+}

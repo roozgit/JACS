@@ -1,0 +1,34 @@
+@(rlist : List[maintenance.MaintenancesParts])
+
+@main("Repair part request") {@Html("")} {
+	<br />
+	<a class="btn btn-default btn-lg" href="@routes.PartApplication.list()">
+	<span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span>
+	</a>
+	<br />
+	<table class="table">
+	<thead>
+		<tr>
+			<th>@LanguageApplication.message("partName")</th>
+			<th>@LanguageApplication.message("requestedQuantity")</th>
+			<th>@LanguageApplication.message("workOrderSerial")</th>
+			<th>@LanguageApplication.message("requestDate")</th>
+		</tr>
+	</thead>
+	<tbody>
+	@rlist.map { mpi =>
+	<tr @if( (new Date().getTime()) > (mpi.maintenance.requestDate.getTime() + 604800000)) {class="danger"}
+		@if( (new Date().getTime()) < (mpi.maintenance.requestDate.getTime() - 604800000)) {class="success"}
+	>
+		<td><a href="@routes.PartApplication.partIndex(mpi.part.id)">@mpi.part.name</a></td>
+		<td><em>@mpi.quantity</em></td>
+		<td><a href="@routes.MaintenanceApplication.maintenanceIndex(mpi.maintenance.id)">
+		@mpi.maintenance.workOrderSerial</a>
+		<td>@myUtils.DateTimeUtils.getIranianDate(mpi.maintenance.requestDate)</td>
+	</tr>
+	}
+	</tbody>
+	</table>
+	
+	
+}

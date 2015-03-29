@@ -1,0 +1,37 @@
+@(id : Long, pcForm: Form[PartsComponents],parentCompId : Long)
+
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("Edit part-component") {@Html("")} {
+	<style>
+	body {
+		background-color: #EDEDED;
+	}
+	</style>
+		
+	@form(action = routes.PartComponentApplication.update(id,parentCompId),
+	'class->"form-horizontal",
+	'role->"form"
+	) {
+	@inputText(pcForm("part.id"),'type->"hidden",'_label->"")
+	@inputText(pcForm("component.id"),'type->"hidden",'_label->"")
+		<div class="form-group">
+			<div class="col-sm-3">
+				@inputText(pcForm("quantity"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("partQuantityInComponent"),
+				'_showConstraints->true
+				)
+			</div>					
+		</div>
+		
+		<div align="center">
+			<input type="submit" value="@LanguageApplication.message("update")" class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.PartComponentApplication.list(parentCompId)" 
+				class="btn btn-danger btn-lg" role="button">
+			@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+}

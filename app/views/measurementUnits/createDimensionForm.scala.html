@@ -1,0 +1,48 @@
+@(dForm: Form[Dimensions])
+
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("New dimension") {@Html("")} {
+	<style>
+	body {
+		background-color: #EDEDED;
+	}
+	</style>
+	@form(action = routes.MeasurementUnitApplication.saveDimension(),
+	'class->"form",
+	'role->"form") {
+		<div class="form-group">
+			<fieldset>
+				<div class="row">
+				
+					<div class="col-lg-5">
+						@inputText(dForm("name"),						
+						'class->"form-control",
+						'_showConstraints->true,
+						'_label->LanguageApplication.message("name")
+						)
+					</div>
+					
+					<div class="col-lg-3">
+						@inputText(dForm("comments"),						
+						'class->"form-control",
+						'_showConstraints->true,
+						'_label->LanguageApplication.message("comments")
+						)
+					</div>
+										
+				</div>
+			</fieldset>
+		</div>
+		
+		<div align="center">
+			<input type="submit" value=@LanguageApplication.message("create") 
+			class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+				href="@routes.MeasurementUnitApplication.dimensionList()"
+				class="btn btn-danger btn-lg" role="button">
+				@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+}

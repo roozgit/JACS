@@ -1,0 +1,76 @@
+@(mid : Long, mForm : Form[MeasurementUnits])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("New unit") {@Html("")} {
+	<style>
+	body {
+		background-color: #EDEDED;
+	}
+	</style>
+	@form(action = routes.MeasurementUnitApplication.updateMeasurementUnit(mid),
+	'class->"form-horizontal",
+	'role->"form"
+	) {
+		<div class="form-group">
+			<div class="row">
+				<div class="col-lg-2">
+					@select(mForm("dimension.id"),
+						options(Dimensions.options()),
+						'class->"form-control",
+						'_showConstraints->true,
+						'_label->LanguageApplication.message("dimensions")
+						)
+				</div>
+				<div class="col-lg-2">
+					@inputText(mForm("system"),
+						'class->"form-control",
+						'_label->LanguageApplication.message("measurementSystem"),
+						'_showConstraints->true
+						)
+				</div>
+				
+				<div class="col-lg-2">
+					@inputText(mForm("unitName"),
+						'class->"form-control",
+						'_label->LanguageApplication.message("name"),
+						'_showConstraints->true
+						)
+				</div>
+				
+				<div class="col-lg-2">
+					@inputText(mForm("unitName2"),
+						'class->"form-control",
+						'_label->LanguageApplication.message("nameF"),
+						'_showConstraints->true
+						)
+				</div>
+				
+				<div class="col-lg-2">
+					@inputText(mForm("unitCode"),
+						'class->"form-control",
+						'_label->LanguageApplication.message("unitCode"),
+						'_showConstraints->true
+						)
+				</div>
+				
+				<div class="col-lg-2">
+					@inputText(mForm("comments"),
+						'class->"form-control",
+						'_label->LanguageApplication.message("comments"),
+						'_showConstraints->true
+						)
+				</div>
+						
+			</div>
+		</div>
+		<div align="center">
+			<input type="submit" value=@LanguageApplication.message("create") 
+			class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.MeasurementUnitApplication.list()" 
+				class="btn btn-danger btn-lg" role="button">
+				@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+}

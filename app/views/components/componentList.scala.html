@@ -1,0 +1,163 @@
+@(parentSubunitId : Long, currentPage : com.avaje.ebean.Page[Components], currentSortBy: String, currentOrder: String, currentFilter: String)
+
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import be.objectify.deadbolt.java.views.html._
+
+@****************************************
+* Helper generating navigation links    *
+****************************************@
+@link(newPage:Int, newSortBy:String) = @{
+    
+    var sortBy = currentSortBy
+    var order = currentOrder
+    
+    if(newSortBy != null) {
+        sortBy = newSortBy
+        if(currentSortBy == newSortBy) {
+            if(currentOrder == "asc") {
+                order = "desc"
+            } else {
+                order = "asc"
+            }
+        } else {
+            order = "asc"
+        }
+    }
+    
+    // Generate the link
+    routes.ComponentApplication.list(parentSubunitId,newPage, sortBy, order, currentFilter)    
+}
+
+@**********************************
+* Helper generating table headers *
+***********************************@
+@header(key:String, title:String) = {
+    <th class="@if(key=="name") {col-sm-3} @if(key=="description") {col-sm-5} @if(key=="componentClass") {col-sm-2}">
+        <a href="@link(0, key)">@title
+        <span class="glyphicon @if(currentSortBy == key) {
+        	@if(currentOrder == "asc") {glyphicon-sort-by-attributes} else {glyphicon-sort-by-attributes-alt}
+        	} else {glyphicon-sort}"></span>
+        </a>
+    </th>
+}
+
+@main("Component list: "+currentFilter) {<div id='tree'></div>} {
+	<ol class="breadcrumb">
+	<li><a href="@routes.InstallationApplication.installationIndex()"><strong>@Subunits.find.byId(parentSubunitId).equipment.section.plant.installation.name</strong></a></li>
+	<li><a href="@routes.PlantApplication.list(0, "name", "asc", "")"><small>@LanguageApplication.message("plants")</small></a></li>
+	<li><a href="@routes.PlantApplication.plantIndex(Subunits.find.byId(parentSubunitId).equipment.section.plant.id)"><strong>@Subunits.find.byId(parentSubunitId).equipment.section.plant.name</strong></a></li>
+	<li><a href="@routes.SectionApplication.list(Subunits.find.byId(parentSubunitId).equipment.section.plant.id,0,"name","asc","")"><small>@LanguageApplication.message("sections")</small></a></li>
+	<li><a href="@routes.SectionApplication.sectionIndex(Subunits.find.byId(parentSubunitId).equipment.section.id)"><strong>@Subunits.find.byId(parentSubunitId).equipment.section.name</strong></a></li>
+	<li><a href="@routes.EquipmentApplication.list(Subunits.find.byId(parentSubunitId).equipment.section.id, 0, "name", "asc", "")"><small>@LanguageApplication.message("equipments")</small></a></li>
+	<li><a href="@routes.EquipmentApplication.equipmentIndex(Subunits.find.byId(parentSubunitId).equipment.id)"><strong>@Subunits.find.byId(parentSubunitId).equipment.name</strong></a></li>
+	<li><a href="@routes.SubunitApplication.list(Subunits.find.byId(parentSubunitId).equipment.id, 0, "name", "asc", "")"><small>@LanguageApplication.message("subunits")</small></a></li>
+	<li><a href="@routes.SubunitApplication.subunitIndex(parentSubunitId)"><strong>@Subunits.find.byId(parentSubunitId).name</strong></a></li>
+	<li><small>@LanguageApplication.message("components")</small></li>
+	</ol>
+	<br />
+	@restrict(la(as("admin"),as("creator"))) {
+	<a title="New component" class="btn btn-primary btn-lg"
+	href="@routes.ComponentApplication.createComponent(parentSubunitId)">@LanguageApplication.message("addComponent")
+			<span class="glyphicon glyphicon-plus"></span></a>}
+	
+	<br /><br/>
+	@if(flash.containsKey("success")) {
+        <div class="alert alert-success">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+	    }
+	    @if(flash.containsKey("error")) {
+       <div class="alert alert-danger">
+           <strong>ERROR: </strong> @flash.get("error")
+       </div>
+  		}
+	<br />
+	
+	<form class="form-inline" role="form" action="@link(0, "name")" method="GET">
+		<div class="form-group">
+			<input type="hidden" value="@parentSubunitId" name="psuid">			
+			<input class="form-control" type="search" id="searchbox" name="f" value="@currentFilter" placeholder="@LanguageApplication.message("filterBy")">
+		</div>
+		<div class="form-group">
+			<input type="submit" id="searchsubmit" value="@LanguageApplication.message("filter")" class="btn btn-success">
+		</div>
+	</form>
+	
+	
+	@if(currentPage.getTotalRowCount == 0) {
+		<div class="well well-lg">
+	  		<em>Nothing to display</em>
+	    </div> 
+	   } else {   
+			<table class="table table-striped table-bordered">			
+				<thead>
+					<tr>
+						@header("name", LanguageApplication.message("name"))
+						@header("description", LanguageApplication.message("description"))
+						@header("componentClass", LanguageApplication.message("class"))
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>	
+					@currentPage.getList.map { cl =>
+					<tr>
+						<td @if(session.get("play_user_lang") == "1") {style="direction:ltr; text-align:right;"}>
+							<a href="@routes.ComponentApplication.componentIndex(cl.id)">@cl.name</a>
+						</td>
+						
+						<td>
+							@if(cl.description==null) {
+								<em>-</em>
+							} else {@cl.description}
+						</td>
+						
+						<td>
+							@if(cl.componentClass==null) {
+								<em>-</em>
+							} else {@cl.componentClass.name}
+						</td>
+						
+						<td>
+							<a class="glyphicon glyphicon-remove" title=@LanguageApplication.message("remove")
+							href="@routes.ComponentApplication.delete(parentSubunitId, cl.id)"></a>
+						</td>
+					</tr>
+				}
+				</tbody>
+			</table>
+			
+			<div id="pager" class="pager">
+	            <ul>
+	            	@if(currentPage.hasPrev) {
+	                    <li class="previous">
+	                        <a href="@link(currentPage.getPageIndex - 1, null)">
+	                        @if(session().get("play_user_lang") == "0") {&larr; @LanguageApplication.message("previous")} else {&rarr; @LanguageApplication.message("previous") }
+	                        </a>
+	                    </li>
+	                } else {
+	                    <li class="previous disabled">
+	                        <a>
+	                        @if(session().get("play_user_lang") == "0") {&larr; @LanguageApplication.message("previous")} else {&rarr; @LanguageApplication.message("previous") }
+	                        </a>
+	                    </li>
+	                }
+	                <li class="current">
+	                    <a>@LanguageApplication.message("displaying") @currentPage.getDisplayXtoYofZ(" " + LanguageApplication.message("to")+" "," "+LanguageApplication.message("of")+" ")</a>
+	                </li>
+	                @if(currentPage.hasNext) {
+	                    <li class="next">
+	                        <a href="@link(currentPage.getPageIndex + 1, null)">
+	                        @if(session().get("play_user_lang") == "1") {@LanguageApplication.message("next") &larr;} else {@LanguageApplication.message("next") &rarr;}
+	                        </a>
+	                    </li>
+	                } else {
+	                    <li class="next disabled">
+	                        <a>
+	                        @if(session().get("play_user_lang") == "1") {@LanguageApplication.message("next") &larr;} else {@LanguageApplication.message("next") &rarr;}
+	                        </a>
+	                    </li>
+	                }
+	            </ul>
+	        </div>
+	}
+}

@@ -1,0 +1,62 @@
+@(mid : Long, wfl : List[maintenance.MaintenanceWorkflow])
+
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import be.objectify.deadbolt.java.views.html._
+
+@main("Work flow") {@Html("")} {
+
+	<a class="btn btn-default btn-lg" title="Back to maintenance" 
+		href="@routes.MaintenanceApplication.maintenanceIndex(mid)">
+		<span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span></a>
+	<br />
+	
+  	@dynamic("maintenancePrivilege") {
+	<form class="form-horizontal"
+	role="form" action="@routes.MaintenanceApplication.referWorkTo(mid)">
+	  	<div class="form-group">
+	  	<input type="hidden" name="maintID" value="@mid">
+		</div>
+		<div class="form-group">
+		<div class="col-lg-2">
+			<label>@LanguageApplication.message("referTo")</label><br/>
+			<div class="btn-group-vertical">
+				@maintenance.WorkflowTree.options(maintenance.Maintenances.find.byId(mid).workflowStage.id).map {wt =>
+				<div class="btn-group" role="group" aria-label="...">
+				<label class="btn btn-link">
+				<input id="@wt._1" class="form-control" type="radio" name="workflowStage.id" value="@wt._1">@wt._2
+				</label>
+				</div>
+				}
+			</div>
+			<br/>
+			<label>@LanguageApplication.message("comments")</label>
+			<input id="reason" class="form-control" type="text" value="" name="reason"></input>
+			
+		</div>
+		</div>
+		<button type="submit" class="btn btn-success">
+		@LanguageApplication.message("submit")
+		</button>
+	</form>
+	<br />
+	}
+	<label>@LanguageApplication.message("workflowHistory")</label>
+	<table class="table table-striped">
+	 	<tr>
+	 		<th>@LanguageApplication.message("referrer")</th>
+	 		<th>@LanguageApplication.message("portfolio")</th>
+	 		<th>@LanguageApplication.message("acceptReject")</th>
+	 		<th>@LanguageApplication.message("date")</th>
+	 		<th>@LanguageApplication.message("comments")</th>	
+	 	</tr>
+	 	@wfl.map {wf =>
+	 		<tr>
+		 		<td>@wf.user.userName</td>
+		 		<td>@wf.workflowStage.description</td>
+		  		<td>@if(wf.acceptReject==true) {@LanguageApplication.message("accept")} else {@LanguageApplication.message("reject")}</td>
+		  		<td>@myUtils.DateTimeUtils.getIranianDateTime(wf.actionDate)</td>
+		  		<td>@wf.rejectReason</td>
+	 		</tr>
+	 	}
+	</table>
+ }

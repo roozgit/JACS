@@ -1,0 +1,41 @@
+@(mgs : List[maintenance.Maintenances], delayed: List[History], currentHours : String, currentDays : String, currentMonths : String)
+@main("Unlogged maintenances") {@Html("")} {
+	<h2>@LanguageApplication.message("unloggedMaints")</h2>
+	<table class="table">
+	<tr>
+		<th class="col-lg-1">@LanguageApplication.message("workOrderSerial")</th>
+		<th class="col-lg-2">@LanguageApplication.message("maintenanceStatus")</th>
+	</tr>
+	@mgs.map { di =>
+	<tr>
+		<td><a
+		href="@routes.MaintenanceApplication.maintenanceIndex(di.id)">@di.workOrderSerial</a></td>
+		<td>@di.maintenanceStatus</td>
+	</tr>
+	}
+	</table>
+	<h2>@LanguageApplication.message("delayedMaints")</h2>
+	<form class="form-inline" role="form" action="@routes.MaintenanceApplication.showUnloggedMaintenances(currentHours,currentDays,currentMonths)" method="GET">
+		<div class="form-group">
+			<input class="form-control" type="search" id="searchbox" name="currentHours" value="@currentHours">@LanguageApplication.message("hour")
+			<input class="form-control" type="search" id="searchbox" name="currentDays" value="@currentDays">@LanguageApplication.message("day")
+			<input class="form-control" type="search" id="searchbox" name="currentMonths" value="@currentMonths">@LanguageApplication.message("month")
+		</div>
+		<div class="form-group">
+			<input type="submit" id="searchsubmit" value="@LanguageApplication.message("submit")" class="btn btn-success">&nbsp @LanguageApplication.message("remainToStart")
+		</div>
+	</form>
+	<table class="table">
+	<tr>
+		<th class="col-lg-1">@LanguageApplication.message("plannedStart")</th>
+		<th class="col-lg-2">@LanguageApplication.message("workOrderSerial")</th>
+	</tr>
+	@delayed.map { di =>
+	<tr>
+		<td><a
+		href="@routes.MaintenanceApplication.maintenanceIndex(di.maint.id)">@myUtils.DateTimeUtils.getIranianDateTime(di.start)</a></td>
+		<td>@di.maint.workOrderSerial</td>
+	</tr>
+	}
+	</table>
+}

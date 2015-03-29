@@ -1,0 +1,123 @@
+@(installations: List[Installations]) 
+
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import be.objectify.deadbolt.java.views.html._
+
+@main("Installations") {<div id='tree'></div>} {
+ 	@installations.map {inst =>
+ 		<div class="row">
+ 			<div align="center"><h1><span class="label label-default">@inst.name</span></h1></div>
+ 			<div class="col-lg-6">
+ 			<div class="btn btn-group btn-group-justified">
+	 		@restrict(la(as("admin"),as("editor"))) {
+			 	<a class="btn btn-warning btn-lg" title="@LanguageApplication.message("edit")"
+		 		href="@routes.InstallationApplication.editInstallation(inst.id)"><span class="hideInSmall">@LanguageApplication.message("edit")</span>
+		 		<span class="glyphicon glyphicon-edit"></span></a>}
+		 		
+		 		<!-- Register failure button -->
+		 		<a class="btn btn-danger btn-lg" title="Register failure"
+		 		href="@routes.FailureApplication.createFailure(3,inst.id)"><span class="hideInSmall">@LanguageApplication.message("registerFailure")</span>
+		 		<span class="fa fa-bolt"></span></a>
+		 	</div>
+			 	<br/>
+	 			<div class="btn btn-group btn-group-justified">
+					<a class="btn btn-default btn-lg" title="@LanguageApplication.message("plants")" 
+					href="@routes.PlantApplication.list()">
+					<span class="hideInSmall">@LanguageApplication.message("plants")</span><i class="fa fa-link"></i></a>
+			 
+					<a class="btn btn-default btn-lg" title="@LanguageApplication.message("history")"
+					href="@routes.HistoryApplication.list(3,inst.id)">
+					<span class="hideInSmall">@LanguageApplication.message("history")</span>
+					 <span class="fa fa-history"></span></a>
+					
+					<a class="btn btn-default btn-lg" title="@LanguageApplication.message("dataSheet")"
+					href="@routes.DatasheetApplication.list(3,inst.id)">
+					<span class="hideInSmall">@LanguageApplication.message("dataSheet")</span>
+					<i class="fa fa-info-circle"></i></a>
+				</div>
+				
+		 		<br />
+		 		
+			 	@if(flash.containsKey("success")) {
+			        <div class="alert alert-success">
+			            <strong>Done!</strong> @flash.get("success")
+			        </div>
+			    	}
+			    @if(flash.containsKey("error")) {
+			       <div class="alert alert-danger">
+			           <strong>ERROR: </strong> @flash.get("error")
+			       </div>
+		   			}
+	    		<br />
+			 
+			 <div class="well well-sm"><p>@inst.description</p></div>
+			 <table class="table table-bordered">
+				 <tr>
+					 <th>@LanguageApplication.message("soilType")</th>
+					 <th>@LanguageApplication.message("soilCorrosiveness")</th>
+					 <th>@LanguageApplication.message("earthquakeZone")</th>
+					 <th>@LanguageApplication.message("minHumidity")</th>
+					 <th>@LanguageApplication.message("maxHumidity")</th>
+					 <th>@LanguageApplication.message("minTemperature")</th>
+					 <th>@LanguageApplication.message("maxTemperature")</th>
+				 </tr>
+				 <tr>
+					 <td>@inst.soilType</td>
+					 <td>@inst.soilCorrosiveness</td>
+					 <td>@inst.earthquakeZone</td>
+					 <td>@inst.minHumidity</td>
+					 <td>@inst.maxHumidity</td>
+					 <td>@inst.minTemperature</td>
+					 <td>@inst.maxTemperature</td>		 
+				 </tr>
+			 </table>
+			<br /> 
+	 		@if(inst.comments!=null) {
+	 			<label>@LanguageApplication.message("comments")</label>
+	 			<pre>@inst.comments</pre>
+	 			}
+ 		</div>
+ 		<div class="col-lg-6">
+	 		<h3>@LanguageApplication.message("dataSources")</h3>
+			<table class="table table-bordered">
+	 		<thead>
+	 			<tr class="success">
+	 				<th>@LanguageApplication.message("name")</th>
+	 				<th>@LanguageApplication.message("type")</th>
+	 				<th></th>
+	 			</tr>
+	 		</thead>
+	 		@if(inst.files != null) {
+	 			@inst.files.map { fi =>
+			 		<tbody>
+			 			<tr>
+			 				<td><a href="@routes.Application.download(fi.id)">@fi.name</a></td>
+			 				<td>@fi.tag</td>
+			 				<td><a class="btn btn-danger btn-sm" 
+			 				href="@routes.InstallationApplication.deleteAssociation(inst.id,fi.id)">
+			 				<span class="fa fa-trash"></span></a></td>
+			 			<tr>
+			 		</tbody>
+			 	}
+			 }
+		 	</table>
+			<br />
+			
+			<h3>@LanguageApplication.message("upload")</h3>
+			<form class="form-inline" role="form" method="POST" enctype="multipart/form-data"
+						action="@routes.InstallationApplication.upload(inst.id)">
+				<div class="form-group">
+					<input type="file" name="file" class="btn btn-default">
+				</div>
+				<button type="submit" class="btn btn-default btn-md" title="upload">
+					<span class="fa fa-upload"></span>
+				</button>						
+			</form>
+			<br/>
+			<h3>@LanguageApplication.message("failureCauseTree")</h3>
+			<div data-value="3_1" id="failTree"></div>
+			
+		</div>
+	</div>
+	}
+}

@@ -1,0 +1,145 @@
+@(currentPage : com.avaje.ebean.Page[Blobs], currentSortBy: String, currentOrder: String, currentFilter: String)
+
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@****************************************
+* Helper generating navigation links    *
+****************************************@
+@link(newPage:Int, newSortBy:String) = @{
+    
+    var sortBy = currentSortBy
+    var order = currentOrder
+    
+    if(newSortBy != null) {
+        sortBy = newSortBy
+        if(currentSortBy == newSortBy) {
+            if(currentOrder == "asc") {
+                order = "desc"
+            } else {
+                order = "asc"
+            }
+        } else {
+            order = "asc"
+        }
+    }
+    
+    // Generate the link
+    routes.Application.list(newPage, sortBy, order, currentFilter)    
+}
+
+@**********************************
+* Helper generating table headers *
+***********************************@
+@header(key:String, title:String) = {
+    <th class=@if(key=="name") {"col-sm-3"} else {"col-sm-2"}>
+        <a href="@link(0, key)">@title
+        <span class="glyphicon @if(currentSortBy == key) {
+        	@if(currentOrder == "asc") {glyphicon-sort-by-attributes} else {glyphicon-sort-by-attributes-alt}
+        	} else {glyphicon-sort}"></span>
+        </a>
+    </th>
+}
+
+@main("File list: "+ currentFilter) {@Html("")} {
+		@if(flash.containsKey("success")) {
+	        <div class="alert alert-success">
+	            <strong>Done!</strong> @flash.get("success")
+	        </div>
+		    }
+		    @if(flash.containsKey("error")) {
+		       <div class="alert alert-danger">
+		           <strong>ERROR: </strong> @flash.get("error")
+		       </div>
+	   		}
+		<br />
+		<form class="form-inline" role="form" action="@link(0, "name")" method="GET">
+			<div class="form-group">			
+				<input class="form-control" type="search" id="searchbox" name="f" value="@currentFilter" placeholder="Filter by ...">
+			</div>
+			<div class="form-group">
+				<input type="submit" id="searchsubmit" value="Filter" class="btn btn-primary">
+			</div>
+		</form>
+		<br />
+		@if(currentPage.getTotalRowCount == 0) {
+			<div class="well well-lg">
+		  		<em>Nothing to display</em>
+		    </div> 
+		   } else {   
+				<table class="table table-striped">			
+					<thead>
+						<tr class="success">
+							@header("name", LanguageApplication.message("name"))
+							@header("tag", LanguageApplication.message("type"))
+							@header("extension","MIME type")
+							@header("owner.userName", LanguageApplication.message("creator"))
+							@header("creationDate", LanguageApplication.message("date"))
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>	
+						@currentPage.getList.map { cl =>
+						<tr>
+							<td>
+								<a class="glyphicon glyphicon-file" href="@routes.Application.download(cl.id)">@cl.name</a>
+							</td>
+							
+							<td>
+								@if(cl.tag==null) {
+									<em>-</em>
+								} else {<a href="@routes.Application.editFile(cl.id)">@cl.tag</a>}
+							</td>
+							<td>
+								@if(cl.extension==null) {
+									<em>-</em>
+								} else {@cl.extension}
+							</td>
+							<td>
+								@if(cl.owner==null) {
+									<em>-</em>
+								} else {@cl.owner.userName}
+							</td>
+							
+							<td>
+								@if(cl.creationDate==null) {
+									<em>-</em>
+								} else {@cl.creationDate}
+							</td>
+							<td>
+							<a href="@routes.Application.delete(cl.id)" class="btn btn-danger">
+							<span class="fa fa-trash"></span></a>
+							</td>
+	
+						</tr>
+						}
+					</tbody>
+				</table>
+				
+				<div id="pager" class="pager">
+		            <ul>
+		            	@if(currentPage.hasPrev) {
+		                    <li class="previous">
+		                        <a href="@link(currentPage.getPageIndex - 1, null)">&larr; Previous</a>
+		                    </li>
+		                } else {
+		                    <li class="previous disabled">
+		                        <a>&larr; Previous</a>
+		                    </li>
+		                }
+		                <li class="current">
+		                    <a>Displaying @currentPage.getDisplayXtoYofZ(" to "," of ")</a>
+		                </li>
+		                @if(currentPage.hasNext) {
+		                    <li class="next">
+		                        <a href="@link(currentPage.getPageIndex + 1, null)">Next &rarr;</a>
+		                    </li>
+		                } else {
+		                    <li class="next disabled">
+		                        <a>Next &rarr;</a>
+		                    </li>
+		                }
+		            </ul>
+		        </div>
+				}
+}

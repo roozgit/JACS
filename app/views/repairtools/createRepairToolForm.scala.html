@@ -1,0 +1,36 @@
+@(newRepairToolForm : Form[RepairTools])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("New tool") {@Html("")} {
+	<style>
+		body {
+			background-color: #EDEDED;
+		}
+	</style>
+	@form(action = routes.RepairToolApplication.save(),
+	'class->"form",
+	'role->"form"
+	) {
+		<div class="form-group">
+			<div class="row">
+				<div class="col-lg-4">
+				@inputText(newRepairToolForm("name"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("name"),
+					'_showConstraints->true
+					)
+				</div>
+			</div>
+		</div>
+		
+		<div align="center">
+			<input type="submit" value=@LanguageApplication.message("create") 
+			class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.RepairToolApplication.list(0,"name","asc","")" 
+				class="btn btn-danger btn-lg" role="button">
+				@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+}

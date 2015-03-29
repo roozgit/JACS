@@ -1,0 +1,51 @@
+@(parentEquipmentId : Long, subunitForm: Form[Subunits])
+
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("New subunit") {@Html("")} {
+	<style>
+		body {
+			background-color: #EDEDED;
+		}
+	</style>
+	@form(action = routes.SubunitApplication.save(parentEquipmentId),
+	'class->"form-horizontal",
+	'role->"form"
+	) {
+		<div class="form-group">
+			<div class="col-lg-3">
+				@inputText(subunitForm("name"),
+				'_showConstraints->true,
+				'class->"form-control",
+				'_label->LanguageApplication.message("name")
+				)
+			</div>
+			<div class="col-lg-6">
+				@inputText(subunitForm("description"),
+				'_showConstraints->false,
+				'class->"form-control",
+				'_label->LanguageApplication.message("description")
+				)
+			</div>
+		</div>
+		<div class="form-group">	
+			<div class="col-lg-2">		
+				@select(subunitForm("subunitType"),
+				options(SubunitTypes.values().toList.map(_.toString)),
+				'class->"form-control",
+				'_label->LanguageApplication.message("category")
+				)
+			</div>
+		</div>
+		
+		<div align="center">
+			<input type="submit" value=@LanguageApplication.message("create") 
+			class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.SubunitApplication.list(parentEquipmentId,0,"name","asc","")" 
+				class="btn btn-danger btn-lg" role="button">
+				@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+}

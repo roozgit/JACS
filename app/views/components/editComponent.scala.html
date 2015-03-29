@@ -1,0 +1,185 @@
+@(id : Long, componentForm: Form[Components])
+
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("Edit component") {@Html("")} {
+<style>
+	body {
+		background-color: #EDEDED;
+	}
+	</style>
+	@form(action = routes.ComponentApplication.update(id),
+	'class->"form-horizontal",
+	'role->"form"
+	) {	
+			<fieldset>
+			<legend><span class="label label-default">@LanguageApplication.message("taxonomy")</span></legend>
+				
+				<div class="form-group">
+					
+					<div class="col-lg-5">
+						@select(componentForm("subunit.id"),
+						options(Subunits.options()),
+						'class->"form-control",
+						'_label->LanguageApplication.message("subunit")
+						)
+					</div>
+					
+					<div class="col-lg-5">
+						@select(componentForm("componentClass.id"),
+						options(equipment.EquipmentClass.options()),
+						'class->"form-control",
+						'_label->LanguageApplication.message("class"),
+						'_default->""
+						)
+					</div>
+				</div>
+			</fieldset>
+		
+		<fieldset>
+			<legend><span class="label label-default">@LanguageApplication.message("basicInfo")</span></legend>
+			<div class="form-group">
+				<div class="col-lg-5">
+					@inputText(componentForm("name"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("name"),
+					'_showConstraints->true
+					)
+				</div>
+				
+				<div class="col-lg-5">
+					@inputText(componentForm("description"),
+					'class->"form-control",
+					'_showConstraints->true,
+					'_label->LanguageApplication.message("description")
+					)
+				</div>
+			</div>
+		</fieldset>		
+		
+		<fieldset>
+		<legend><span class="label label-default">@LanguageApplication.message("vendorInfo")</span></legend>
+			<div class="form-group">
+				<div class="col-lg-3">
+					@select(componentForm("manufacturerCompany.id"),
+					options(Companies.options()),
+					'class->"form-control",
+					'_label->LanguageApplication.message("vendor"),
+					'_default->""
+					)
+				</div>
+
+				<div class="col-lg-3">
+					@inputText(componentForm("manufacturerModelDesignation"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("modelDesignation")
+					)
+				</div>
+				
+				<div class="col-lg-3">
+					@inputText(componentForm("componentSerialNo"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("serial")
+					)
+				</div>					
+
+			</div>
+			
+			<div class="form-group">
+				<div class="col-lg-3">
+					@inputText(componentForm("manufactureDate"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("manufactureDate"),
+					'_showConstraints->false
+					)
+				</div>
+				<script type="text/javascript">
+					Calendar.setup({
+					inputField     :    "manufactureDate",   // id of the input field
+					button         :    "manufactureDate",   // trigger for the calendar (button ID)
+		       		ifFormat       :    "%Y/%m",       // format of the input field
+        			dateType	   :	'jalali',
+					weekNumbers    : false
+					});
+				</script>
+				
+				<div class="col-lg-3">
+					@inputText(componentForm("purchaseDate"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("purchaseDate"),
+					'_showConstraints->false
+					)
+				</div>
+				<script type="text/javascript">
+					Calendar.setup({
+					inputField     :    "purchaseDate",   // id of the input field
+					button         :    "purchaseDate",   // trigger for the calendar (button ID)
+		       		ifFormat       :    "%Y/%m%d",       // format of the input field
+        			dateType	   :	'jalali',
+					weekNumbers    : false
+					});
+				</script>
+			</div>	
+			<div class="form-group">
+				<div class="col-lg-9">	
+					@inputText(componentForm("guarantee"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("guaranteeDescription")
+					)
+				</div>
+				
+				<div class="col-sm-3">	
+					@inputText(componentForm("guaranteeEndDate"),
+					'class->"form-control",
+					'_showConstraints->false,
+					'_label->LanguageApplication.message("guaranteeEndDate")
+					)
+				</div>
+				<script type="text/javascript">
+					Calendar.setup({
+					inputField     :    "guaranteeEndDate",   // id of the input field
+					button         :    "guaranteeEndDate",   // trigger for the calendar (button ID)
+		       		ifFormat       :    "%Y/%m%d",       // format of the input field
+        			dateType	   :	'jalali',
+					weekNumbers    : false
+					});
+				</script>
+			
+			</div>
+				
+		</fieldset>
+		<fieldset>
+		<legend><span class="label label-default">@LanguageApplication.message("dataSources")</span></legend>
+			<div class="form-group">
+				<div class="col-lg-6">
+					@multiSelect(field = componentForm("files"),
+						options=options(Blobs.options()),
+						'class->"form-control",
+						'_label->LanguageApplication.message("files"),
+						'size->"12",
+						'_default->""
+						)
+				</div>
+			</div>
+		</fieldset>
+		
+			<div class="form-group">
+				<div class="col-lg-6">
+					@textarea(componentForm("comments"),
+						'class->"form-control",
+						'rows->"5",
+						'_label->LanguageApplication.message("comments")
+						)
+				</div>
+			</div>
+			
+		<div align="center">
+			<input type="submit" value="@LanguageApplication.message("update")" class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.ComponentApplication.componentIndex(id)" 
+				class="btn btn-danger btn-lg" role="button">
+			@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+}

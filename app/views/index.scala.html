@@ -1,0 +1,272 @@
+@(maintList : List[maintenance.Maintenances])
+
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import be.objectify.deadbolt.java.views.html._
+
+@main("CMMS DASHBOARD") {@restrictOr(la(as("admin"))) {
+	<div id='adminTree'>
+	<ul id='treeData' style='display: none;'>
+		<li id="workflow" class="folder">@LanguageApplication.message("workflow")
+			<ul>
+				<li id="CMWorkflow"><a 
+				href="@routes.WorkflowApplication.workflowIndex(maintenance.MaintenanceCategories.CORRECTIVE_MAINTENANCE.toString())">
+				Corrective Maintenance(CM)</a></li>
+				
+				<li id="PMWorkflow"><a 
+				href="@routes.WorkflowApplication.workflowIndex(maintenance.MaintenanceCategories.PREVENTIVE_MAINTENANCE.toString())">
+				Preventive Maintenance(PM)</a></li>
+				
+				<li id="PdMWorkflow"><a 
+				href="@routes.WorkflowApplication.workflowIndex(maintenance.MaintenanceCategories.PREDICTIVE_MAINTENANCE.toString())">
+				Predictive Maintenance(PdM)</a></li>
+				
+				<li id="modification"><a 
+				href="@routes.WorkflowApplication.workflowIndex(maintenance.MaintenanceCategories.MODIFICATION.toString())">
+				Modification</a></li>
+
+				<li id="preservation"><a 
+				href="@routes.WorkflowApplication.workflowIndex(maintenance.MaintenanceCategories.PRESERVATION.toString())">
+				Preservation</a></li>
+			</ul>
+		</li>
+		
+		<li><a href="@routes.Application.securityRoleList()">@LanguageApplication.message("viewRoles")</a></li>
+		
+		<li><a 
+		href="@routes.DisciplineApplication.createDiscipline()">
+		@LanguageApplication.message("addDiscipline")</a></li>
+		
+		<li><a 
+		href="@routes.UserApplication.createUser()">
+		@LanguageApplication.message("addPersonnel")</a></li>
+		
+		<li><a 
+		href="@routes.MeasurementUnitApplication.dimensionList()">
+		@LanguageApplication.message("dimensions")</a></li>
+		
+		<li><a 
+		href="@routes.MeasurementUnitApplication.list()">
+		@LanguageApplication.message("measurementUnits")</a></li>
+		
+		<li><a 
+		href="@routes.Application.resolveDBInconsistencies()">@LanguageApplication.message("resolveDBIncosistencies")</a></li>
+		            
+	</ul>
+</div>} {@Html("")}} {
+<div class="row">
+<br/>
+<!-- Equipment panel -->
+	<div class="col-lg-4 col-md-6">		
+		
+		<div class="panel panel-primary">
+	         <div class="panel-heading">
+	             <div class="row">
+	                 <div class="col-xs-3">
+	                     <i class="fa fa-gear fa-5x"></i>
+	                 </div>
+	                 <div class="@if(session().get("play_user_lang") == "0") {col-xs-9 text-right} else {col-xs-9 text-left}">
+	                     <h2>@LanguageApplication.message("equipments")</h2>
+	                 </div>
+	             </div>
+	         </div>
+	         
+	            <div class='panel-body' @if(session.get("play_user_lang")==0) {'text-left'} else {'text-right'}>
+	            	<ul>
+				         <li><a
+							href="@routes.InstallationApplication.installationIndex()">@LanguageApplication.message("installations")</a></li>
+						<li><a
+							href="@routes.SectionApplication.list(1L)">@LanguageApplication.message("nglUnits")</a></li>
+						<li><a
+							href="@routes.EquipmentClassApplication.list()">@LanguageApplication.message("equipmentClasses")</a></li>
+						<li><a href="@routes.SearchApplication.searchForm()">@LanguageApplication.message("search")</a></li>
+						<li><a href="@routes.CompanyApplication.list()">@LanguageApplication.message("vendors")</a></li>
+					</ul>
+					<br/>
+	            </div>
+	             <div class="panel-footer text-left">
+	                 
+	             </div>
+	      </div>
+		
+	</div>
+	
+	<!-- Maintenance panel -->
+	<div class="col-lg-4 col-md-6">		
+		
+		<div class="panel panel-green">
+	         <div class="panel-heading">
+	             <div class="row">
+	                 <div class="col-xs-3">
+	                     <i class="fa fa-wrench fa-5x"></i>
+	                 </div>
+	                 <div class="@if(session().get("play_user_lang") == "0") {col-xs-9 text-right} else {col-xs-9 text-left}">
+	                     <h2>@LanguageApplication.message("maintenances")</h2>
+	                 </div>
+	             </div>
+	         </div>
+	         
+	             <div class='panel-body' @if(session.get("play_user_lang")==0) {'text-left'} else {'text-right'}>
+	             	<ul>
+	             		<li><a
+						href="@routes.MaintenanceApplication.list()">@LanguageApplication.message("maintenances")</a></li>
+						<li><a href="@routes.MaintenanceApplication.showUnloggedMaintenances()">@LanguageApplication.message("systemMessages")</a></li>
+						<li><a href="@routes.MaintenanceApplication.createMaintenance()">@LanguageApplication.message("newWorkOrder")</a></li>
+						<li><a href="@routes.MaintenanceGroupApplication.maintenanceGroupList()">@LanguageApplication.message("maintProjects")</a></li>
+	             	</ul>
+	             	<button class="btn btn-link" title="Corrective maints"
+		 			data-toggle="modal" data-target="#maintModal">
+		 			@LanguageApplication.message("portfolio") ( @maintList.size )</button>
+	             </div>
+	             <div class="panel-footer text-left">
+	                 
+	                 
+	             </div>
+	      </div>
+		
+	</div>
+	
+	
+	<!-- Failure panel -->		
+	<div class="col-lg-4 col-md-6">		
+		
+		<div class="panel panel-red">
+	         <div class="panel-heading">
+	             <div class="row">
+	                 <div class="col-xs-3">
+	                     <i class="fa fa-bolt fa-5x"></i>
+	                 </div>
+	                 <div class="@if(session().get("play_user_lang") == "0") {col-xs-9 text-right} else {col-xs-9 text-left}">
+	                     <h2>@LanguageApplication.message("failures")</h2>
+	                 </div>
+	             </div>
+	         </div>
+	        
+	         <div class='panel-body' @if(session.get("play_user_lang")==0) {'text-left'} else {'text-right'}>
+	         <ul>
+	         	<li><a href="@routes.FailureApplication.failureModeList()">
+	        		 @LanguageApplication.message("failureModes")</a></li>
+	         
+             	<li><a href="@routes.FailureApplication.failureCausesList()">@LanguageApplication.message("failureCauses")</a></li>
+             	<li><a href="@routes.FailureApplication.failureMechanismsList()">@LanguageApplication.message("failureMechanism")</a></li>
+		 	</ul>
+		 	<br/><br/>
+             </div>
+             <div class="panel-footer text-left">
+                 
+             </div>
+	     </div>
+		
+	</div>
+	<!-- modal -->
+		<div class="modal fade" id="maintModal" tabinex=-1 role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+					<h4 class="modal-title">@LanguageApplication.message("portfolio")</h4>
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							&times;
+						</button>
+					</div>
+					
+					<div class="modal-body">
+						<div class="list-group">
+                           	@maintList.map { mlp =>
+                           	<a href="@routes.MaintenanceApplication.maintenanceIndex(mlp.id)" 
+                           	class="list-group-item">
+                                   <i class="fa fa-tasks fa-fw"></i>@mlp.workOrderSerial
+                                   <span class="pull-right text-muted small">
+                                   <em>@myUtils.DateTimeUtils.getIranianDate(mlp.requestDate)</em>
+                                   </span>
+                               </a>
+                           	}       
+                           </div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">
+						@LanguageApplication.message("cancel")
+						</button>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		<!-- end of modal -->
+	
+</div>
+	<div class="row">
+	<!-- chart 1 -->
+		<div class="col-lg-4 col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-heading diagram-panel">
+                   @LanguageApplication.message("maintenancePie")<i class="fa fa-pie-chart"></i>
+                </div>
+                <div class="panel-body">
+                	<div class="flotchart-container">
+					<div id="placeholder" class="flotchart-placeholder"></div>
+					</div>
+                </div>
+			</div>
+			
+		</div>
+	<!-- chart 2 -->
+		<div class="col-lg-4 col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-heading diagram-panel">
+                   @LanguageApplication.message("previous7DaysWO")<i class="fa fa-line-chart"></i>
+                </div>
+                <div class="panel-body">
+                	<div class="flotchart-container">
+					<div id="placeholder-diagram" class="flotchart-placeholder"></div>
+					</div>
+                </div>
+			</div>
+		</div>
+	<!-- chart 3 -->
+		<div class="col-lg-4 col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-heading diagram-panel">
+                    @LanguageApplication.message("failChart")<i class="fa fa-bar-chart"></i>
+                </div>
+                <div class="panel-body">
+                	<div class="flotchart-container">
+					<div id="placeholder-failChart" class="flotchart-placeholder"></div>
+					</div>
+                </div>
+			</div>
+		</div>
+	
+	</div>
+	<div class="row">
+		<!-- notifications panel -->
+		<div class="col-lg-3 col-md-6">
+	        <div class="panel panel-yellow">
+	            <div class="panel-heading">
+	                <i class="fa fa-bell fa-fw"></i>@LanguageApplication.message("notifications")
+	            </div>
+	            <!-- /.panel-heading -->
+	            <div class="panel-body">
+	                <div class="span4">
+		            <ul id="members">
+		            </ul>
+        		</div>
+	            </div>
+	        </div>
+		</div>
+		
+	</div>
+	
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.flot.min.js"))'></script>
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.flot.pie.min.js"))'></script>
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.flot.categories.min.js"))'></script>
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.flot.resize.min.js"))'></script>
+	
+	<script type="text/javascript" src="@routes.Assets.at("javascripts/flot.js")" defer></script>
+	<script>
+		$(document).ready(function() {
+			for(i=0;i<5;i++) {
+			$(".diagram-panel").fadeTo('slow', 0.5).fadeTo('slow', 1.0);
+			}
+		});
+	</script>
+	
+ }

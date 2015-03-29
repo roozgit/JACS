@@ -1,0 +1,98 @@
+@(content : Html)
+
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="JACS : Just Another CMMS Software. Based on ISO-14224">
+    <meta name="author" content="Roozbeh">
+   
+    <!-- Bootstrap core CSS -->
+	<link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("css/bootstrap.min.css"))'>
+	<link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("css/bootstrap-theme.min.css"))'>
+	<link rel="stylesheet" type="text/css" media="screen"
+		href='@routes.WebJarAssets.at(WebJarAssets.locate("font-awesome.min.css"))'>
+    <link rel="stylesheet" type="text/css" media="screen"
+		href="@routes.Assets.at("stylesheets/cover.css")">
+    <style> body {background:url("@routes.Assets.at("images/banner.png")") no-repeat fixed center;}</style>
+     <title>CMMS LOGIN</title>
+	</head>
+
+  <body>
+
+    <div class="site-wrapper">
+
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+          <div class="masthead clearfix">
+            <div class="inner">
+              <h1 class="masthead-brand">Computerized Maintenance Management & Information System</h1>
+              <ul class="nav masthead-nav">
+                <li>
+                @for(lang <- LanguageApplication.otherLanguageItems()){
+        <a href="@lang.switchUrl">@lang.name</a>
+    }
+                </li>
+                <li><a target="_blank" href="http://jacs.blogfa.com"><i class="fa fa-external-link"></i></a></li>
+                <li><a target="_blank" href="http://www.cmmsjacs.ir"><i class="fa fa-support"></i></a></li>
+                <li><a target="_blank" href="https://www.facebook.com/cmmsJACS"><i class="fa fa-facebook"></i></a></li>
+                <li><a target="_blank" href="https://plus.google.com/+CmmsjacsIrSoftware"><i class="fa fa-google-plus"></i></a></li>
+                <li><a href="mailto:roozbeh.khd@@gmail.com"><i class="fa fa-send"></i></a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="inner cover">
+          <div class="logo"  style="display:none;">
+          
+          	<a class="btn btn-info btn-lg" href="#"><strong>J</strong></a>
+          	<a class="btn btn-success btn-lg" href="#"><strong>A</strong></a>
+          	<a class="btn btn-warning btn-lg" href="#"><strong>C</strong></a>
+          	<a class="btn btn-danger btn-lg" href="#"><strong>S</strong></a>
+          </div>
+            
+            <p class="lead">
+            Just Another CMMIS Software
+            </p>
+            @content
+          </div>
+
+          <div class="mastfoot">
+            <div class="inner">
+            <p>Developed by: Roozbeh Khodadadeh-roozbeh.khd@@gmail.com</p>
+            <p>Version 1.10.2</p>
+            <p><a href="http://creativecommons.org/licenses/by-nc/4.0/">Commercial use without purchasing is forbidden!</a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+ 
+</body>
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))'></script>
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery-ui.min.js"))'></script>
+	
+	<script>
+	$(document).ready(function() {
+		//Remove all cookies
+		var cookies = document.cookie.split(";");
+		for(var i=0; i < cookies.length; i++) {
+		    var equals = cookies[i].indexOf("=");
+		    var name = equals > -1 ? cookies[i].substr(0, equals) : cookies[i];
+		    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+		}
+		$(".logo").hide(function() {
+			$(".logo").fadeIn(10000);
+		});
+		
+	});
+	
+	</script>
+</html>

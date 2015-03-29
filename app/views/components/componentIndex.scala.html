@@ -1,0 +1,230 @@
+@(parentComponent: Components)
+
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import be.objectify.deadbolt.java.views.html._
+
+@main(parentComponent.name) {<div id='tree'></div>} {
+	<ol class="breadcrumb">
+	<li><a href="@routes.InstallationApplication.installationIndex()"><strong>@parentComponent.subunit.equipment.section.plant.installation.name</strong></a></li>
+	<li><a href="@routes.PlantApplication.list(0, "name", "asc", "")"><small>@LanguageApplication.message("plants")</small></a></li>
+	<li><a href="@routes.PlantApplication.plantIndex(parentComponent.subunit.equipment.section.plant.id)"><strong>@parentComponent.subunit.equipment.section.plant.name</strong></a></li>
+	<li><a href="@routes.SectionApplication.list(parentComponent.subunit.equipment.section.plant.id,0,"name","asc","")"><small>@LanguageApplication.message("sections")</small></a></li>
+	<li><a href="@routes.SectionApplication.sectionIndex(parentComponent.subunit.equipment.section.id)"><strong>@parentComponent.subunit.equipment.section.name</strong></a></li>
+	<li><a href="@routes.EquipmentApplication.list(parentComponent.subunit.equipment.section.id, 0, "name", "asc", "")"><small>@LanguageApplication.message("equipments")</small></a></li>
+	<li><a href="@routes.EquipmentApplication.equipmentIndex(parentComponent.subunit.equipment.id)"><strong>@parentComponent.subunit.equipment.name</strong></a></li>
+	<li><a href="@routes.SubunitApplication.list(parentComponent.subunit.equipment.id, 0, "name", "asc", "")"><small>@LanguageApplication.message("subunits")</small></a></li>
+	<li><a href="@routes.SubunitApplication.subunitIndex(parentComponent.subunit.id)"><strong>@parentComponent.subunit.name</strong></a></li>
+	<li><a href="@routes.ComponentApplication.list(parentComponent.subunit.id)"><small>@LanguageApplication.message("components")</small></a></li>
+	</ol>
+  	
+    <div align="center"><h1><span class="label label-default">@parentComponent.name</span></h1></div>
+   <br/>
+    <div class="col-lg-6">
+    <div class="btn btn-group btn-group-justified">
+    	@restrict(la(as("admin"), as("creator"), as("editor"))) {
+		 <a class="btn btn-warning btn-lg" title="Edit component"
+		 		href="@routes.ComponentApplication.editComponent(parentComponent.id)"><span class="hideInSmall">@LanguageApplication.message("edit")</span>
+		 		<span class="glyphicon glyphicon-edit"></span></a>
+		 		
+		 <a class="btn btn-primary btn-lg" title="Copy component or upgrade to equipment level"
+		 	data-toggle="modal" data-target="#myModalCo"><span class="hideInSmall">@LanguageApplication.message("copyComponent")</span>
+		 	<span class="fa fa-copy"></span></a>
+		 	
+		 	<!-- Register failure button -->
+			 		<a class="btn btn-danger btn-lg" title="Register failure"
+			 		href="@routes.FailureApplication.createFailure(8,parentComponent.id)"><span class="hideInSmall">@LanguageApplication.message("registerFailure")</span>
+			 		<span class="fa fa-bolt"></span></a>
+		
+	</div>
+	<!-- modal -->
+	<div class="modal fade" id="myModalCo" tabinex=-1 role="dialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						&times;
+					</button>
+				<h4 class="modal-title">@LanguageApplication.message("componentModalTitle")</h4>
+				<div class="modal-body">
+					<form class="form" role="form"
+					action="@routes.ComponentApplication.copyComponent(parentComponent.id)">
+					<input type="hidden" name="cId" value="@parentComponent.id">
+					  	<div class="form-group">
+					  		<label for="subunit.id">@LanguageApplication.message("targetSubunit")</label>
+							<select name="subunit.id" id="subunit_id" class="form-control">
+								@Subunits.options().map {su =>
+									<option value="@su._1">@su._2</option>
+									}
+							</select>		
+						</div>
+						<button type="submit" class="btn btn btn-success">
+						@LanguageApplication.message("submit")
+						</button>
+					</form>
+					<br />
+					<form class="form" role="form" 
+					action="@routes.ComponentApplication.copyComponentAsEquipment(parentComponent.id)">
+					<input type="hidden" name="cId" value="@parentComponent.id">
+					  	<div class="form-group">
+					  		<label for="section.id">@LanguageApplication.message("moveAsEquipment")</label>
+							<select name="section.id" id="section_id" class="form-control">
+								@Sections.options(1).map {su =>
+									<option value="@su._1">@su._2</option>
+									}
+							</select>		
+						</div>
+						<button type="submit" class="btn btn btn-success">
+						@LanguageApplication.message("submit")
+						</button>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-dismiss="modal">
+					@LanguageApplication.message("cancel")
+					</button>
+				</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end of modal -->
+		 }
+ 
+		 <br />
+		 <div class="btn btn-group btn-group-justified">
+		
+			<a class="btn btn-default btn-lg"
+			href="@routes.PartComponentApplication.list(parentComponent.id,0,"part.name","asc","")">
+			<span class="hideInSmall">@LanguageApplication.message("parts")</span><i class="fa fa-link"></i></a>
+			
+	 		<a class="btn btn-default btn-lg"
+			href="@routes.HistoryApplication.list(8,parentComponent.id)">
+			<span class="hideInSmall">@LanguageApplication.message("history")</span><i class="fa fa-history"></i></a>
+			
+			<a class="btn btn-default btn-lg"
+			href="@routes.DatasheetApplication.list(8,parentComponent.id)">
+			<span class="hideInSmall">@LanguageApplication.message("dataSheet")</span><i class="fa fa-info-circle"></i></a>
+		</div>
+		
+		@if(flash.containsKey("success")) {
+        <div class="alert alert-success">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+    }
+    @if(flash.containsKey("error")) {
+       <div class="alert alert-danger">
+           <strong>ERROR: </strong> @flash.get("error")
+       </div>
+  		}
+  		<br />
+  		<div class="well well-sm">
+		 	@parentComponent.description
+		 </div>
+</div>
+<div class="col-lg-6">
+ 		<!-- tabs -->
+		<div id="tab-container" class="tab-container">
+			<ul class="etabs">
+				<li class="tab"><a href="#tabs-model">@LanguageApplication.message("modelInfo")</a></li>
+				<li class="tab"><a href="#tabs-guarantee">@LanguageApplication.message("guaranteeInfo")</a></li>
+				<li class="tab"><a href="#tabs-failureCauseTree">@LanguageApplication.message("failureCauseTree")</a></li>
+				<li class="tab"><a href="#tabs-comments">@LanguageApplication.message("comments")</a></li>
+				<li class="tab"><a href="#tabs-sources">@LanguageApplication.message("dataSources")</a></li>
+			</ul>
+			
+			<!-- model info -->
+			<div id="tabs-model">
+				<table class="table table-bordered">
+		 			<tr>
+		 				<th>@LanguageApplication.message("class")</th>
+				 		<th>@LanguageApplication.message("vendor")</th>
+				 		<th>@LanguageApplication.message("modelDesignation")</th>
+				 		<th>@LanguageApplication.message("manufactureDate")</th>
+				 		<th>@LanguageApplication.message("purchaseDate")</th>
+				 		<th>@LanguageApplication.message("serial")</th>
+		 			</tr>
+		 			<tr>
+		 				<td>@if(parentComponent.componentClass!=null) {
+		 				<a href="@routes.EquipmentClassApplication.equipmentClassIndex(parentComponent.componentClass.id)">
+		 				
+						@parentComponent.componentClass.name
+						---
+						@parentComponent.componentClass.ecTypeCode</a>
+						} else {-}
+						</td>
+		 				<td>
+						 	@if(parentComponent.manufacturerCompany != null) {
+						 		<a href="@routes.CompanyApplication.companyIndex(parentComponent.manufacturerCompany.id)">@parentComponent.manufacturerCompany.name</a>} else {-}
+						</td>
+		 				<td>@parentComponent.manufacturerModelDesignation</td>
+		 				<td>@myUtils.DateTimeUtils.getIranianYear(parentComponent.manufactureDate)</td>
+		 				<td>@myUtils.DateTimeUtils.getIranianDate(parentComponent.purchaseDate)</td>
+		 				<td>@parentComponent.componentSerialNo</td>
+		 			</tr>
+ 				</table>
+			</div>
+		
+			<!-- Guarantee -->
+			<div id="tabs-guarantee">
+				<table class="table table-bordered">
+		 			<tr>
+				 		<th>@LanguageApplication.message("guaranteeDescription")</th>
+				 		<th>@LanguageApplication.message("guaranteeEndDate")</th>	
+		 			</tr>
+		 			<tr>
+				 		<td>@parentComponent.guarantee</td>
+				  		<td>@myUtils.DateTimeUtils.getIranianDate(parentComponent.guaranteeEndDate)</td> 
+		 			</tr>
+				</table>
+			</div>
+			
+			<!-- Failure cause tree tab -->
+			  	<div id="tabs-failureCauseTree"><div data-value="8_@parentComponent.id" id="failTree"></div></div>
+			  	
+			<!-- Comments -->
+			<div id="tabs-comments">
+				@if(parentComponent.comments!=null && parentComponent.comments!="") {
+			 		<pre>@parentComponent.comments</pre>
+			 	}
+			</div>
+			
+			<!-- Data sources -->
+			<div id="tabs-sources">
+				<table class="table table-bordered">
+			 		<thead>
+			 			<tr class="success">
+			 				<th>@LanguageApplication.message("name")</th>
+			 				<th>@LanguageApplication.message("type")</th>
+			 				<th></th>
+			 			</tr>
+			 		</thead>
+			 		@if(parentComponent.files != null) {
+			 			@parentComponent.files.map { fi =>
+			 		<tbody>
+			 			<tr>
+			 				<td><a href="@routes.Application.download(fi.id)">@fi.name</a></td>
+			 				<td>@fi.tag</td>
+			 				<td><a class="btn btn-danger btn-sm" title=@LanguageApplication.message("remove")
+			 				href="@routes.ComponentApplication.deleteAssociation(parentComponent.id,fi.id)">
+			 				<span class="fa fa-trash"></span></a></td>
+			 			<tr>
+			 		</tbody>
+					 	}
+					 }
+				</table>
+				<br />
+				<h4>@LanguageApplication.message("upload")</h4>
+				<form class="form-inline" role="form" method="POST" enctype="multipart/form-data"
+					action="@routes.ComponentApplication.upload(parentComponent.id)" >
+						<div class="form-group">
+								<input type="file" name="file" class="btn btn-default">
+						</div>
+						<button type="submit" class="btn btn-default btn-md" title="upload">
+							<span class="fa fa-upload"></span>
+						</button>
+				</form>
+			</div>
+			
+		</div>
+	</div>
+}

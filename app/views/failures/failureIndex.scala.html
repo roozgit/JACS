@@ -1,0 +1,96 @@
+@(parentLevel : Integer, parentId : Long, failure : models.failure.Failures)
+
+@backName(pl : Int) = @{
+		
+		pl match {
+			case 3 => Installations.find.byId(parentId).name
+			case 4 => Plants.find.byId(parentId).name
+			case 5 => Sections.find.byId(parentId).name
+			case 6 => equipment.Equipments.find.byId(parentId).name
+			case 7 => Subunits.find.byId(parentId).name
+			case 8 => Components.find.byId(parentId).name
+			}
+		
+	}
+	
+@backLink(pl : Int) = @{
+		
+		pl match {
+			case 3 => routes.InstallationApplication.installationIndex()
+			case 4 => routes.PlantApplication.plantIndex(parentId)
+			case 5 => routes.SectionApplication.sectionIndex(parentId)
+			case 6 => routes.EquipmentApplication.equipmentIndex(parentId)
+			case 7 => routes.SubunitApplication.subunitIndex(parentId)
+			case 8 => routes.ComponentApplication.componentIndex(parentId)
+			}
+		
+	}
+	
+@main("Fail data") {<div id='tree'></div>} {
+	<div align="center"><h1 class="ltrInRtl"><a href=@backLink(parentLevel)>@backName(parentLevel)</a></h1></div>
+	<div class="btn btn-group">
+		<a class="btn btn-warning btn-lg" 
+		href="@routes.FailureApplication.editFailure(parentLevel, parentId, failure.id)">@LanguageApplication.message("edit")
+		<span class="glyphicon glyphicon-edit"></span></a>
+		
+		<a class="btn btn-default btn-lg" href="@routes.HistoryApplication.list(parentLevel,parentId)">
+		<span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span></a>
+	</div>
+	@if(flash.containsKey("success")) {
+        <div class="alert alert-success">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+        <br />
+    }
+    @if(flash.containsKey("error")) {
+       <div class="alert alert-danger">
+           <strong>ERROR: </strong> @flash.get("error")
+       </div>
+       <br />
+  		}
+	
+	 <table class="table">
+	 	<tr>
+	 		<th>@LanguageApplication.message("parentFailure")
+	 		<th>@LanguageApplication.message("severity")</th>
+	 		<th>@LanguageApplication.message("functionImpact")</th>
+	 		<th>@LanguageApplication.message("operationImpact")</th>
+	 		<th>@LanguageApplication.message("safetyImpact")</th>
+	 		<th>@LanguageApplication.message("failureModeCode")</th>
+	 		<th>@LanguageApplication.message("failureMechanism")</th>
+	 		<th>@LanguageApplication.message("detectionMethod")</th>
+	 	</tr>
+	 	<tr>
+	 		<td>@if(failure.parentFailure!=null) {@failure.parentFailure.id}</td>
+	 		<td>@failure.severity</td>
+	 		<td>@failure.functionImpact</td>
+	 		<td>@failure.operationImpact</td>
+	 		<td>@failure.safetyImpact</td>
+	 		<td>@failure.failureMode.failureModeCode</td>
+	 		<td>@failure.failureMechanism.notation</td>
+	 		<td>@failure.detectionMethod</td>
+	 	</tr>
+	
+	 </table>
+	 <label>@LanguageApplication.message("maintenances")</label>
+	 <ol>
+	 	@failure.correctiveActions.map { ca =>
+	 	<li>@ca.workOrderSerial</li>
+	 }
+	 </ol>
+	 <br/>
+	 <label>@LanguageApplication.message("failureCauses")</label>
+	 <ol>
+	 @failure.failureCauses.map { fca =>
+	 	<li>@fca.notation --- @fca.subdivisionNotation</li>
+	 }
+	 </ol>
+	 <br/>
+	 <dl>
+		<dt>@LanguageApplication.message("start"):<a href="@routes.HistoryApplication.historyIndex(failure.failHistory.id)">@myUtils.DateTimeUtils.getIranianDateTime(failure.failHistory.start)</a></dt>
+		<dt>@LanguageApplication.message("end"):<a href="@routes.HistoryApplication.historyIndex(failure.failHistory.id)">@myUtils.DateTimeUtils.getIranianDateTime(failure.failHistory.end)</a></dt>
+	 </dl>
+	 
+	 <label>@LanguageApplication.message("comments")</label>
+	 <pre>@failure.comments</pre> 
+ }

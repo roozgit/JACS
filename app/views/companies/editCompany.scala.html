@@ -1,0 +1,239 @@
+@(id : Long, newCompanyForm : Form[Companies])
+
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("Edit company") {@Html("")} {
+	<style>
+	body {
+		background-color: #EDEDED;
+	}
+	</style>
+	@form(action = routes.CompanyApplication.update(id),
+	'class->"form-horizontal",
+	'role->"form"
+	) {
+			<fieldset>
+				<legend><span class="label label-default">@LanguageApplication.message("basicInfo")</span></legend>
+				<div class="form-group">
+					<div class="col-lg-4">
+					@inputText(newCompanyForm("name"),
+						'class->"form-control",
+						'_label->LanguageApplication.message("name"),
+						'_showConstraints->true
+						)
+					</div>
+					
+					<div class="col-lg-4">
+					@inputText(newCompanyForm("description"),
+						'class->"form-control",
+						'_label->LanguageApplication.message("description"),
+						'_showConstraints->false
+						)
+					</div>
+					
+					<div class="col-lg-2">
+					@select(newCompanyForm("companyType"),
+						options(CompanyTypes.values().toList.map(_.toString)),
+						'class->"form-control",
+						'_showConstraints->true,
+						'_label->LanguageApplication.message("companyType")
+						)
+					</div>
+					
+					<div class="col-lg-2">
+						<label>@LanguageApplication.message("country")</label>
+						<select id="country" name="country" class="form-control">
+						<option value="" selected></option>
+						<option value="Iran">Iran (Islamic Republic of)</option>
+						<option value="United Kingdom">United Kingdom</option>
+						<option value="United States">United States</option>
+						<option value="Germany">Germany</option>
+						<option value="Italy">Italy</option>
+						<option value="France">France</option>
+						<option value="Netherlands">Netherlands</option>
+						<option value="Japan">Japan</option>
+						<option value="China">China</option>
+						<option value="Korea">Korea, Republic of</option>
+						<option value="Argentina">Argentina</option>
+						<option value="Armenia">Armenia</option>
+						<option value="Australia">Australia</option>
+						<option value="Austria">Austria</option>
+						<option value="Azerbaijan">Azerbaijan</option>
+						<option value="Belarus">Belarus</option>
+						<option value="Belgium">Belgium</option>
+						<option value="Brazil">Brazil</option>
+						<option value="Canada">Canada</option>						
+						<option value="Czech Republic">Czech Republic</option>
+						<option value="Denmark">Denmark</option>						
+						<option value="Finland">Finland</option>
+						<option value="Hong Kong">Hong Kong</option>
+						<option value="Hungary">Hungary</option>
+						<option value="Iceland">Iceland</option>
+						<option value="India">India</option>
+						<option value="Indonesia">Indonesia</option>
+						<option value="Iraq">Iraq</option>
+						<option value="Ireland">Ireland</option>						
+						<option value="Malaysia">Malaysia</option>
+						<option value="Norway">Norway</option>
+						<option value="Philippines">Philippines</option>
+						<option value="Poland">Poland</option>
+						<option value="Portugal">Portugal</option>
+						<option value="Russia">Russian Federation</option>
+						<option value="Saudi Arabia">Saudi Arabia</option>
+						<option value="South Africa">South Africa</option>
+						<option value="Span">Spain</option>
+						<option value="Sweden">Sweden</option>
+						<option value="Switzerland">Switzerland</option>
+						<option value="Taiwan">Taiwan</option>
+						<option value="Thailand">Thailand</option>
+						<option value="Turkey">Turkey</option>
+						<option value="Ukraine">Ukraine</option>
+						<option value="United Arab Emirates">United Arab Emirates</option>
+						<option value="Vietnam">Viet Nam</option>						
+						</select>
+					</div>
+				</div>	
+			</fieldset>
+			
+			<fieldset>
+			<legend><span class="label label-default">@LanguageApplication.message("contactInfo")</span></legend>
+			<div class="form-group">
+				<div class="col-lg-4">
+				@inputText(newCompanyForm("telephone1"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("tel"),
+					'_showConstraints->true
+					)
+				</div>
+				
+				<div class="col-lg-4">
+				@inputText(newCompanyForm("telephone2"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("tel"),
+					'_showConstraints->true
+					)
+				</div>
+				
+				<div class="col-lg-4">
+				@inputText(newCompanyForm("telephone3"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("tel"),
+					'_showConstraints->true
+					)
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<div class="col-lg-4">
+				@inputText(newCompanyForm("fax1"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("fax"),
+					'_showConstraints->true
+					)
+				</div>
+				
+				<div class="col-lg-4">
+				@inputText(newCompanyForm("fax2"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("fax"),
+					'_showConstraints->true
+					)
+				</div>
+				
+				<div class="col-lg-4">
+				@inputText(newCompanyForm("fax3"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("fax"),
+					'_showConstraints->true
+					)
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<div class="col-lg-4">
+					@textarea(newCompanyForm("address1"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("address")
+					)
+				</div>
+				
+				<div class="col-lg-4">
+					@textarea(newCompanyForm("address2"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("address")
+					)
+				</div>
+				
+				<div class="col-lg-4">
+					@textarea(newCompanyForm("address3"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("address")
+					)
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<div class="col-lg-4">
+				@inputText(newCompanyForm("website"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("website"),
+					'_showConstraints->true
+					)
+				</div>
+				
+				<div class="col-lg-4">
+				@inputText(newCompanyForm("email"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("email"),
+					'_showConstraints->true
+					)
+				</div>
+				
+				<div class="col-lg-4">
+				@inputText(newCompanyForm("contactPerson"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("contactPerson"),
+					'_showConstraints->true
+					)
+				</div>
+			</div>
+			
+			</fieldset>
+		
+			<fieldset>
+			<legend><span class="label label-default">@LanguageApplication.message("repInfo")</span></legend>
+			<div class="form-group">
+				<div class="col-lg-6">
+					@multiSelect(field = newCompanyForm("headCompanies"),
+					options = options(Companies.options()),
+					'class->"form-control",
+					'size->12,
+					'_label->LanguageApplication.message("repLabel"),
+					'_default->""
+					)
+				</div>
+			</div>
+			</fieldset>
+			
+			<div class="form-group">
+				<div class="col-lg-6">
+					@textarea(newCompanyForm("comments"),
+					'class->"form-control",
+					'rows->5,
+					'_label->LanguageApplication.message("comments")
+					)
+				</div>
+			</div>
+		
+		<div align="center">
+			<input type="submit" value="@LanguageApplication.message("update")" class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.CompanyApplication.companyIndex(id)" 
+				class="btn btn-danger btn-lg" role="button">
+			@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+}
+
+		

@@ -1,0 +1,230 @@
+@(id : Long, partForm: Form[Parts])
+
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("Edit part") {@Html("")} {
+	<style>
+		body {
+			background-color: #EDEDED;
+		}
+	</style>
+	@form(action = routes.PartApplication.update(id),
+	'class->"form-horizontal",
+	'role->"form"
+	) {
+	<fieldset>
+		<legend><span class="label label-default">@LanguageApplication.message("basicInfo")</span></legend>
+		<div class="form-group">
+			<div class="col-lg-3">
+				@inputText(partForm("name"),
+				'_Show_constraintss->"false",
+				'class->"form-control",
+				'_label->LanguageApplication.message("name"),
+				'_showConstraints->true
+				)
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-lg-6">
+				@textarea(partForm("description"),
+				'class->"form-control",
+				'rows->"4",
+				'_label->LanguageApplication.message("description")
+				)
+			</div>
+		</div>
+	</fieldset>
+	
+	<fieldset>
+		<legend><span class="label label-default">@LanguageApplication.message("vendorInfo")</span></legend>
+		<div class="form-group">
+			<div class="col-lg-3">
+			@select(partForm("originalVendor.id"),
+				options(Companies.options()),
+				'_Show_constraintss->"false",
+				'class->"form-control",
+				'_label->LanguageApplication.message("vendors"),
+				'_default->""
+				)
+			</div>
+			<div class="col-lg-3">
+				@multiSelect(partForm("manufacturerCompanies"),
+				options(Companies.options()),
+				'class->"form-control",
+				'_label->LanguageApplication.message("subVendors")
+				)
+			</div>
+		</div>
+	</fieldset>
+	
+	<fieldset>
+		<legend><span class="label label-default">@LanguageApplication.message("codeInfo")</span></legend>
+		<div class="form-group">
+			<div class="col-lg-3">
+				@inputText(partForm("mescCode"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("mescCode")
+				)
+			</div>
+					
+			<div class="col-lg-3">
+				@inputText(partForm("vendorCode"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("vendorCode")
+				)
+			</div>
+			
+			<div class="col-lg-3">
+				@inputText(partForm("vendorDrawingNo"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("vendorDrawingNo")
+				)
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-lg-3">
+				@inputText(partForm("assetCode"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("assetCode")
+				)
+			</div>
+			
+			<div class="col-lg-3">
+				@inputText(partForm("plantCode"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("plantCode")
+				)
+			</div>
+			<div class="col-lg-3">
+				@inputText(partForm("userCode"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("userCode")
+				)
+			</div>
+		</div>	
+	</fieldset>
+	
+	<fieldset>
+		<legend><span class="label label-default">@LanguageApplication.message("materialInfo")</span></legend>		
+		<div class="form-group">
+			<div class="col-lg-4">
+				@inputText(partForm("material1"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("material")
+					)
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-lg-4">
+				@inputText(partForm("material2"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("material")
+					)
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-lg-4">
+				@inputText(partForm("material3"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("material")
+					)
+			</div>
+		</div>
+	</fieldset>
+	
+	<fieldset>
+		<legend><span class="label label-default">@LanguageApplication.message("storageInfo")</span></legend>		
+		<div class="form-group">
+			<div class="col-lg-4">
+				@inputText(partForm("storageLocation"),
+				'_Show_constraintss->"false",
+				'class->"form-control",
+				'_label->LanguageApplication.message("storageLocation")
+				)
+			</div>
+		</div>
+				
+		<div class="form-group">
+			<div class="col-lg-2">
+				@select(partForm("measurementUnit.id"),
+				options(MeasurementUnits.options()),
+				'_Show_constraintss->"true",
+				'class->"form-control",
+				'_label->LanguageApplication.message("measurementUnit")
+				)
+			</div>
+					
+			<div class="col-lg-2">
+				@inputText(partForm("price"),
+				'_Show_constraintss->"true",
+				'class->"form-control",
+				'_label->LanguageApplication.message("unitPrice")
+				)
+			</div>
+					
+			<div class="col-lg-2">
+				@select(partForm("currency"),
+				options(Currencies.values().toList.map(_.toString)),
+				'class->"form-control",
+				'_label->LanguageApplication.message("currency")
+				)
+			</div>
+		</div>
+				
+		<div class="form-group">
+			<div class="col-lg-3">
+				@inputText(partForm("remainingQuantity"),
+				'_Show_constraintss->"false",
+				'class->"form-control",
+				'_label->LanguageApplication.message("stockQuantity")
+				)
+			</div>
+					
+			<div class="col-lg-2">
+				@inputText(partForm("minimumRequired"),
+				'_Show_constraintss->"false",
+				'class->"form-control",
+				'_label->LanguageApplication.message("minReq")
+				)
+			</div>
+					
+			<div class="col-sm-3">
+				@inputText(partForm("maximumRequired"),
+				'_Show_constraintss->"false",
+				'class->"form-control",
+				'_label->LanguageApplication.message("maxAllowed")
+				)
+			</div>
+					
+		</div>
+	</fieldset>
+		
+		<div class="form-group">
+			<div class="col-lg-6">
+				@textarea(partForm("comments"),
+				'class->"form-control",
+				'rows->"5",
+				'_label->LanguageApplication.message("comments")
+				)
+			</div>
+		</div>
+		
+		<div align="center">
+			<input type="submit" value="@LanguageApplication.message("update")" class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.PartApplication.partIndex(id)" 
+				class="btn btn-danger btn-lg" role="button">
+			@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("select2.min.js"))'></script>
+	@if(session().get("play_user_lang") == "1") {
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("select2_locale_fa.js"))'></script>}
+	<script>
+		$(document).ready(function() {
+			$("#measurementUnit_id").select2();
+		});
+	</script>
+}

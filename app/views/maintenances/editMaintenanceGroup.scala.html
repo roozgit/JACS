@@ -1,0 +1,52 @@
+@(id : Long, maintenanceGroupForm : Form[maintenance.MaintenanceGroups])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("Edit project") {@Html("")} {
+	<style>
+		body {
+			background-color: #EDEDED;
+		}
+	</style>
+	@form(action = routes.MaintenanceGroupApplication.update(id),
+	'class->"form-horizontal",
+	'role->"form"
+	) {
+		<div class="form-group">
+			<div class="col-lg-3">
+			@inputText(maintenanceGroupForm("name"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("name"),
+				'_showConstraints->true
+				)
+			</div>
+			
+			<div class="col-lg-6">
+				@textarea(maintenanceGroupForm("comments"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("comments")
+				)
+			</div>
+			
+			<div class="col-lg-2">
+			@multiSelect(field = maintenanceGroupForm("memberMaints"),
+				options = options(maintenance.Maintenances.options()),
+				'class->"form-control",
+				'_label->LanguageApplication.message("memberMaints"),
+				'size->27,
+				'_showConstraints->true
+				)
+			</div>
+			
+		</div>
+		
+		<div align="center">
+			<input type="submit" value="@LanguageApplication.message("update")" class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.MaintenanceGroupApplication.maintenanceGroupIndex(id)" 
+				class="btn btn-danger btn-lg" role="button">
+			@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+}
+

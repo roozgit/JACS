@@ -1,0 +1,377 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page and files
+GET     /                   	    controllers.Application.index()
+GET		/Dashboard					controllers.Application.index2()
+GET 	/fastEquipmentSearch		controllers.Application.fastSearch()
+GET		/tree						controllers.Application.treeJson()
+GET		/fillTree					controllers.Application.fillJsonTree(parentLevel : Integer, parentId : Long)
+GET		/moveCopy					controllers.Application.moveOrCopy(source : Long, sourceID : Long, dest : Long, destId : Long)
+GET		/chart						controllers.Application.flotChartJson()
+GET		/chart2						controllers.Application.flotChartJson2()
+GET		/resolveDB					controllers.Application.resolveDBInconsistencies()
+GET		/roleList					controllers.Application.securityRoleList()
+GET		/search						controllers.SearchApplication.searchForm()
+POST	/searchResults			 	controllers.SearchApplication.resultRenderer(stype : String)
+
+#Language class routes
+GET     /language/:code/:returnpath    controllers.LanguageApplication.changeLanguage(code: String, returnpath:String)
+GET     /language/:code/               controllers.LanguageApplication.changeLanguageHome(code: String)
+
+#Workflow
+GET		/workflow/index				controllers.WorkflowApplication.workflowIndex(wfType : String)
+POST	/workflow/new				controllers.WorkflowApplication.save(maintCat : String)
+GET		/workflow/delete			controllers.WorkflowApplication.deleteWorkflow(mCat : String)
+GET		/workflow/edit				controllers.WorkflowApplication.editWorkflow(id : Long)
+POST	/workflow/edit				controllers.WorkflowApplication.update(id : Long)
+GET		/flowTree					controllers.WorkflowApplication.flowTreeJson(wfType : String)
+GET		/fillFlowTree				controllers.WorkflowApplication.fillFlowTreeJson(recId : Long, decId : Long, wfType : String)
+
+#Blobs
+GET		/upload			 			controllers.Application.list(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")
+GET 	/file/edit					controllers.Application.editFile(fileId : Long)
+POST 	/file/edit					controllers.Application.update(fileId : Long)
+POST    /file/upload				controllers.Application.upload()
+GET  	/file/delete				controllers.Application.delete(fileId : Long)
+GET		/file/download				controllers.Application.download(fileId : Long)
+
+#UserBlobs
+GET		/user/upload				controllers.UserBlobApplication.uploadForm()
+GET 	/user/file/edit				controllers.UserBlobApplication.editFile(id : Long)
+POST 	/user/file/edit				controllers.UserBlobApplication.update(id : Long)
+POST    /user/file/upload			controllers.UserBlobApplication.upload(userId : Long)
+GET  	/user/file/delete			controllers.UserBlobApplication.delete(fileId : Long)
+GET		/user/file/download			controllers.UserBlobApplication.download(id : Long)
+GET		/user/image					controllers.UserBlobApplication.renderImage(id : Long)
+
+#Authentication
+GET 	/login						controllers.AuthApplication.login()
+POST    /login         				controllers.AuthApplication.authenticate()
+GET     /logout   					controllers.AuthApplication.logout()
+
+#Installations
+GET		/installation						controllers.InstallationApplication.installationIndex()
+GET     /installation/edit      			controllers.InstallationApplication.editInstallation(id : Long)
+POST    /installation/edit	 				controllers.InstallationApplication.update(id : Long)
+POST 	/installations/upload				controllers.InstallationApplication.upload(id : Long)
+GET		/installations/deleteAssociation	controllers.InstallationApplication.deleteAssociation(id : Long, fileId : Long)
+
+#Plants
+GET 	/plants						controllers.PlantApplication.list(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")
+GET     /plant            			controllers.PlantApplication.plantIndex(id : Long)
+GET     /plant/new		    		controllers.PlantApplication.createPlant()
+POST    /plant/new		    		controllers.PlantApplication.save()
+GET		/plant/edit		    		controllers.PlantApplication.editPlant(id : Long)
+POST	/plant/edit		   			controllers.PlantApplication.update(id : Long)
+POST 	/plants/upload				controllers.PlantApplication.upload(id : Long)
+GET		/plants/deleteAssociation	controllers.PlantApplication.deleteAssociation(id : Long, fileId : Long)
+
+
+#Sections
+GET 	/sections						controllers.SectionApplication.list(ppid : Long, p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")
+GET		/section		    			controllers.SectionApplication.sectionIndex(id : Long)
+GET		/section/new	    	    	controllers.SectionApplication.createSection(id: Long)
+POST	/section/new	    			controllers.SectionApplication.save(ppid : Long)
+GET		/section/edit	   				controllers.SectionApplication.editSection(id : Long)
+POST	/section/edit	    			controllers.SectionApplication.update(id : Long)
+POST 	/sections/upload				controllers.SectionApplication.upload(id : Long)
+GET		/sections/deleteAssociation		controllers.SectionApplication.deleteAssociation(id : Long, fileId : Long)
+GET		/sections/maints-ajax			controllers.SectionApplication.allSectionMaints(id : Long)
+
+
+#Equipments
+GET 	/equipments						controllers.EquipmentApplication.list(psid : Long, p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")
+GET		/equipment						controllers.EquipmentApplication.equipmentIndex(id : Long)
+GET		/equipment/new					controllers.EquipmentApplication.createEquipment(psid:Long)
+POST	/equipment/new					controllers.EquipmentApplication.save(psid : Long)
+GET		/equipment/edit					controllers.EquipmentApplication.editEquipment(id : Long)
+POST	/equipment/edit					controllers.EquipmentApplication.update(id : Long)
+POST 	/equipments/upload				controllers.EquipmentApplication.upload(id : Long)
+GET		/equipments/deleteAssociation	controllers.EquipmentApplication.deleteAssociation(id : Long, fileId : Long)
+GET		/equipments/copy				controllers.EquipmentApplication.copyEquipment(eId : Long)
+GET		/equipments/moveAsComponent		controllers.EquipmentApplication.copyEquipmentAsComponent(eId : Long)
+GET		/equipments/delete				controllers.EquipmentApplication.delete(equipmentId : Long)
+GET		/equipment/uptime				controllers.EquipmentApplication.flotEquipmentUpTimeJson(id : Long)
+
+#EquipmentClass
+GET 	/equipment_classes			controllers.EquipmentClassApplication.list(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")
+GET 	/equipment_class 			controllers.EquipmentClassApplication.equipmentClassIndex(id : Long)
+GET 	/equipment_class/new		controllers.EquipmentClassApplication.createEquipmentClass()
+POST 	/equipment_class/new 		controllers.EquipmentClassApplication.save()
+GET 	/equipment_class/edit 		controllers.EquipmentClassApplication.editEquipmentClass(id : Long)
+POST 	/equipment_class/edit 		controllers.EquipmentClassApplication.update(id : Long)
+
+#Subunits
+GET 	/subunits						controllers.SubunitApplication.list(peid : Long, p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")
+GET		/subunit						controllers.SubunitApplication.subunitIndex(id : Long)
+GET		/subunit/new					controllers.SubunitApplication.createSubunit(id:Long)
+POST	/subunit/new					controllers.SubunitApplication.save(psid : Long)
+GET		/subunit/edit					controllers.SubunitApplication.editSubunit(id : Long)
+POST	/subunit/edit					controllers.SubunitApplication.update(id : Long)
+POST 	/subunits/upload				controllers.SubunitApplication.upload(id : Long)
+GET		/subunits/deleteAssociation		controllers.SubunitApplication.deleteAssociation(id : Long, fileId : Long)
+GET		/subunits/delete				controllers.SubunitApplication.delete(parentEQId : Long, id : Long)
+
+#Components
+GET 	/components						controllers.ComponentApplication.list(psuid : Long, p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")
+GET		/component						controllers.ComponentApplication.componentIndex(id : Long)
+GET		/component/new					controllers.ComponentApplication.createComponent(id:Long)
+POST	/component/new					controllers.ComponentApplication.save(psid : Long)
+GET		/component/edit					controllers.ComponentApplication.editComponent(id : Long)
+POST	/component/edit					controllers.ComponentApplication.update(id : Long)
+POST 	/components/upload				controllers.ComponentApplication.upload(id : Long)
+GET		/components/deleteAssociation	controllers.ComponentApplication.deleteAssociation(id : Long, fileId : Long)
+GET		/components/delete				controllers.ComponentApplication.delete(parentSUId : Long, id : Long)
+GET		/components/copy				controllers.ComponentApplication.copyComponent(cId : Long)
+GET		/components/copyAsEquipmen		controllers.ComponentApplication.copyComponentAsEquipment(cId : Long)
+
+#Parts
+GET 	/parts						controllers.PartApplication.list(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")
+GET		/part						controllers.PartApplication.partIndex(id : Long)
+GET		/part/new					controllers.PartApplication.createPart()
+POST	/part/new					controllers.PartApplication.save()
+GET		/part/edit					controllers.PartApplication.editPart(id : Long)
+POST	/part/edit					controllers.PartApplication.update(id : Long)
+GET 	/parts/maintRequests		controllers.PartApplication.viewPartRequests()
+POST 	/parts/upload				controllers.PartApplication.upload(id : Long)
+GET		/parts/deleteAssociation	controllers.PartApplication.deleteAssociation(id : Long, fileId : Long)
+GET		/parts/delete				controllers.PartApplication.delete(id : Long)
+
+#PartsComponents
+GET		/part_components			controllers.PartComponentApplication.list(pcoid : Long, p:Int ?= 0, s ?= "part.name", o ?= "asc", f ?= "")
+GET 	/part_component/new			controllers.PartComponentApplication.createPartComponent(pcid : Long)
+POST 	/part_component/new			controllers.PartComponentApplication.save(pcid : Long)
+GET 	/part_component/edit		controllers.PartComponentApplication.editPartComponent(id : Long)
+POST 	/part_component/edit		controllers.PartComponentApplication.update(id : Long, parentCompId : Long)
+GET		/part-component/delete		controllers.PartComponentApplication.delete(id : Long, pcid : Long)
+GET		/part-component/copy		controllers.PartComponentApplication.copyPartsComponents(pcId : Long)
+
+#History
+GET 	/logs						controllers.HistoryApplication.list(level : Integer, pxid : Long, p:Int ?= 0, s ?= "eventType", o ?= "asc", f ?= "")
+GET		/logs/pm					controllers.HistoryApplication.plannedMaintsHistoryList(p:Int ?= 0, s ?= "eventType", o ?= "asc")
+GET		/log						controllers.HistoryApplication.historyIndex(hxid : Long)
+GET		/log/edit					controllers.HistoryApplication.editHistory(hxid : Long, msg : String)
+POST 	/log/edit					controllers.HistoryApplication.update(hxid : Long)
+GET 	/log/new					controllers.HistoryApplication.createHistory(level : Integer, pxid : Long, maintID : Long ?=-1, failID : Long ?=-1)
+POST 	/log/new					controllers.HistoryApplication.save(level : Integer, pxid : Long, maintID : Long ?=-1, failID : Long ?=-1)
+GET		/log/calendar				controllers.HistoryApplication.calendar(level : Integer, pxid : Long, calType : String ?="", occur : String ?="")
+GET     /log.json                	controllers.HistoryApplication.json(level : Integer, pxid : Long, type : String, occur : String)
+POST	/log/move-ajax				controllers.HistoryApplication.move()
+POST	/log/resize-ajax			controllers.HistoryApplication.resize()
+GET		/log/delete-ajax			controllers.HistoryApplication.deleteH(hxid : Long, level : Integer, pxid : Long, calType : String)
+
+#Shifts
+GET		/shift						controllers.ShiftApplication.shiftIndex(shi : Long)
+GET		/shift/edit					controllers.ShiftApplication.editShift(shi : Long)
+POST 	/shift/edit					controllers.ShiftApplication.update(shi : Long)
+GET 	/shift/new					controllers.ShiftApplication.createShift(userId : Long)
+POST 	/shift/new					controllers.ShiftApplication.save(userId : Long)
+GET		/shift/calendar				controllers.ShiftApplication.shiftCalendar(userId : Long)
+GET     /shift.json                	controllers.ShiftApplication.json(userId : Long)
+POST	/shift/move-ajax			controllers.ShiftApplication.move()
+POST	/shift/resize-ajax			controllers.ShiftApplication.resize()
+GET		/shift/delete-ajax			controllers.ShiftApplication.deleteShift(shi : Long)
+
+#PartHistory
+GET 	/part/logs					controllers.PartHistoryApplication.list(pid : Long, p:Int ?= 0, s ?= "commenceDate", o ?= "asc", f1 ?= "", f2 ?= "", f3 ?= "", f4 ?= "", f5 ?= "", f6 ?= "", f7 ?= "", f8 ?= "")
+GET		/part/log					controllers.PartHistoryApplication.partHistoryIndex(hid : Long)
+GET		/part/log/edit				controllers.PartHistoryApplication.editPartHistory(phxid : Long)
+POST 	/part/log/edit				controllers.PartHistoryApplication.update(phxid : Long)
+GET 	/part/log/new				controllers.PartHistoryApplication.createPartHistory(phxid : Long)
+POST 	/part/log/new				controllers.PartHistoryApplication.save(phxid : Long)
+GET		/part/log/del				controllers.PartHistoryApplication.delete(ppid : Long, phxid : Long)
+POST 	/part/log/upload			controllers.PartHistoryApplication.upload(phxid : Long)
+GET		/part/log/deleteAssociation	controllers.PartHistoryApplication.deleteAssociation(phxid : Long, fileId : Long)
+GET		/part/log/request			controllers.PartHistoryApplication.createRequestHistory()
+POST	/part/log/request			controllers.PartHistoryApplication.saveRequest()
+GET 	/parts/stock_update			controllers.PartHistoryApplication.updateStockParts(mpid : Long, mid : Long)
+
+#InventoryEvents
+GET		/inventoryEvents			controllers.InventoryEventApplication.list()
+GET		/inventoryEvents/new		controllers.InventoryEventApplication.createInventoryEvent()
+POST	/inventoryEvents/new		controllers.InventoryEventApplication.save()
+GET		/inventoryEvents/edit		controllers.InventoryEventApplication.editInventoryEvent(id : Long)
+POST	/inventoryEvents/edit		controllers.InventoryEventApplication.update(id : Long)
+
+#Datasheet
+GET 	/datasheet					controllers.DatasheetApplication.list(level : Integer, pid : Long, p:Int ?= 0, s ?= "parameter", o ?= "asc", f ?= "")
+PUT 	/datasheet/update			controllers.DatasheetApplication.update()
+GET 	/datasheet/new				controllers.DatasheetApplication.createDatasheet(level : Integer, pid : Long, hitsotryId: Long ?=-1)
+POST 	/datasheet/new				controllers.DatasheetApplication.save(level : Integer, pid : Long, hitsotryId: Long)
+DELETE	/datasheet/ajax-delete		controllers.DatasheetApplication.deleteItem(id : Long)
+GET		/datasheet/maintParams-ajax	controllers.DatasheetApplication.maintParameters(historyId : Long)
+
+#Maintenances
+GET 	/maint						controllers.MaintenanceApplication.maintenanceIndex(maintID : Long)
+GET 	/maints						controllers.MaintenanceApplication.list(p:Int ?= 0, s ?= "workOrderSerial", o ?= "asc", f1 ?= "", f2 ?= "", f3 ?= "", f4 ?= "", f5 ?= "", f6 ?= "", f7 ?= "",f8 ?= "",f9 ?= "")
+GET 	/maint/edit					controllers.MaintenanceApplication.editMaintenance(maintID :  Long)
+POST 	/maint/edit					controllers.MaintenanceApplication.update(eid : Long, maintID : Long)
+GET  	/maint/new					controllers.MaintenanceApplication.createMaintenance(sid : Long ?=-1, eid : Long ?=-1)
+POST 	/maint/new					controllers.MaintenanceApplication.save(sid: Long, eid : Long)
+GET		/maint/workflow				controllers.MaintenanceApplication.workflowIndex(maintID : Long)
+GET		/maint/sefiller-ajax		controllers.MaintenanceApplication.sectionEquipmentFiller(sectionId : Long)
+GET		/maint/eqrfiller-ajax		controllers.MaintenanceApplication.equipmentRoutineFiller(equipmentId : Long)
+GET		/maint/eqcrfiller-ajax		controllers.MaintenanceApplication.equipmentClassRoutineFiller(equipmentId : Long)
+GET		/maint/serfiller-ajax		controllers.MaintenanceApplication.sectionRoutineFiller(SectionId : Long)
+POST 	/maint/upload				controllers.MaintenanceApplication.upload(maintID : Long)
+GET		/maint/deleteAssociation	controllers.MaintenanceApplication.deleteAssociation(maintID : Long, fileId : Long)
+GET		/maint/portfolio			controllers.MaintenanceApplication.referWorkTo(maintID : Long)
+GET		/maint/createPortfolio		controllers.MaintenanceApplication.createWorkflow(maintID : Long)
+GET		/maint/deletePortfolio		controllers.MaintenanceApplication.deleteWorkflow(maintID : Long)
+GET		/maint/mttr					controllers.MaintenanceApplication.mttr(equipmentId : Long)
+
+GET		/maint/unlogged				controllers.MaintenanceApplication.showUnloggedMaintenances(currentHours : String ?="0", currentDays : String ?="0", currentMonths : String ?="0")
+GET 	/maint/projects/list		controllers.MaintenanceGroupApplication.maintenanceGroupList()
+GET 	/maint/projects/index		controllers.MaintenanceGroupApplication.maintenanceGroupIndex(id : Long)
+GET 	/maint/projects/new			controllers.MaintenanceGroupApplication.createMaintenanceGroup()
+POST 	/maint/projects/new			controllers.MaintenanceGroupApplication.save()
+GET 	/maint/projects/edit 		controllers.MaintenanceGroupApplication.editMaintenanceGroup(id : Long)
+POST 	/maint/projects/edit 		controllers.MaintenanceGroupApplication.update(id : Long)
+POST	/maint/projects/addPart		controllers.MaintenanceGroupApplication.addPartToGroupMaints(projectId : Long)
+POST	/maint/projects/addTool		controllers.MaintenanceGroupApplication.addToolToGroupMaints(projectId : Long)
+POST	/maint/shiftDates			controllers.MaintenanceGroupApplication.shiftDates(projectId : Long)
+GET		/maint/projects/delete		controllers.MaintenanceGroupApplication.deleteGroup(projectId : Long)
+GET		/maint/new-ajax				controllers.MaintenanceApplication.createAjaxMaintenance(sid: Long, eid : Long)
+GET		/maint/serial-ajax			controllers.MaintenanceApplication.calculateSerials(category : String)
+GET		/maint/delete				controllers.MaintenanceApplication.delete(maintID : Long)
+GET		/maint/removeFromGroup		controllers.MaintenanceApplication.removeFromGroup(maintId : Long, groupId : Long)
+
+#Maintenance-personnel
+GET 	/maint/personnel/new		controllers.MaintenanceApplication.createMaintenanceUser(maintID : Long)
+POST 	/maint/personnel/new		controllers.MaintenanceApplication.saveMaintenancesUsers(maintID : Long)
+GET 	/maint/personnel/edit		controllers.MaintenanceApplication.editMaintenanceUser(muid : Long, maintID : Long)
+POST 	/maint/personnel/edit		controllers.MaintenanceApplication.updateMaintenancesUsers(muid : Long, maintID : Long)
+GET 	/maint/personnel/delete		controllers.MaintenanceApplication.deleteMaintenanceUser(muid : Long, maintID : Long)
+
+#Maintenance-parts
+GET 	/maint/part/new				controllers.MaintenanceApplication.createMaintenancePart(maintID : Long)
+POST 	/maint/part/new				controllers.MaintenanceApplication.saveMaintenancesParts(maintID : Long)
+GET 	/maint/part/edit			controllers.MaintenanceApplication.editMaintenancePart(mpid : Long, maintID : Long)
+POST 	/maint/part/edit			controllers.MaintenanceApplication.updateMaintenancesParts(mpid : Long, maintID : Long)
+GET 	/maint/part/delete			controllers.MaintenanceApplication.deleteMaintenancePart(mpid : Long, maintID : Long)
+
+#Maintenance-subunits
+GET 	/maint/subunit/new			controllers.MaintenanceApplication.createMaintenanceSubunit(maintID : Long)
+POST 	/maint/subunit/new			controllers.MaintenanceApplication.saveMaintenancesSubunits(maintID : Long)
+GET 	/maint/subunit/edit			controllers.MaintenanceApplication.editMaintenanceSubunit(msid : Long, maintID : Long)
+POST 	/maint/subunit/edit			controllers.MaintenanceApplication.updateMaintenancesSubunits(msid : Long, maintID : Long)
+GET 	/maint/subunit/delete		controllers.MaintenanceApplication.deleteMaintenanceSubunit(msid : Long, maintID : Long)
+
+#Maintenance-components
+GET 	/maint/component/new		controllers.MaintenanceApplication.createMaintenanceComponent(maintID : Long)
+POST 	/maint/component/new		controllers.MaintenanceApplication.saveMaintenancesComponents(maintID : Long)
+GET 	/maint/component/edit		controllers.MaintenanceApplication.editMaintenanceComponent(mcid : Long, maintID : Long)
+POST 	/maint/component/edit		controllers.MaintenanceApplication.updateMaintenancesComponents(mcid : Long, maintID : Long)
+GET 	/maint/component/delete		controllers.MaintenanceApplication.deleteMaintenanceComponent(mcid : Long, maintID : Long)
+
+#Preventive Maintenance
+GET 	/PMs						controllers.PreventiveMaintenanceApplication.list(level : Integer, pid : Long)
+GET		/PM							controllers.PreventiveMaintenanceApplication.pmIndex(pmId : Long)
+GET		/PM/edit					controllers.PreventiveMaintenanceApplication.editPM(pmId : Long)
+POST 	/PM/edit					controllers.PreventiveMaintenanceApplication.update(pmId : Long)
+GET 	/PM/new						controllers.PreventiveMaintenanceApplication.createPM(level : Integer, pmId : Long)
+POST 	/PM/new						controllers.PreventiveMaintenanceApplication.save(level : Integer, pmId : Long)
+GET		/PM/plan					controllers.PreventiveMaintenanceApplication.planPmParams(level : String, pmParentId : Long, pmRoutineId : Long)
+GET		/PM/plan.json				controllers.PreventiveMaintenanceApplication.calculatePmPlanJson(level :String, pmClassId : Long, pmRoutineId : Long, startDate : String, endDate : String, numOfPmsPerDay : String, maintLength : String)
+POST	/PM/savePlan.json			controllers.PreventiveMaintenanceApplication.savePlannedMaints(pmRoutineId : Long, periods : String, isProject : Boolean, hiddenStart : String, hiddenStop : String)
+
+#Failures
+GET		/failure/index				controllers.FailureApplication.failureIndex(level : Integer, pid : Long, fid : Long)
+GET		/failure/new				controllers.FailureApplication.createFailure(level : Integer, pid : Long)
+GET		/failure/newEF				controllers.FailureApplication.createEquipmentFailure(eid : Long)
+POST	/failure/new				controllers.FailureApplication.save(level : Integer, pid : Long)
+GET		/failure/edit				controllers.FailureApplication.editFailure(level : Integer, pid : Long,fid : Long)
+POST	/failure/edit				controllers.FailureApplication.update(level : Integer, pid : Long,fid : Long)
+GET		/failure/fm/list			controllers.FailureApplication.failureModeList(p:Int ?= 0, s ?= "typeNumber", o ?= "asc", f ?= "")
+GET		/failure/fm/new				controllers.FailureApplication.createFailureMode()
+POST	/failure/fm/new				controllers.FailureApplication.failureModeSave()
+GET		/failure/fm/edit			controllers.FailureApplication.editFailureMode(fmid : Long)
+POST	/failure/fm/update			controllers.FailureApplication.failureModeUpdate(fmid : Long)
+GET		/failure/eqfiller-ajax		controllers.FailureApplication.failureFiller(sectionId: Long, equipmentId : Long)
+GET		/failure/fmChart-ajax		controllers.FailureApplication.flotChartFailureJson()
+GET 	/fails						controllers.FailureApplication.list(eqId : Long, p:Int ?= 0, s ?= "severity", o ?= "asc", f1 ?= "", f2 ?= "", f3 ?= "", f4 ?= "", f5 ?= "", f6 ?= "", f7 ?= "",f8 ?= "",f9 ?= "")
+GET		/failure/failureCauses		controllers.FailureApplication.failureCausesList()
+GET		/failure/failureMechs		controllers.FailureApplication.failureMechanismsList()
+GET		/failure/mtbf				controllers.FailureApplication.mtbf(equipmentId : Long)
+GET		/failures/tree				controllers.FailureApplication.initCausalityTree(parentLevel : Integer, parentId : Long)
+GET		/failures/fillCausalityTree controllers.FailureApplication.fillCausalityTree(faId : Long)
+
+#Companies
+GET 	/companies					controllers.CompanyApplication.list(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")
+GET 	/company 					controllers.CompanyApplication.companyIndex(id : Long)
+GET 	/company/new				controllers.CompanyApplication.createCompany()
+POST 	/company/new 				controllers.CompanyApplication.save()
+GET 	/company/edit 				controllers.CompanyApplication.editCompany(id : Long)
+POST 	/company/edit 				controllers.CompanyApplication.update(id : Long)
+POST 	/company/upload-logo		controllers.CompanyApplication.upload(id : Long)
+GET		/company/logo				controllers.CompanyApplication.renderImage(id : Long)
+GET		/company/logo/del			controllers.CompanyApplication.deleteAssociation(id: Long)
+
+#RepairTools
+GET 	/tools						controllers.RepairToolApplication.list(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")
+GET 	/tool 						controllers.RepairToolApplication.repairToolIndex(id : Long)
+GET 	/tool/new					controllers.RepairToolApplication.createRepairTool()
+POST 	/tool/new 					controllers.RepairToolApplication.save()
+GET 	/tool/edit 					controllers.RepairToolApplication.editRepairTool(id : Long)
+POST 	/tool/edit 					controllers.RepairToolApplication.update(id : Long)
+
+#Users
+GET 	/users						controllers.UserApplication.list(p:Int ?= 0, s ?= "userName", o ?= "asc", f ?= "")
+GET 	/user/new					controllers.UserApplication.createUser()
+POST 	/user/new 					controllers.UserApplication.save()
+GET 	/user		 				controllers.UserApplication.userIndex(uid : Long)
+GET 	/user/edit				 	controllers.UserApplication.editUser(uid : Long)
+POST 	/user/edit					controllers.UserApplication.update(uid : Long)
+GET		/user/pass_edit				controllers.UserApplication.editPassword(uid : Long)
+POST	/user/pass_edit				controllers.UserApplication.updatePassword(uid : Long)
+GET		/user/passReset				controllers.UserApplication.resetPassword(uid : Long)
+GET		/user/disableLogin			controllers.UserApplication.disableLogin(uid : Long)
+GET		/user/roles/edit			controllers.UserApplication.editSecurity(uid : Long)
+POST	/user/roles/edit			controllers.UserApplication.updateSecurity(uid : Long)
+GET		/user/discips				controllers.UserApplication.disciplineUserFiller(disid : Long)
+GET		/user/pageSize				controllers.UserApplication.setPageSize(uid : Long)
+
+#Disciplines
+GET 	/disciplines				controllers.DisciplineApplication.list(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")
+GET 	/disciplines/index			controllers.DisciplineApplication.disciplineIndex(id : Long)
+GET 	/disciplines/new			controllers.DisciplineApplication.createDiscipline()
+POST 	/disciplines/new 			controllers.DisciplineApplication.save()
+GET 	/disciplines/edit 			controllers.DisciplineApplication.editDiscipline(id : Long)
+POST 	/disciplines/edit 			controllers.DisciplineApplication.update(id : Long)
+GET		/disciplines/createSR		controllers.DisciplineApplication.createSecurityRoles(id : Long)
+
+#Reports
+GET 	/report						controllers.ReportApplication.downloadPdfPmForm(id : Long, mtype : String ?= "excel")
+GET		/report/equipments			controllers.ReportApplication.equipmentReport(pid : Long, type : String)
+GET		/report/reportSelector		controllers.ReportApplication.reportSelector()
+POST	/report/displayReport		controllers.ReportApplication.displayReport()
+GET		/report/woForm				controllers.ReportApplication.workOrderForm(id : Long)
+GET		/report/woMeter				controllers.ReportApplication.meterWorkOrder(disciplineId : Long)
+GET		/report/ganntChart			controllers.ReportApplication.projectGantt(gid : Long)
+
+#Measurement Units
+GET		/dimensions					controllers.MeasurementUnitApplication.dimensionList()
+GET		/dimensions/create			controllers.MeasurementUnitApplication.createDimensionForm()
+POST	/dimenstions/create			controllers.MeasurementUnitApplication.saveDimension()
+GET		/dimensions/edit			controllers.MeasurementUnitApplication.editDimensionForm(did : Long)
+POST	/dimensions/edit			controllers.MeasurementUnitApplication.updateDimension(did : Long)
+GET 	/units/list					controllers.MeasurementUnitApplication.list(p:Int ?= 0, s ?= "name", o ?= "asc", f ?= "")
+GET		/units/create				controllers.MeasurementUnitApplication.createMeasurementUnitForm()
+POST	/units/create				controllers.MeasurementUnitApplication.saveMeasurementUnit()
+GET		/units/edit					controllers.MeasurementUnitApplication.editMeasurementUnitForm(mid : Long)
+POST	/units/edit					controllers.MeasurementUnitApplication.updateMeasurementUnit(mid : Long)
+GET		/units/options				controllers.MeasurementUnitApplication.measurementUnitOptions()
+
+#Web sockets
+GET 	/wsInterface 			controllers.WebSocketApplication.wsInterface(username : String)
+GET 	/assets/javascripts/ws.js	controllers.WebSocketApplication.wsJs(username : String)
+
+#javascript routes
+GET     /assets/javascripts/routes	controllers.Application.javascriptRoutes()
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET     /webjars/*file                    controllers.WebJarAssets.at(file)
+GET         /vassets/*file          controllers.Assets.versioned(path="/public", file: Asset)

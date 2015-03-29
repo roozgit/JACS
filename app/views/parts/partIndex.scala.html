@@ -1,0 +1,200 @@
+@(parentPart: Parts, coList : Map[Components,Float])
+@main("Part:" + parentPart.name) {<div id='tree'></div>} {
+  	<h2 align="center">
+  		<span class="label label-default">@parentPart.name</span>
+  	</h2><br/>
+  	<div class="col-lg-4">
+	  	<div class="btn-group btn-group-justified">
+			<a class="btn btn-warning btn-lg" title="Edit part"
+			 	href="@routes.PartApplication.editPart(parentPart.id)"><span class="hideInSmall">@LanguageApplication.message("edit")</span>
+			 	<span class="glyphicon glyphicon-edit"></span></a>
+			 
+			 <a class="btn btn-default btn-lg"
+				href="@routes.PartHistoryApplication.list(parentPart.id)">
+				<span class="hideInSmall">@LanguageApplication.message("history")</span><i class="fa fa-history"></i></a>
+				
+				<a class="btn btn-default btn-lg"
+				href="@routes.DatasheetApplication.list(9,parentPart.id)">
+				<span class="hideInSmall">@LanguageApplication.message("dataSheet")</span><i class="fa fa-info-circle"></i></a>
+			
+			<a class="btn btn-default btn-lg" title="Back to part list"
+				href="@routes.PartApplication.list(0,"name","asc","")">
+				<span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span></span>
+			</a>
+		</div>
+				 
+			<br />
+			@if(flash.containsKey("success")) {
+	        <div class="alert alert-success">
+	            <strong>Done!</strong> @flash.get("success")
+	        </div>
+	    	}
+	    	@if(flash.containsKey("error")) {
+		       <div class="alert alert-danger">
+		           <strong>ERROR: </strong> @flash.get("error")
+		       </div>
+		  	}
+	  		<br />
+			<div class="well well-sm"><h4>@parentPart.description</h4></div>
+		</div>
+		<div class="col-lg-8">
+		 <!-- tabs -->
+		<div id="tab-container" class="tab-container">
+			<ul class="etabs">
+				<li class="tab"><a href="#tabs-codes">@LanguageApplication.message("codeInfo")</a></li>
+				<li class="tab"><a href="#tabs-manufacturers">@LanguageApplication.message("vendorInfo")</a></li>
+				<li class="tab"><a href="#tabs-material">@LanguageApplication.message("materialInfo")</a></li>
+				<li class="tab"><a href="#tabs-usage">@LanguageApplication.message("plantUsage")</a></li>
+				<li class="tab"><a href="#tabs-comments">@LanguageApplication.message("comments")</a></li>
+				<li class="tab"><a href="#tabs-dataSources">@LanguageApplication.message("dataSources")</a></li>
+			</ul>
+			
+			<!-- codes -->
+			<div id="tabs-codes">
+				<table class="table table-bordered">
+					<tr>
+					<th>@LanguageApplication.message("mescCode")</th>
+					<th>@LanguageApplication.message("vendorCode")</th>
+					<th>@LanguageApplication.message("vendorDrawingNo")</th>
+					<th>@LanguageApplication.message("assetCode")</th>
+					<th>@LanguageApplication.message("plantCode")</th>
+					</tr>
+					
+					<tr>
+					<td>@parentPart.mescCode</td>
+					<td>@parentPart.vendorCode</td>
+					<td>@parentPart.vendorDrawingNo</td>
+					<td>@parentPart.assetCode</td>
+					<td>@parentPart.plantCode</td>
+					</tr>		
+				</table>
+			</div>
+			
+			<!-- manufacturers -->
+			<div id="tabs-manufacturers">
+				<table class="table table-bordered">
+					<tr>
+						<th>@LanguageApplication.message("vendor")</th>
+						<td>@if(parentPart.originalVendor!=null) {
+						<a 
+						href="@routes.CompanyApplication.companyIndex(parentPart.originalVendor.id)">@parentPart.originalVendor.name
+						</a>} else {-}</td>
+					</tr>
+					<tr>
+						<th>@LanguageApplication.message("vendorDrawingNo")</th>
+						<td>@if(parentPart.vendorDrawingNo!=null) {
+						@parentPart.vendorDrawingNo} else {-}
+						</td>
+					</tr>
+				</table>
+				<br />
+				@if(parentPart.manufacturerCompanies!=null) {
+					<h3>@LanguageApplication.message("subVendors")</h3>
+					<ul>@parentPart.manufacturerCompanies.map { mcc =>
+						<li>@mcc.name</li>
+						}
+					</ul>
+				}
+			</div>
+			
+			<!-- materials-->
+			<div id="tabs-material">
+				<p>@LanguageApplication.message("material"): @parentPart.material1</p>
+				<p>@LanguageApplication.message("material"): @parentPart.material2</p>
+				<p>@LanguageApplication.message("material"): @parentPart.material3</p>
+			</div> 
+			
+			<div id="tabs-usage">
+				<p>@LanguageApplication.message("storageLocation"): @parentPart.storageLocation</p>
+				<br />
+				<table class="table table-bordered">
+					<tr>
+						<th>@LanguageApplication.message("unitPrice"):</th>
+						<th>@LanguageApplication.message("currency"):</th>
+						<th>@LanguageApplication.message("stockQuantity"):</th>
+						<th>@LanguageApplication.message("measurementUnit"):</th>
+						<th>@LanguageApplication.message("minReq"):</th>
+						<th>@LanguageApplication.message("maxAllowed"):</th>
+					</tr>
+					<tr>
+						<td>@parentPart.unitPrice</td>
+						<td>@parentPart.currency</td>
+						<td>@parentPart.remainingQuantity</td>
+						<td><a href="@routes.MeasurementUnitApplication.list()">@parentPart.measurementUnit.unitName</a></td>
+						<td>@parentPart.minimumRequired</td>
+						<td>@parentPart.maximumRequired</td>
+					</tr>
+				</table>
+				<br />
+				<table class="table-bordered">
+					<thead>
+						<tr><th>@LanguageApplication.message("usageTable")</th></tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th>@LanguageApplication.message("location")</th>
+							<th>@LanguageApplication.message("quantity")</th>
+						</tr>
+						@coList.map { co =>
+						<tr>							
+							<td>								
+								<a href="@routes.ComponentApplication.componentIndex(co._1.id)">@co._1.name</a> in 
+								<a style="display:inline;" 
+									href="@routes.EquipmentApplication.equipmentIndex(co._1.subunit.equipment.id)">
+									@co._1.subunit.equipment.name</a>
+							</td>
+							<td>
+								@co._2
+							</td>
+						</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+			
+			<!-- comments -->
+			<div id="tabs-comments">
+				@if(parentPart.comments!=null && parentPart.comments!="") {
+		 		<pre>@parentPart.comments</pre>
+		 		} else {-}
+			</div>
+			
+			<!-- Data sources -->
+			<div id="tabs-dataSources">
+				<table class="table table-bordered">
+			 		<thead>
+			 			<tr class="success">
+			 				<th>@LanguageApplication.message("name")</th>
+			 				<th>@LanguageApplication.message("type")</th>
+			 				<th></th>
+			 			</tr>
+			 		</thead>
+			 		@if(parentPart.files != null) {
+			 			@parentPart.files.map { fi =>
+					 		<tbody>
+					 			<tr>
+					 				<td><a href="@routes.Application.download(fi.id)">@fi.name</a></td>
+					 				<td>@fi.tag</td>
+					 				<td><a class="btn btn-danger btn-sm" 
+					 				href="@routes.PartApplication.deleteAssociation(parentPart.id,fi.id)">
+					 				<span class="fa fa-trash"></span></a></td>
+					 			<tr>
+					 		</tbody>
+					 	}
+					 }
+			 	</table>
+				<br />
+				<h3>@LanguageApplication.message("upload")</h3>
+				<form class="form-inline" role="form" method="POST" enctype="multipart/form-data"
+					action="@routes.PartApplication.upload(parentPart.id)">
+					<div class="form-group">
+						<input type="file" name="file" class="btn btn-default">
+					</div>
+					<button type="submit" class="btn btn-default btn-md" title="upload">
+						<span class="fa fa-upload"></span>
+					</button>						
+				</form>
+			</div>			
+		</div>
+		</div>	
+	}

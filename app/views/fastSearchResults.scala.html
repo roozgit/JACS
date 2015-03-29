@@ -1,0 +1,26 @@
+@(eqs : com.avaje.ebean.Page[equipment.Equipments])
+
+@main("Search results:") {<div id='tree'></div>} {
+	<style>
+	.searchListResult {
+	direction:ltr;
+	@if(session().get("play_user_lang") == "1") {text-align:right;} else {text-align:left;} 
+	}
+	</style>
+	@eqs.getList.groupBy(_.section).map {
+		case (section,equis) => {
+			<p>@section.name</p>			
+			@equis.toList.groupBy(_.equipmentClass).map {
+				case (equipmentClass,fineq) => {
+					<p>@equipmentClass.name</p>
+					@fineq.map { eq =>
+            		<li class="searchListResult"><a class="searchResult" href="@routes.EquipmentApplication.equipmentIndex(eq.id)">
+            		@eq.name : @eq.description</a>
+            		</li><br />
+            		}
+				}
+			}
+        	
+		}
+	}
+ }

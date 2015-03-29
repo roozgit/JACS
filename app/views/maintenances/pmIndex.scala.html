@@ -1,0 +1,99 @@
+@(PM : maintenance.PreventiveMaintenances)
+
+@backLink = @{
+	var pl:Integer=4
+	var pi:Long=1
+	if(PM.parentPlant!=null) {
+		pl=4
+		pi=PM.parentPlant.id		
+		} else {
+		if(PM.parentSection!=null) {
+			pl=5
+			pi = PM.parentSection.id
+			} else {
+			if(PM.parentEquipment!=null) {
+				pl=6
+				pi=PM.parentEquipment.id
+				}
+			}
+		}
+		routes.PreventiveMaintenanceApplication.list(pl,pi)
+	}
+	
+@backName = @{
+	if(PM.parentPlant!=null) {
+		PM.parentPlant.name
+		} else {
+		if(PM.parentSection!=null) {
+			PM.parentSection.name
+			} else {
+			if(PM.parentEquipment!=null) {
+				PM.parentEquipment.name
+				} else {
+				if(PM.pmClass!=null) {
+					PM.pmClass.name + "-" + PM.pmClass.ecType
+					} else {
+						<em>---</em>
+					}
+				}
+			}
+		}
+	}
+	
+@level = @{
+	if(PM.parentPlant!=null) {
+		"plant"
+		} else {
+		if(PM.parentSection!=null) {
+			"section"
+			} else {
+			if(PM.parentEquipment!=null) {
+				"equipment"
+				} else {
+				if(PM.pmClass!=null) {
+					"equipmentClass"
+					} else {
+						"X"
+					}
+				}
+			}
+		}
+	}
+
+@main(backName+": "+PM.name) {@Html("")} {
+	<h3 @if(session.get("play_user_lang") == "1") {style="direction:ltr; text-align:right;"}>@backName</h3>
+	<div class="btn btn-group">
+		<a class="btn btn-warning btn-lg" href="@routes.PreventiveMaintenanceApplication.editPM(PM.id)">@LanguageApplication.message("edit")
+		<span class="glyphicon glyphicon-edit"></span></a>
+		<a class="btn btn-default btn-lg" href="@routes.ReportApplication.downloadPdfPmForm(PM.id)">EXCEL<i class="fa fa-file-excel-o"></i></a>
+		<a class="btn btn-default btn-lg" href="@routes.ReportApplication.downloadPdfPmForm(PM.id,"pdf")">PDF<i class="fa fa-file-pdf-o"></i></a>
+		
+		<a class="btn btn-primary btn-lg" href="@routes.PreventiveMaintenanceApplication.planPmParams(level, maintenance.PreventiveMaintenances.getParent(PM.id),PM.id)">
+		@LanguageApplication.message("planRoutines")</a>
+		@if(PM.pmClass!=null) {
+			<a class="btn btn-default btn-lg" href="@routes.EquipmentClassApplication.equipmentClassIndex(PM.pmClass.id)">
+			<span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span></a>
+		} else {
+		<a class="btn btn-default btn-lg" href=@backLink>
+		<span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span></a>}
+	</div>
+	
+	 <table class="table table-bordered">
+	 	<tr>
+	 		<th>@LanguageApplication.message("name")</th>
+	 		<th>@LanguageApplication.message("responsibleDiscipline")</th>
+	 		<th>@LanguageApplication.message("intervalDays")</th>
+	 		<th>@LanguageApplication.message("intervalOpHours")</th>
+	 		<th>@LanguageApplication.message("onShutdown")</th> 		
+	 	</tr>
+	 	<tr>
+	 		<td>@PM.name</td>
+	 		<td>@PM.actingDiscipline.name</td>
+	 		<td>@PM.intervalDays</td>
+	  		<td>@PM.intervalOperationHours</td>
+	  		<td>@PM.onShutDown</td>
+	 	</tr>
+	
+	 </table>
+	 <pre>@PM.description</pre> 
+ }

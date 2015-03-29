@@ -1,0 +1,245 @@
+@(parentLevel : java.lang.Integer, parentId : Long, currentPage : com.avaje.ebean.Page[Datasheet], currentSortBy: String, currentOrder: String, currentFilter: String)
+
+@****************************************
+* Helper generating navigation links    *
+****************************************@
+@link(newPage:Int, newSortBy:String) = @{
+    
+    var sortBy = currentSortBy
+    var order = currentOrder
+    
+    if(newSortBy != null) {
+        sortBy = newSortBy
+        if(currentSortBy == newSortBy) {
+            if(currentOrder == "asc") {
+                order = "desc"
+            } else {
+                order = "asc"
+            }
+        } else {
+            order = "asc"
+        }
+    }
+    
+    // Generate the link
+    routes.DatasheetApplication.list(parentLevel, parentId, newPage, sortBy, order, currentFilter)    
+}
+
+@**********************************
+* Helper generating table headers *
+***********************************@
+@header(key:String, title:String) = {
+    <th class="@if(key=="parameter") {col-lg-3} else {col-lg-1}">
+        <a href="@link(0, key)">@title
+        <span class="glyphicon @if(currentSortBy == key) {
+        	@if(currentOrder == "asc") {glyphicon-sort-by-attributes} else {glyphicon-sort-by-attributes-alt}
+        	} else {glyphicon-sort}"></span>
+        </a>
+    </th>
+}
+
+@main("Datasheet list:" + currentFilter) {@Html("")} {
+
+	<div align="center"><h1>@LanguageApplication.message("dataSheet")</h1></div>
+	
+	<div class="btn btn-group">
+		<a class="btn btn-primary btn-lg"
+		href="@routes.DatasheetApplication.createDatasheet(parentLevel,parentId)">@LanguageApplication.message("newParameter")
+			<i class="fa fa-info-circle"></i>
+			<i class="fa fa-plus"></i>
+		</a>
+		
+		@if(parentLevel==3) {<a title=@LanguageApplication.message("return") class="btn btn-default btn-lg" href="@routes.InstallationApplication.installationIndex()">
+		<span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span></a>}
+		@if(parentLevel==4) {<a title=@LanguageApplication.message("return") class="btn btn-default btn-lg" href="@routes.PlantApplication.plantIndex(parentId)">
+		<span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span></a>}
+		@if(parentLevel==5) {<a title=@LanguageApplication.message("return") class="btn btn-default btn-lg" href="@routes.SectionApplication.sectionIndex(parentId)">
+		<span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span></a>}
+		@if(parentLevel==6) {<a title=@LanguageApplication.message("return") class="btn btn-default btn-lg" href="@routes.EquipmentApplication.equipmentIndex(parentId)">
+		<span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span></a>}
+		@if(parentLevel==7) {<a title=@LanguageApplication.message("return") class="btn btn-default btn-lg" href="@routes.SubunitApplication.subunitIndex(parentId)">
+		<span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span></a>}
+		@if(parentLevel==8) {<a title=@LanguageApplication.message("return") class="btn btn-default btn-lg" href="@routes.ComponentApplication.componentIndex(parentId)">
+		<span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span></a>}
+		@if(parentLevel==9) {<a title=@LanguageApplication.message("return") class="btn btn-default btn-lg" href="@routes.PartApplication.partIndex(parentId)">
+		<span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span></a>}
+	</div>
+	<br /><br/>
+	
+	<form class="form-inline" role="form" action="@link(0, "name")" method="GET">
+		<div class="form-group">
+			<input type="hidden" value="@parentId" name="pid">
+			<input type="hidden" value="@parentLevel" name="level">			
+			<input class="form-control" type="search" id="searchbox" name="f" value="@currentFilter" placeholder="@LanguageApplication.message("filterBy")">
+		</div>
+		<div class="form-group">
+			<input type="submit" id="searchsubmit" value="@LanguageApplication.message("filter")" class="btn btn-success">
+		</div>
+	</form>
+	<br />
+	
+	@if(flash.containsKey("success")) {
+        <div class="alert alert-success">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+	    }
+	 @if(flash.containsKey("error")) {
+       <div class="alert alert-danger">
+           <strong>ERROR: </strong> @flash.get("error")
+       </div>
+  		}
+	<br />
+	
+	@if(currentPage.getTotalRowCount == 0) {
+		<div class="well well-lg">
+	  		<em>Nothing to display</em>
+	    </div>
+	   } else {
+			<table class="table table-striped table-bordered">
+				<thead>
+					<tr>
+						@header("parameter", LanguageApplication.message("parameter"))
+						@header("value", LanguageApplication.message("value"))
+						@header("minValue", LanguageApplication.message("minAllowedValue"))
+						@header("maxValue", LanguageApplication.message("maxAllowedValue"))
+						@header("unit.unitCode", LanguageApplication.message("measurementUnit"))
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					@currentPage.getList.map { cl =>
+					<tr>
+						<td>
+							<a href="#" data-pk=@cl.id data-url="/datasheet/update" data-type="text"
+							id="parameterFieldDs@cl.id" data-name="parameter" data-title="New value">
+							@cl.parameter
+							</a>
+						</td>
+						
+						<td class="ltrInRtl">
+							<a href="#" data-pk=@cl.id data-url="/datasheet/update" data-type="text"
+							id="valueFieldDs@cl.id" data-name="value" data-title="New value">
+							@if(cl.value!=null) {@cl.value} else {}
+							</a>
+						</td>
+						
+						<td class="ltrInRtl">
+							<a href="#" data-pk=@cl.id data-url="/datasheet/update" data-type="text"
+							id="minValueFieldDs@cl.id" data-name="minValue" data-title="New value">
+							@if(cl.minValue!=null) {@cl.minValue} else {}
+							</a>
+						</td>
+						
+						<td class="ltrInRtl">
+							<a href="#" data-pk=@cl.id data-url="/datasheet/update" data-type="text"
+							id="maxValueFieldDs@cl.id" data-name="maxValue" data-title="New value">
+							@if(cl.maxValue!=null) {@cl.maxValue} else {}
+							</a>
+						</td>
+						
+						<td class="ltrInRtl">
+							<a href="#" data-pk=@cl.id data-url="/datasheet/update" data-type="select2"
+							id="unitField@cl.id" data-name="unit.id" data-title="New value">
+							@if(cl.unit!=null) {@cl.unit.unitName (@cl.unit.unitCode)} else {}
+							</a>
+						</td>
+						
+						<td>
+							<a id="delDsItem" data-pk="@cl.id" class="btn btn-danger btn-sm" title=@LanguageApplication.message("remove")>
+							<i class="fa fa-trash"></i></a>
+						</td>
+						
+					</tr>
+				}
+				</tbody>
+			</table>
+			
+			<div id="pager" class="pager">
+            <ul>
+            	@if(currentPage.hasPrev) {
+                    <li class="previous">
+                        <a href="@link(currentPage.getPageIndex - 1, null)">
+                        @if(session().get("play_user_lang") == "0") {&larr; @LanguageApplication.message("previous")} else {&rarr; @LanguageApplication.message("previous") }
+                        </a>
+                    </li>
+                } else {
+                    <li class="previous disabled">
+                        <a>
+                        @if(session().get("play_user_lang") == "0") {&larr; @LanguageApplication.message("previous")} else {&rarr; @LanguageApplication.message("previous") }
+                        </a>
+                    </li>
+                }
+                <li class="current">
+                    <a>@LanguageApplication.message("displaying") @currentPage.getDisplayXtoYofZ(" " + LanguageApplication.message("to")+" "," "+LanguageApplication.message("of")+" ")</a>
+                </li>
+                @if(currentPage.hasNext) {
+                    <li class="next">
+                        <a href="@link(currentPage.getPageIndex + 1, null)">
+                        @if(session().get("play_user_lang") == "1") {@LanguageApplication.message("next") &larr;} else {@LanguageApplication.message("next") &rarr;}
+                        </a>
+                    </li>
+                } else {
+                    <li class="next disabled">
+                        <a>
+                        @if(session().get("play_user_lang") == "1") {@LanguageApplication.message("next") &larr;} else {@LanguageApplication.message("next") &rarr;}
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+	}
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("select2.min.js"))'></script>
+	@if(session().get("play_user_lang") == "1") {
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("select2_locale_fa.js"))'></script>}
+	<script type="text/javascript">
+	$(document).ready(function() {
+		var unitList = [];
+		$.ajax({
+			type:   'GET',
+            url: '/units/options',
+            success: function(data) {
+            	for(var i=0;i<data.length;i++) {
+            		unitList.push({id: data[i].id, text: data[i].description});
+            	}
+			}
+		});
+		$.fn.editable.defaults.mode = 'popup';
+		$.fn.editable.defaults.ajaxOptions = {
+				type: "PUT"
+				};
+		$('a[id*="FieldDs"]').each(function() {
+		    $(this).editable({
+		    	success: function() {
+		    	location.reload();
+		    	}
+		    });
+		});
+		
+		$('a[id^="unitField"]').each(function() {
+		    $(this).editable({
+		    	source : unitList,
+		        select2: {
+		            width: 300,
+		            placeholder: 'Select measurement unit',
+		            allowClear: true
+		        },
+		    	success: function() {
+		    	location.reload();
+		    	}
+		    });
+		});
+		$("a#delDsItem").click(function() {
+			$.ajax({
+			    url: jsRoutes.controllers.DatasheetApplication.deleteItem(this.getAttribute("data-pk")).url,
+			    type: 'DELETE',
+			    success: function(result) {
+			    	location.reload(true);
+			    }
+			});
+		});
+		
+	});
+	
+	</script>
+	
+}

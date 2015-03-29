@@ -1,0 +1,111 @@
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("Select report") {@Html("")} {
+<style>
+	@if(session.get("play_user_lang") == "1") {
+		body {background-image:url(@routes.Assets.at("images/reportBG.png"));
+		background-repeat:repeat-y;}
+	} else {
+		body {background-image:url(@routes.Assets.at("images/reportBG1.png"));
+		background-repeat:repeat-y;}
+	}
+</style>
+	@if(flash.containsKey("error")) {
+      <div class="alert alert-danger">
+          <strong>ERROR: </strong> @flash.get("error")
+      </div>
+      <br />
+    }
+	<h6>@LanguageApplication.message("selectReport")</h6>
+		 <form class="form-horizontal" role="form" id="reportSelectForm" 
+		 method="POST" action="@routes.ReportApplication.displayReport()">
+		
+			<div class="form-group">
+				<div class="col-lg-2">
+				<label for="start">@LanguageApplication.message("start")</label>
+				<input type="text" id="start" name="start">
+					
+				</div>
+				<script type="text/javascript">
+					Calendar.setup({
+					inputField     :    "start",   // id of the input field
+					button         :    "start",   // trigger for the calendar (button ID)
+		       		ifFormat       :    "%Y/%m/%d",       // format of the input field
+        			dateType	   :	'jalali',
+					weekNumbers    : true
+					});
+				</script>
+			
+				<div class="col-lg-2">
+				<label for="end">@LanguageApplication.message("end")</label>
+					<input type="text" id="end" name="end">
+				</div>
+				<script type="text/javascript">
+					Calendar.setup({
+					inputField     :    "end",   // id of the input field
+					button         :    "end",   // trigger for the calendar (button ID)
+		       		ifFormat       :    "%Y/%m/%d",       // format of the input field
+	       			dateType	   :	'jalali',
+					weekNumbers    : true
+					});
+				</script>
+			</div>
+			<div class="form-group">
+				<div class="col-lg-4">
+				<!-- Discipline select -->
+				<label for="disciplineSelect">@LanguageApplication.message("disciplines")</label>
+				<select id="disciplineSelect" name="disciplineSelect" class="form-control">
+				@models.Disciplines.find.all().map { di =>
+				<option value="@di.id">@di.name</option>
+				}
+				</select>
+				
+				<!-- Report format select -->
+				<label for="reportFormat">@LanguageApplication.message("reportFormat")</label>
+				<select id="reportFormat" name="reportFormat" class="form-control">
+				<option selected>HTML</option>
+				<option>PDF</option>
+				<option>EXCEL</option>
+				</select>
+				
+				
+				<label for="reportName">@LanguageApplication.message("reportName")</label>
+				<select id="reportName" name="reportName" class="form-control">
+					<option value="statusSummary" selected>@LanguageApplication.message("statusSummary")</option>
+					<option value="pmStatusSummary">@LanguageApplication.message("pmStatusSummary")</option>
+					<option value="nglEquipment">@LanguageApplication.message("nglEquipment")</option>
+					<option value="failureReport">@LanguageApplication.message("failureReport")</option>
+					<option value="manHourDisciplineUnit">@LanguageApplication.message("manHourDisciplineUnit")</option>
+					<option value="sectionWorkOrderCount">@LanguageApplication.message("sectionWorkOrderCount")</option>
+					<option value="workOrderStatusReport">@LanguageApplication.message("workOrderStatusReport")</option>
+					<option value="criticalEquipmentWorkReport">@LanguageApplication.message("criticalEquipmentWorkReport")</option>
+					<option value="maintenanceBackLogReport">@LanguageApplication.message("backLogReport")</option>
+					<option value="consumedMaterialReport">@LanguageApplication.message("consumedMaterialReport")</option>
+					<option value="requestedMaterialReport">@LanguageApplication.message("requestedMaterialReport")</option>
+				</select>
+				
+				</div>
+			</div>
+			<input type="submit" class = "btn btn-success btn-lg" value=@LanguageApplication.message("submit")>
+			</form>
+			
+			<script type="text/javascript">
+				$(document).ready(function() {
+					$("select#disciplineSelect").hide();
+					$("label[for='disciplineSelect']").hide();
+					$("select#reportName").change(function() {
+						if($(this).val()=="manHourDisciplineUnit" || $(this).val()=="maintenanceBackLogReport") {
+							$("select#disciplineSelect").show();
+							$("label[for='disciplineSelect']").show();
+						}
+							
+						else {
+							$("select#disciplineSelect").hide();
+							$("label[for='disciplineSelect']").hide();
+						}
+					});
+				});
+			</script>
+	
+	}

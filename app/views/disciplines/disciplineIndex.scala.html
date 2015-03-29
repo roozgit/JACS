@@ -1,0 +1,76 @@
+@(dis : Disciplines)
+
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import be.objectify.deadbolt.java.views.html._
+
+@main(dis.name) {@Html("")} {
+
+	<div class="btn btn-group">
+	@restrict(la(as("admin"))) {
+		<a class="btn btn-warning btn-lg" title="Edit discipline"
+		 		href="@routes.DisciplineApplication.editDiscipline(dis.id)">@LanguageApplication.message("edit")
+		 		<span class="glyphicon glyphicon-edit"></span></a>
+		 		
+		<a class="btn btn-primary btn-lg" title="Create permissons"
+				href="@routes.DisciplineApplication.createSecurityRoles(dis.id)">@LanguageApplication.message("createSecurityRoles")
+				<span class="glyphicon glyphicon-plus"></span></a>}
+				
+		<a title=@LanguageApplication.message("return") class="btn btn-default btn-lg" href="@routes.DisciplineApplication.list()">
+		<span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span></a>
+	</div>
+	
+	<br />
+	@if(flash.containsKey("success")) {
+        <div class="alert alert-success">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+	    }
+ 	@if(flash.containsKey("error")) {
+      <div class="alert alert-danger">
+          <strong>ERROR: </strong> @flash.get("error")
+      </div>
+    }
+    <br />
+	<div class="row">
+		<div class="col-lg-6">
+			<table class="table table-bordered">
+			
+				<tr>
+					<th>@LanguageApplication.message("name")</th>
+					<th>@LanguageApplication.message("tel")</th>
+					<th>@LanguageApplication.message("headDiscipline")</th>
+				</tr>
+				
+				<tr>
+					<td>@dis.name</td>
+					<td>@dis.telephone</td>
+					@if(dis.headDiscipline != null) {
+					<td>@dis.headDiscipline.name</td>}
+				</tr>
+			
+			</table>
+			<br/>
+			<p>@LanguageApplication.message("comments")</p>
+			<pre>@dis.comments</pre>
+			<img src="@routes.ReportApplication.meterWorkOrder(dis.id)" alt="No W.O"></img>
+		</div>
+		
+		<div class="col-lg-6">
+			<table class="table table-bordered">
+				<thead>
+				<tr><th>@LanguageApplication.message("personnel")</th>
+				<th>@LanguageApplication.message("portfolio")</th>
+				</tr>
+				</thead>
+				<tbody>
+				@dis.disciplinePersonnel.map { dper =>
+					<tr>
+						<td><a href="@routes.UserApplication.userIndex(dper.id)">
+						@dper.firstName  @dper.lastName</a></td>
+						<td>@dper.referredMaints.map {rma => @rma.workOrderSerial ,}</td>
+					</tr>}
+				</tbody>
+			</table>
+		</div>
+	</div>
+}

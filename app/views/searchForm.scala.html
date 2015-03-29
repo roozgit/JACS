@@ -1,0 +1,483 @@
+@(tabSelector : String, searchData : DynamicForm, results : List[java.util.ArrayList[String]])
+
+@main("Search form") {
+<style>
+#langChanger {
+	display :none;
+}
+</style>
+	<!-- form tabs -->
+	<div id="tab-container2" class="tab-container">
+		<ul class="etabs">
+			<li class="tab"><a href="#tabs-sections">@LanguageApplication.message("sections")</a></li>
+			<li class="tab"><a href="#tabs-equipments">@LanguageApplication.message("equipments")</a></li>
+			<li class="tab"><a href="#tabs-subunits">@LanguageApplication.message("subunits")</a></li>
+			<li class="tab"><a href="#tabs-components">@LanguageApplication.message("components")</a></li>
+			<li class="tab"><a href="#tabs-parts">@LanguageApplication.message("parts")</a></li>
+			<li class="tab"><a href="#tabs-datasheets">@LanguageApplication.message("dataSheet")</a></li>
+			<li class="tab"><a href="#tabs-maintenances">@LanguageApplication.message("maintenances")</a></li>
+		</ul>
+		
+		<!-- section search form -->
+		<div id="tabs-sections">
+			<form class="form-horizontal" id="sectionForm" name="sectionForm" action="@routes.SearchApplication.resultRenderer("sections")" method="POST">
+				<div class="form-group">
+					<input type="hidden" id="sectionPage" name="page" value="@searchData.get("page")"/>
+					
+					<label class="control-label" for="sectionName">@LanguageApplication.message("name")</label>
+					<input class="form-control" type="text" id="sectionName" name="name" value="@searchData.get("name")"/>
+				 
+					<label class="control-label" for="sectionDescription">@LanguageApplication.message("description")</label>
+					<input class="form-control" type="text" id="sectionDescription" name="description" value="@searchData.get("description")"/>
+				
+					<label class="control-label" for="sectionCategory">@LanguageApplication.message("category")</label>
+					<input class="form-control" type="text" id="sectionCategory" name="sectionCategory" value="@searchData.get("sectionCategory")"/>
+				
+					<label class="control-label" for="sectionComments">@LanguageApplication.message("comments")</label>
+					<input class="form-control" type="text" id="sectionComments" name="comments" value="@searchData.get("comments")"/>
+				</div>
+				
+				<div class="form-group">
+					<label class="radio-inline" for="sectionOptionSelect1">
+					<input type="radio" id="sectionOptionSelect1" name="searchType" value="exactSearch" />@LanguageApplication.message("exactSearch")
+					</label>
+					
+					<label class="radio-inline" for="sectionOptionSelect2">
+					<input type="radio" checked id="sectionOptionSelect2" name="searchType" value="generalSearch" />@LanguageApplication.message("generalSearch")
+					</label>
+				</div>
+				<button type="submit" id="sectionPrevPage">@LanguageApplication.message("previous")</button>
+				<button type="submit" id="sectionFormSubmit"><i class="fa fa-search"></i></button>
+				<button type="submit" id="sectionNextPage">@LanguageApplication.message("next")</button>
+			</form>
+		</div> <!-- end of section search form -->
+		
+		<!-- Equipment search form -->
+		<div id="tabs-equipments">
+			<form id="equipmentForm" name="equipmentForm" action="@routes.SearchApplication.resultRenderer("equipments")" method="POST">
+				<div class="form-group">
+					<input type="hidden" id="equipmentPage" name="page" value="@searchData.get("page")"/>
+					
+					<div class="col-lg-6">
+					<label class=control-label for="equipmentSectionName">@LanguageApplication.message("section")</label>
+					<input type="text" class="form-control" id="equipmentSectionName" name="section.name" value="@searchData.get("section.name")"/>
+					</div>
+					
+					<div class="col-lg-6">
+					<label class=control-label for="equipmentName">@LanguageApplication.message("equipmentTag")</label>
+					<input type="text" class="form-control" id="equipmentName" name="name" value="@searchData.get("name")"/>
+					</div>
+					
+					<label class=control-label for="equipmentDescription">@LanguageApplication.message("description")</label>
+					<input type="text" class="form-control" id="equipmentDescription" name="description" value="@searchData.get("description")"/>
+					
+					<div class="col-lg-6">
+					<label class=control-label for="equipmentClassCategoryName">@LanguageApplication.message("category")</label>
+					<input type="text" class="form-control" id="equipmentClassCategoryName" name="equipmentClass.equipmentCategory.name" value="@searchData.get("equipmentClass.equipmentCategory.name")"/>
+					
+					<label class=control-label for="equipmentClassEcTypeName">@LanguageApplication.message("classSubType")</label>
+					<input type="text" class="form-control" id="equipmentClassEcTypeName" name="equipmentClass.ecType" value="@searchData.get("equipmentClass.ecType")"/>
+					</div>
+					
+					<div class="col-lg-6">
+					<label class=control-label for="equipmentClassName">@LanguageApplication.message("class")</label>
+					<input type="text" class="form-control" id="equipmentClassName" name="equipmentClass.name" value="@searchData.get("equipmentClass.name")"/>
+					
+					<label class=control-label for="equipmentCriticality">@LanguageApplication.message("criticality")</label>
+					<input type="text" class="form-control" id="equipmentCriticality" name="criticality" value="@searchData.get("criticality")"/>
+					</div>
+					
+					<label class=control-label for="equipmentTools">@LanguageApplication.message("tools")</label>
+					<input type="text" class="form-control" id="equipmentTools" name="specialTools.name" value="@searchData.get("specialTools.name")"/>
+					
+					<div class="col-lg-6">
+					<label class=control-label for="equipmentAutoGeneratedCode">@LanguageApplication.message("autoGenCode")</label>
+					<input type="text" class="form-control" id="equipmentAutoGeneratedCode" name="equipmentAutoGeneratedCode" value="@searchData.get("equipmentAutoGeneratedCode")"/>
+					
+					<label class=control-label for="equipmentAssetNo">@LanguageApplication.message("assetNo")</label>
+					<input type="text" class="form-control" id="equipmentAssetNo" name="assetNo" value="@searchData.get("assetNo")"/>
+					</div>
+					
+					<div class="col-lg-6">
+					<label class=control-label for="equipmentSerialNo">@LanguageApplication.message("serial")</label>
+					<input type="text" class="form-control" id="equipmentSerialNo" name="equipmentSerialNo" value="@searchData.get("equipmentSerialNo")"/>
+					
+					<label class=control-label for="equipmentOredaCode">@LanguageApplication.message("oredaCode")</label>
+					<input type="text" class="form-control" id="equipmentOredaCode" name="oredaCode" value="@searchData.get("oredaCode")"/>
+					</div>
+					
+					<label class=control-label for="equipmentCostCenter">@LanguageApplication.message("costCenter")</label>
+					<input type="text" class="form-control" id="equipmentCostCenter" name="costCenter" value="@searchData.get("costCenter")"/>
+					
+					<div class="col-lg-6">
+					<label class=control-label for="equipmentManufacturer">@LanguageApplication.message("vendor")</label>
+					<input type="text" class="form-control" id="equipmentManufacturer" name="manufacturerCompany.name" value="@searchData.get("manufacturerCompany.name")"/>
+					</div>
+					
+					<div class="col-lg-6">
+					<label class=control-label for="equipmentModelDesignation">@LanguageApplication.message("modelDesignation")</label>
+					<input type="text" class="form-control" id="equipmentModelDesignation" name="manufacturerModelDesignation" value="@searchData.get("manufacturerModelDesignation")"/>
+					</div>
+					
+					<label class=control-label for="equipmentMaintenanceAspects">@LanguageApplication.message("maintAspects")</label>
+					<input type="text" class="form-control" id="equipmentMaintenanceAspects" name="equipmentMaintenanceAspects" value="@searchData.get("equipmentMaintenanceAspects")"/>
+					
+					<div class="col-lg-6">
+					<label class=control-label for="equipmentOperationAspects">@LanguageApplication.message("operationAspects")</label>
+					<input type="text" class="form-control" id="equipmentOperationAspects" name="equipmentOperationAspects" value="@searchData.get("equipmentOperationAspects")"/>
+					</div>
+					
+					<div class="col-lg-6">
+					<label class=control-label for="equipmentHseAspects">@LanguageApplication.message("safetyAspects")</label>
+					<input type="text" class="form-control" id="equipmentHseAspects" name="equipmentHseAspects" value="@searchData.get("equipmentHseAspects")"/>
+					</div>
+					
+					<label class=control-label for="equipmentComments">@LanguageApplication.message("comments")</label>
+					<input type="text" class="form-control" id="equipmentComments" name="comments" value="@searchData.get("comments")"/>
+				</div>
+				
+				<div class="form-group">
+					<label class="radio-inline" for="equipmentOptionSelect1">
+					<input type="radio" id="equipmentOptionSelect1" name="searchType" value="exactSearch" />@LanguageApplication.message("exactSearch")
+					</label>
+					
+					<label class="radio-inline" for="equipmentOptionSelect2">
+					<input type="radio" checked id="equipmentOptionSelect2" name="searchType" value="generalSearch" />@LanguageApplication.message("generalSearch")
+					</label>
+				</div>
+				<button type="submit" id="equipmentPrevPage">@LanguageApplication.message("previous")</button>
+				<button type="submit" id="equipmentFormSubmit"><i class="fa fa-search"></i></button>
+				<button type="submit" id="equipmentNextPage">@LanguageApplication.message("next")</button>
+			</form>
+		</div> <!-- end of equipment search form -->
+		
+		<!-- Subunit search form -->
+		<div id="tabs-subunits">
+			<form class="form-horizontal" id="subunitForm" name="subunitForm" action="@routes.SearchApplication.resultRenderer("subunits")" method="POST">
+				<div class="form-group">
+					<input type="hidden" id="subunitPage" name="page" value="@searchData.get("page")"/>
+					
+					<label class="control-label" for="subunitEquipmentName">@LanguageApplication.message("equipment")</label>
+					<input class="form-control" type="text" id="subunitEquipmentName" name="equipment.name" value="@searchData.get("equipment.name")"/>
+					
+					<label class="control-label" for="subunitName">@LanguageApplication.message("name")</label>
+					<input class="form-control" type="text" id="subunitName" name="name" value="@searchData.get("name")"/>
+				 
+					<label class="control-label" for="subunitDescription">@LanguageApplication.message("description")</label>
+					<input class="form-control" type="text" id="subunitDescription" name="description" value="@searchData.get("description")"/>
+				
+					<label class="control-label" for="subunitType">@LanguageApplication.message("category")</label>
+					<input class="form-control" type="text" id="subunitType" name="subunitType" value="@searchData.get("subunitType")"/>
+				
+					<label class="control-label" for="subunitComments">@LanguageApplication.message("comments")</label>
+					<input class="form-control" type="text" id="subunitComments" name="comments" value="@searchData.get("comments")"/>
+				</div>
+				
+				<div class="form-group">
+					<label class="radio-inline" for="subunitOptionSelect1">
+					<input type="radio" id="subunitOptionSelect1" name="searchType" value="exactSearch" />@LanguageApplication.message("exactSearch")
+					</label>
+					
+					<label class="radio-inline" for="subunitOptionSelect2">
+					<input type="radio" checked id="subunitOptionSelect2" name="searchType" value="generalSearch" />@LanguageApplication.message("generalSearch")
+					</label>
+				</div>
+				<button type="submit" id="subunitPrevPage">@LanguageApplication.message("previous")</button>
+				<button type="submit" id="subunitFormSubmit"><i class="fa fa-search"></i></button>
+				<button type="submit" id="subunitNextPage">@LanguageApplication.message("next")</button>
+			</form>
+		</div> <!-- end of subunit search form -->
+		
+		<!-- component search form -->
+		<div id="tabs-components">
+			<form class="form-horizontal" id="componentForm" name="componentForm" action="@routes.SearchApplication.resultRenderer("components")" method="POST">
+				<div class="form-group">
+					<input type="hidden" id="componentPage" name="page" value="@searchData.get("page")"/>
+					
+					<label class="control-label" for="componentEquipmentName">@LanguageApplication.message("equipment")</label>
+					<input class="form-control" type="text" id="componentEquipmentName" name="subunit.equipment.name" value="@searchData.get("subunit.equipment.name")"/>
+					
+					<label class="control-label" for="componentClassName">@LanguageApplication.message("class")</label>
+					<input class="form-control" type="text" id="componentClassName" name="componentClass.name" value="@searchData.get("componentClass.name")"/>				
+					
+					<label class="control-label" for="componentName">@LanguageApplication.message("name")</label>
+					<input class="form-control" type="text" id="componentName" name="name" value="@searchData.get("name")"/>
+				 
+					<label class="control-label" for="componentDescription">@LanguageApplication.message("description")</label>
+					<input class="form-control" type="text" id="componentDescription" name="description" value="@searchData.get("description")"/>
+				
+					<label class="control-label" for="componentSerialNo">@LanguageApplication.message("category")</label>
+					<input class="form-control" type="text" id="componentSerialNo" name="componentSerialNo" value="@searchData.get("componentSerialNo")"/>
+					
+					<div class="col-lg-6">
+					<label class=control-label for="componentManufacturer">@LanguageApplication.message("vendor")</label>
+					<input type="text" class="form-control" id="componentManufacturer" name="manufacturerCompany.name" value="@searchData.get("manufacturerCompany.name")"/>
+					</div>
+					
+					<div class="col-lg-6">
+					<label class=control-label for="componentModelDesignation">@LanguageApplication.message("modelDesignation")</label>
+					<input type="text" class="form-control" id="componentModelDesignation" name="manufacturerModelDesignation" value="@searchData.get("manufacturerModelDesignation")"/>
+					</div>
+					
+					<label class="control-label" for="componentComments">@LanguageApplication.message("comments")</label>
+					<input class="form-control" type="text" id="componentComments" name="comments" value="@searchData.get("comments")"/>
+				</div>
+				
+				<div class="form-group">
+					<label class="radio-inline" for="componentOptionSelect1">
+					<input type="radio" id="componentOptionSelect1" name="searchType" value="exactSearch" />@LanguageApplication.message("exactSearch")
+					</label>
+					
+					<label class="radio-inline" for="componentOptionSelect2">
+					<input type="radio" checked id="componentOptionSelect2" name="searchType" value="generalSearch" />@LanguageApplication.message("generalSearch")
+					</label>
+				</div>
+				<button type="submit" id="componentPrevPage">@LanguageApplication.message("previous")</button>
+				<button type="submit" id="componentFormSubmit"><i class="fa fa-search"></i></button>
+				<button type="submit" id="componentNextPage">@LanguageApplication.message("next")</button>
+			</form>
+		</div> <!-- end of component search form -->
+		
+		<!-- part search form -->
+		<div id="tabs-parts">
+			<form class="form-horizontal" id="partForm" name="partForm" action="@routes.SearchApplication.resultRenderer("parts")" method="POST">
+				<div class="form-group">
+					<input type="hidden" id="partPage" name="page" value="@searchData.get("page")"/>
+					
+					<label class="control-label" for="partName">@LanguageApplication.message("name")</label>
+					<input class="form-control" type="text" id="partName" name="name" value="@searchData.get("name")"/>
+				 
+					<label class="control-label" for="partDescription">@LanguageApplication.message("description")</label>
+					<input class="form-control" type="text" id="partDescription" name="description" value="@searchData.get("description")"/>
+					
+					
+					<label class=control-label for="partOriginalVendor">@LanguageApplication.message("vendor")</label>
+					<input type="text" class="form-control" id="partOriginalVendor" name="originalVendor.name" value="@searchData.get("originalVendor.name")"/>
+					
+					<label class=control-label for="partManufacturerCompanies">@LanguageApplication.message("subVendors")</label>
+					<input type="text" class="form-control" id="partManufacturerCompanies" name="manufacturerCompanies.name" value="@searchData.get("manufacturerCompanies.name")"/>
+					
+					<div class="col-lg-6">
+					<label class="control-label" for="partMescCode">@LanguageApplication.message("mescCode")</label>
+					<input class="form-control" type="text" id="partMescCode" name="mescCode" value="@searchData.get("mescCode")"/>
+					</div>
+					
+					<div class="col-lg-6">
+					<label class="control-label" for="partVendorCode">@LanguageApplication.message("vendorCode")</label>
+					<input class="form-control" type="text" id="partVendorCode" name="vendorCode" value="@searchData.get("vendorCode")"/>
+					</div>
+					
+					<div class="col-lg-6">
+					<label class="control-label" for="partPlantCode">@LanguageApplication.message("plantCode")</label>
+					<input class="form-control" type="text" id="partPlantCode" name="plantCode" value="@searchData.get("plantCode")"/>
+					</div>
+					
+					<div class="col-lg-6">
+					<label class="control-label" for="partAssetCode">@LanguageApplication.message("assetCode")</label>
+					<input class="form-control" type="text" id="partAssetCode" name="assetCode" value="@searchData.get("assetCode")"/>
+					</div>
+					
+					<div class="col-lg-6">
+					<label class="control-label" for="partVendorDrawingNo">@LanguageApplication.message("vendorDrawingNo")</label>
+					<input class="form-control" type="text" id="partVendorDrawingNo" name="vendorDrawingNo" value="@searchData.get("vendorDrawingNo")"/>
+					</div>
+					
+					<div class="col-lg-6">
+					<label class="control-label" for="partUserCode">@LanguageApplication.message("userCode")</label>
+					<input class="form-control" type="text" id="partUserCode" name="userCode" value="@searchData.get("userCode")"/>
+					</div>
+					
+					<label class="control-label" for="partMaterial">@LanguageApplication.message("material")</label>
+					<input class="form-control" type="text" id="partMaterial" name="partMaterial" value="@searchData.get("partMaterial")"/>
+					
+					<label class="control-label" for="partStorageLocation">@LanguageApplication.message("storageLocation")</label>
+					<input class="form-control" type="text" id="partStorageLocation" name="storageLocation" value="@searchData.get("storageLocation")"/>
+					
+					<label class="control-label" for="partCurrency">@LanguageApplication.message("currency")</label>
+					<input class="form-control" type="text" id="partCurrency" name="currency" value="@searchData.get("currency")"/>
+					
+					<label class="control-label" for="partCurrency">@LanguageApplication.message("measurementUnit")</label>
+					<input class="form-control" type="text" id="partCurrency" name="measurementUnit.unitName" value="@searchData.get("measurementUnit.unitName")"/>
+					
+					<label class="control-label" for="partComments">@LanguageApplication.message("comments")</label>
+					<input class="form-control" type="text" id="partComments" name="comments" value="@searchData.get("comments")"/>
+				</div>
+				
+				<div class="form-group">
+					<label class="radio-inline" for="partOptionSelect1">
+					<input type="radio" id="partOptionSelect1" name="searchType" value="exactSearch" />@LanguageApplication.message("exactSearch")
+					</label>
+					
+					<label class="radio-inline" for="partOptionSelect2">
+					<input type="radio" checked id="partOptionSelect2" name="searchType" value="generalSearch" />@LanguageApplication.message("generalSearch")
+					</label>
+				</div>
+				<button type="submit" id="partPrevPage">@LanguageApplication.message("previous")</button>
+				<button type="submit" id="partFormSubmit"><i class="fa fa-search"></i></button>
+				<button type="submit" id="partNextPage">@LanguageApplication.message("next")</button>
+			</form>
+		</div> <!-- end of part search form -->
+		
+		<!-- datasheet search form -->
+		<div id="tabs-datasheets">
+			<form class="form-horizontal" id="datasheetForm" name="datasheetForm" action="@routes.SearchApplication.resultRenderer("datasheets")" method="POST">
+				<div class="form-group">
+					<input type="hidden" id="datasheetPage" name="page" value="@searchData.get("page")"/>
+					
+					<label class="control-label" for="datasheetParameter">@LanguageApplication.message("name")</label>
+					<input class="form-control" type="text" id="datasheetParameter" name="parameter" value="@searchData.get("parameter")"/>
+				 
+					<label class="control-label" for="datasheetValue">@LanguageApplication.message("value")</label>
+					<input class="form-control" type="text" id="datasheetValue" name="value" value="@searchData.get("value")"/>
+				</div>
+				
+				<div class="form-group">
+					<label class="radio-inline" for="datasheetOptionSelect1">
+					<input type="radio" id="datasheetOptionSelect1" name="searchType" value="exactSearch" />@LanguageApplication.message("exactSearch")
+					</label>
+					
+					<label class="radio-inline" for="datasheetOptionSelect2">
+					<input type="radio" checked id="datasheetOptionSelect2" name="searchType" value="generalSearch" />@LanguageApplication.message("generalSearch")
+					</label>
+				</div>
+				<button type="submit" id="datasheetPrevPage">@LanguageApplication.message("previous")</button>
+				<button type="submit" id="datasheetFormSubmit"><i class="fa fa-search"></i></button>
+				<button type="submit" id="datasheetNextPage">@LanguageApplication.message("next")</button>
+			</form>
+		</div> <!-- end of datasheet search form -->
+		
+		<!-- maintenance search form -->
+		<div id="tabs-maintenances">
+			<form class="form-horizontal" id="maintenanceForm" name="maintenanceForm" action="@routes.SearchApplication.resultRenderer("maintenances")" method="POST">
+				<div class="form-group">
+					<input type="hidden" id="maintenancePage" name="page" value="@searchData.get("page")"/>
+					
+					<div class="col-lg-6">
+					<label class="control-label" for="maintenanceMaintainedSection">@LanguageApplication.message("section")</label>
+					<input class="form-control" type="text" id="maintenanceMaintainedSection" name="maintainedSection.name" value="@searchData.get("maintainedSection.name")"/>
+					</div>
+					
+					<div class="col-lg-6">
+					<label class="control-label" for="maintenanceMaintainedEquipment">@LanguageApplication.message("equipment")</label>
+					<input class="form-control" type="text" id="maintenanceMaintainedEquipment" name="maintainedEquipment.name" value="@searchData.get("maintainedEquipment.name")"/>
+					</div>
+					
+					<label class="control-label" for="maintenancePmRoutines">@LanguageApplication.message("pmRoutines")</label>
+					<input class="form-control" type="text" id="maintenancePmRoutines" name="maintenancePmRoutines" value="@searchData.get("maintenancePmRoutines")"/>
+					
+					<div class="col-lg-6">
+					<label class="control-label" for="maintenanceRequestDate">@LanguageApplication.message("requestDate")</label>
+					<input class="form-control" type="text" id="maintenanceRequestDate" name="maintenanceRequestDate" value="@searchData.get("maintenanceRequestDate")"/>
+					</div>
+					
+					<div class="col-lg-6">
+					<label class="control-label" for="maintenanceMaintenancePriority">@LanguageApplication.message("maintenancePriority")</label>
+					<input class="form-control" type="text" id="maintenanceMaintenancePriority" name="maintenancePriority" value="@searchData.get("maintenancePriority")"/>
+					</div>
+					
+					<label class="control-label" for="maintenanceWorkOrderDescription">@LanguageApplication.message("description") &nbsp; @LanguageApplication.message("workOrder")</label>
+					<input class="form-control" type="text" id="maintenanceWorkOrderDescription" name="workOrderDescription" value="@searchData.get("workOrderDescription")"/>
+					
+					<label class="control-label" for="maintenanceResponsibleDiscipline">@LanguageApplication.message("responsibleDiscipline")</label>
+					<input class="form-control" type="text" id="maintenanceResponsibleDiscipline" name="responsibleDiscipline.name" value="@searchData.get("responsibleDiscipline.name")"/>
+					
+					<label class="control-label" for="maintenanceMaintenanceStatus">@LanguageApplication.message("maintenanceStatus")</label>
+					<input class="form-control" type="text" id="maintenanceMaintenanceStatus" name="maintenanceStatus" value="@searchData.get("maintenanceStatus")"/>
+					
+					<label class="control-label" for="maintenanceHoldReason">@LanguageApplication.message("holdReason")</label>
+					<input class="form-control" type="text" id="maintenanceHoldReason" name="holdReason" value="@searchData.get("holdReason")"/>
+					
+					<label class="control-label" for="maintenanceMaintenanceCategory">@LanguageApplication.message("maintenanceCategory")</label>
+					<input class="form-control" type="text" id="maintenanceMaintenanceCategory" name="maintenanceCategory" value="@searchData.get("maintenanceCategory")"/>
+					
+					<label class="control-label" for="maintenanceMaintenanceActivity">@LanguageApplication.message("maintActivity")</label>
+					<input class="form-control" type="text" id="maintenanceMaintenanceActivity" name="maintenanceActivity" value="@searchData.get("maintenanceActivity")"/>
+					
+					<div class="col-lg-6">
+					<label class="control-label" for="maintenancResponsiblePerson">@LanguageApplication.message("userId") &nbsp; @LanguageApplication.message("responsiblePerson")</label>
+					<input class="form-control" type="text" id="maintenancResponsiblePerson" name="responsiblePerson.userName" value="@searchData.get("responsiblePerson.userName")"/>
+					</div>
+					
+					<div class="col-lg-6">
+					<label class="control-label" for="maintenancePersonnelInvolved">@LanguageApplication.message("userId") &nbsp; @LanguageApplication.message("personnel")</label>
+					<input class="form-control" type="text" id="maintenancePersonnelInvolved" name="personnelInvolved.user.userName" value="@searchData.get("personnelInvolved.user.userName")"/>
+				 	</div>
+				 	
+					<label class="control-label" for="maintenancepartsUsed">@LanguageApplication.message("usedPart")</label>
+					<input class="form-control" type="text" id="maintenancepartsUsed" name="partsUsed.part.name" value="@searchData.get("partsUsed.part.name")"/>
+					
+					<label class="control-label" for="maintenanceMaintenanceReport">@LanguageApplication.message("maintenanceReport")</label>
+					<input class="form-control" type="text" id="maintenanceMaintenanceReport" name="maintenanceReport" value="@searchData.get("maintenanceReport")"/>
+				</div>
+				
+				<div class="form-group">
+					<label class="radio-inline" for="maintenanceOptionSelect1">
+					<input type="radio" id="maintenanceOptionSelect1" name="searchType" value="exactSearch" />@LanguageApplication.message("exactSearch")
+					</label>
+					
+					<label class="radio-inline" for="maintenanceOptionSelect2">
+					<input type="radio" checked id="maintenanceOptionSelect2" name="searchType" value="generalSearch" />@LanguageApplication.message("generalSearch")
+					</label>
+				</div>
+				<button type="submit" id="maintenancePrevPage">@LanguageApplication.message("previous")</button>
+				<button type="submit" id="maintenanceFormSubmit"><i class="fa fa-search"></i></button>
+				<button type="submit" id="maintenanceNextPage">@LanguageApplication.message("next")</button>
+			</form>
+		</div> <!-- end of maintenance search form -->
+		
+	</div> <!-- end of form tabs -->
+	
+	} {
+	<br/>
+	<div align="center">
+	<h4><span class="label label-info">Page:@if(searchData.get("page")!=null && searchData.get("page").size>0) {@{searchData.get("page").toInt+1}}</span></h4></div>
+	<table id="resultTable" class="table">
+	@results.map {r =>
+	<tr>
+		<td><a  class="ltrInRtl" href="@r.get(0)">@if(r.get(1)!=null) {@r.get(1)}</a><br/>
+		@if(r.get(2)!=null) {@r.get(2)}
+		</td>
+	</tr>
+	}</table>
+	
+	  	        
+	<script type="text/javascript">
+	$(document).ready(function() {
+	    
+	    $('#tab-container2').easytabs({
+	        animate:false
+	    });
+	   $('#tab-container2').easytabs('select', '@tabSelector');
+	        $("input[id*='Page']").val(@searchData.get("page"));
+	   var checkPage =  $("input[id='sectionPage']").val();
+	   $('#tab-container2').bind('easytabs:after', function() {
+	       var tcon = $(this).find(".active");
+	       if(tcon[2].id != '@tabSelector')  {
+	           $("input[type=text]").val("");
+	           $("input[id*='Page']").val(0);
+	       }
+	    });
+	    
+	   if(checkPage==0)  $("button[id$='PrevPage']").prop('disabled', true);
+	    if($("table#resultTable").text().length<5) $("button[id*='NextPage']").prop('disabled', true);
+	    
+	    $("button[id*='PrevPage']").click(function(e){
+	        var p = $("input[id='sectionPage']").val();
+	        p--;
+	        if(p<0) p=0;
+	       $("input[id*='Page']").val(p);
+	    });
+	    
+	    $("button[id*='NextPage']").click(function(e){
+	        var p = $("input[id='sectionPage']").val();
+	        if($("table#resultTable").text().length>5) p++;
+	       	$("input[id*='Page']").val(p);
+	    });
+	    
+	    $("button[id*='FormSubmit']").click(function(e){
+	       	$("input[id*='Page']").val(0);
+	    });
+	    
+	});
+	</script>
+ }

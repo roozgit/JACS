@@ -1,0 +1,30 @@
+@(mgs : List[maintenance.MaintenanceGroups])
+
+@main("Maintenance group list") {@Html("")} {
+	
+	<a 
+	class="btn btn-primary btn-lg" 
+	href="@routes.MaintenanceGroupApplication.createMaintenanceGroup()" title="New project">@LanguageApplication.message("addGroup")
+			<span class="glyphicon glyphicon-plus"></span></a>
+	
+	@if(flash.containsKey("error")) {
+      <div class="alert alert-danger">
+          <strong>ERROR: </strong> @flash.get("error")
+      </div>
+      <br />
+    }
+    
+    @if(flash.containsKey("success")) {
+      <div class="alert alert-success">
+          <strong>SUCCESS: </strong> @flash.get("success")
+      </div>
+      <br />
+    }
+    <br/>
+	<ul>
+	@mgs.map { di =>
+			<li><a 
+			href="@routes.MaintenanceGroupApplication.maintenanceGroupIndex(di.id)">@di.name</a></li>
+		}
+	</ul>	
+	}

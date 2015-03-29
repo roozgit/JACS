@@ -1,0 +1,172 @@
+@(currentPage : com.avaje.ebean.Page[Parts], currentSortBy: String, currentOrder: String, currentFilter: String)
+
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import be.objectify.deadbolt.java.views.html._
+
+@****************************************
+* Helper generating navigation links    *
+****************************************@
+@link(newPage:Int, newSortBy:String) = @{
+    
+    var sortBy = currentSortBy
+    var order = currentOrder
+    
+    if(newSortBy != null) {
+        sortBy = newSortBy
+        if(currentSortBy == newSortBy) {
+            if(currentOrder == "asc") {
+                order = "desc"
+            } else {
+                order = "asc"
+            }
+        } else {
+            order = "asc"
+        }
+    }
+    
+    // Generate the link
+    routes.PartApplication.list(newPage, sortBy, order, currentFilter)    
+}
+
+@**********************************
+* Helper generating table headers *
+***********************************@
+@header(key:String, title:String) = {
+    <th class="col-sm-2">
+        <a href="@link(0, key)">@title
+        <span class="glyphicon @if(currentSortBy == key) {
+        	@if(currentOrder == "asc") {glyphicon-sort-by-attributes} else {glyphicon-sort-by-attributes-alt}
+        	} else {glyphicon-sort}"></span>
+        </a>
+    </th>
+}
+
+@**********************************
+* Helper generating the pager     *
+***********************************@
+@pager = {<div id="pager" class="pager">
+	            <ul>
+	           		<li class="previous">
+	           		<a href="@link(0,null)"><span @if(session().get("play_user_lang") == "0") {class="fa fa-fast-backward"} else {class ="fa fa-fast-forward"}></span>
+	           		</a></li>
+	            	@if(currentPage.hasPrev) {
+	                    <li class="previous">
+	                        <a href="@link(currentPage.getPageIndex - 1, null)">
+	                        @if(session().get("play_user_lang") == "0") {&larr; @LanguageApplication.message("previous")} else {&rarr; @LanguageApplication.message("previous") }
+	                        </a>
+	                    </li>
+	                } else {
+	                    <li class="previous disabled">
+	                        <a>
+	                        @if(session().get("play_user_lang") == "0") {&larr; @LanguageApplication.message("previous")} else {&rarr; @LanguageApplication.message("previous") }
+	                        </a>
+	                    </li>
+	                }
+	                <li class="current">
+	                    <a>@LanguageApplication.message("displaying") @currentPage.getDisplayXtoYofZ(" " + LanguageApplication.message("to")+" "," "+LanguageApplication.message("of")+" ")</a>
+	                </li>
+	                <li class="next"><a href="@link(currentPage.getTotalPageCount-1,null)">
+	                <span @if(session().get("play_user_lang") == "1") {class="fa fa-fast-backward"} else {class ="fa fa-fast-forward"}></span></a></li>
+	                @if(currentPage.hasNext) {
+	                    <li class="next">
+	                        <a href="@link(currentPage.getPageIndex + 1, null)">
+	                        @if(session().get("play_user_lang") == "1") {@LanguageApplication.message("next") &larr;} else {@LanguageApplication.message("next") &rarr;}
+	                        </a>
+	                    </li>
+	                } else {
+	                    <li class="next disabled">
+	                        <a>
+	                        @if(session().get("play_user_lang") == "1") {@LanguageApplication.message("next") &larr;} else {@LanguageApplication.message("next") &rarr;}
+	                        </a>
+	                    </li>
+	                }
+	                
+	            </ul>
+	        </div>
+	       }
+	       
+@main("Part list: "+ currentFilter) {<div id='tree'></div>} {
+		<div class="btn-group">
+		
+			<a class="btn btn-primary btn-lg" title="New part" 
+			href="@routes.PartApplication.createPart()">@LanguageApplication.message("newPart")
+				<span class="glyphicon glyphicon-plus"></span></a>
+				
+			<a class="btn btn-default btn-lg"
+			href="@routes.PartApplication.viewPartRequests()">
+					@LanguageApplication.message("requestList")</a>
+			
+			<a class="btn btn-default btn-lg"
+			href="@routes.PartHistoryApplication.list(-1L)">
+					@LanguageApplication.message("buyRequestList")</a>
+			
+		</div>
+		
+		<br />
+		@if(flash.containsKey("success")) {
+	        <div class="alert alert-success">
+	            <strong>Done!</strong> @flash.get("success")
+	        </div>
+		    }
+		    @if(flash.containsKey("error")) {
+		       <div class="alert alert-danger">
+		           <strong>ERROR: </strong> @flash.get("error")
+		       </div>
+	   		}
+	   		<br />
+		<form class="form-inline" role="form" action="@link(0, "name")" method="GET">
+			<div class="form-group">			
+				<input class="form-control" type="search" id="searchbox" name="f" value="@currentFilter" placeholder="@LanguageApplication.message("filterBy")">
+			</div>
+			<div class="form-group">
+				<input type="submit" id="searchsubmit" value=@LanguageApplication.message("filter") class="btn btn-success">
+			</div>
+		</form>
+		<br />
+		@if(currentPage.getTotalRowCount == 0) {
+			<div class="well well-lg">
+		  		<em>@LanguageApplication.message("nothingToDisplay")</em>
+		    </div> 
+		   } else {
+		   		@pager
+				<table class="table table-striped table-bordered">			
+					<thead>
+						<tr>
+							@header("name", LanguageApplication.message("name"))
+							@header("description", LanguageApplication.message("description"))
+							@header("mescCode",LanguageApplication.message("mescCode"))
+							@header("remainingQuantity", LanguageApplication.message("stockQuantity"))
+							@header("measurementUnit",LanguageApplication.message("measurementUnit"))
+						</tr>
+					</thead>
+					<tbody>	
+						@currentPage.getList.map { cl =>
+						<tr>
+							<td @if(session().get("play_user_lang") == "1") {style="direction:ltr; text-align:right;"}>
+								<a href="@routes.PartApplication.partIndex(cl.id)">@cl.name</a>
+							</td>
+							
+							<td>
+								@if(cl.description==null) {
+									<em>-</em>
+								} else {@cl.description}
+							</td>
+							<td>
+								@if(cl.mescCode==null) {
+									<em>-</em>
+								} else {@cl.mescCode}
+							</td>
+							<td>@cl.remainingQuantity</td>
+							<td><a href="@routes.MeasurementUnitApplication.list()">@cl.measurementUnit.unitName</a></td>			
+							@restrict(la(as("admin"), as("warehouse"))) {
+								<td><a class="btn btn-danger btn-sm"
+								href="@routes.PartApplication.delete(cl.id)">
+								<span class="fa fa-trash"></span></a></td>
+							}
+						</tr>
+						}
+					</tbody>
+				</table>
+				@pager
+		}
+}

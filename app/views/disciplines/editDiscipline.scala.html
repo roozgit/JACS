@@ -1,0 +1,74 @@
+@(id : Long, disciplineForm : Form[Disciplines])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("Edit discipline") {@Html("")} {
+	<style>
+	body {
+		background-color: #EDEDED;
+	}
+	</style>
+	@form(action = routes.DisciplineApplication.update(id),
+	'class->"form-horizontal",
+	'role->"form"
+	) {
+		
+		<fieldset>
+		<div class="form-group">
+			
+				<div class="col-lg-4">
+				@inputText(disciplineForm("name"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("name"),
+					'_showConstraints->true
+					)
+				</div>
+				
+				<div class="col-lg-3">
+				@select(disciplineForm("headDiscipline.id"),
+					options(Disciplines.options()),
+					'_label->LanguageApplication.message("headDiscipline"),
+					'_default->"",
+					'class->"form-control"
+					)
+				</div>
+				
+				<div class="col-lg-2">
+				@select(disciplineForm("organizationPlant.id"),
+					options(Plants.options(1)),
+					'_label->LanguageApplication.message("plant"),
+					'class->"form-control"
+					)
+				</div>
+				
+				<div class="col-sm-3">
+				@inputText(disciplineForm("telephone"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("tel"),
+					'_showConstraints->true
+					)
+				</div>
+						
+		</div>
+							
+		<div class="form-group">
+			<div class="col-sm-6">
+					@textarea(disciplineForm("comments"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("comments")
+					)
+				</div>
+		</div>
+		
+		</fieldset>
+		<div align="center">
+			<input type="submit" value="@LanguageApplication.message("update")" class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.DisciplineApplication.disciplineIndex(id)" 
+				class="btn btn-danger btn-lg" role="button">
+			@LanguageApplication.message("cancel")</a>
+		</div>
+		
+	}
+}
+

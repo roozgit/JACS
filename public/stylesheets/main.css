@@ -1,0 +1,332 @@
+@-moz-document url-prefix() {
+  fieldset { display: table-cell; }
+}
+
+pre {
+    white-space: -moz-pre-wrap; /* Mozilla, supported since 1999 */
+    white-space: -pre-wrap; /* Opera */
+    white-space: -o-pre-wrap; /* Opera */
+    white-space: pre-wrap; /* CSS3 - Text module (Candidate Recommendation) http://www.w3.org/TR/css3-text/#white-space */
+    word-wrap: break-word; /* IE 5.5+ */
+}
+
+#mySidebarToggle {
+	
+	position : fixed;
+	padding-right:20px;
+	padding-left:20px;
+	width: 18px;
+    top: 100px;
+    z-index:10001;
+    border: 1px solid black;
+    background-color:transparent;
+    color:black;
+    overflow: hidden;
+  	display: block;
+  	
+  	/*Rounded Corners*/
+	-webkit-border-radius: 15px;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+  /*Transition*/
+	-webkit-transition: All 0.5s ease;
+	-moz-transition: All 0.5s ease;
+	-o-transition: All 0.5s ease;
+	-ms-transition: All 0.5s ease;
+	transition: All 0.5s ease;
+}
+#mySidebarToggle:hover {
+  width: 140px;
+}
+
+/*Override breadcrumb separator*/
+.breadcrumb > li + li:before {
+      content: ">\00a0"; 
+    }
+a.btn, select, input  {
+	direction:ltr;
+}
+a.btn  {
+	font-size:1.1em;
+}
+
+span.fancytree-title, .ltrInRtl {
+	direction : ltr;
+}
+.PREVENTIVE_MAINTENANCE {
+	background-color : purple;
+	color : white;
+}
+
+.CORRECTIVE_MAINTENANCE {
+	background-color : #2B669A;
+	color : white;
+}
+
+.FINISHED {
+	background-color : #4da74d;
+}
+.IN_PROGRESS {
+	background-color : #edc240;
+}
+.CANCEL {
+	background-color : #cb4b4b;
+}
+.HOLD {
+	background-color : #afd8f8;
+}
+
+.OK {
+	background-color: #DFF0D8;
+}
+
+.HAL,.LAL {
+	background-color: #F2DEDE;
+}
+
+.NA {
+	background-color: #FCF8E3;
+}
+
+body {
+	margin:0;
+	padding-top:50px;
+	background-color : white;
+	/*font-family: "B ZAR"*/
+	}
+
+hr {
+	height: 2px;
+	background-color:black;
+}
+
+.panel-green {
+    border-color: #5cb85c;
+}
+
+.panel-green .panel-heading {
+    border-color: #5cb85c;
+    color: #fff;
+    background-color: #5cb85c;
+}
+
+.panel-green a {
+    color: #5cb85c;
+}
+
+.panel-green a:hover {
+    color: #3d8b3d;
+}
+
+.panel-red {
+    border-color: #d9534f;
+}
+
+.panel-red .panel-heading {
+    border-color: #d9534f;
+    color: #fff;
+    background-color: #d9534f;
+}
+
+.panel-red a {
+    color: #d9534f;
+}
+
+.panel-red a:hover {
+    color: #b52b27;
+}
+
+.panel-yellow {
+    border-color: #f0ad4e;
+}
+
+.panel-yellow .panel-heading {
+    border-color: #f0ad4e;
+    color: #fff;
+    background-color: #f0ad4e;
+}
+
+.panel-yellow a {
+    color: #f0ad4e;
+}
+
+.panel-yellow a:hover {
+    color: #df8a13;
+}
+
+p > .alignright{float : right}
+
+textarea{resize : none;}
+
+.itsmetalking {
+	color : green;
+}
+
+#tree {
+	margin-top: 15px;
+}
+.breadcrumb li > a {
+	display:inline;
+}
+
+/*Striped table distinguishing colors 
+.table-striped > tbody > tr:nth-child(2n+1) > td {
+	background-color : #F5F5F5;
+}*/
+
+/*
+Navbar
+*/
+nav a {
+	font-size:14px;
+}
+
+.nav > li > a {
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+/*
+Sidebar
+*/
+
+.nav-sidebar {
+  margin-right: -21px; /* 20px padding + 1px border */
+  margin-bottom: 20px;
+  margin-left: -20px;
+}
+
+.nav-sidebar > .active > a {
+  color: #fff;
+  background-color: #428bca;
+}
+.nav-sidebar > li > a {
+  padding-right: 20px;
+  padding-left: 20px;
+}
+
+@media (min-width:1200px) {
+	.sidebar {
+    position: fixed;
+    top: 51px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    background-color: #FFFFFF;
+    border-right: 1px solid #eee;
+  }
+}
+
+@media (min-width:1400px) and (max-width:1660px) {
+	a.btn  {
+	font-size: .9em;
+	}
+}
+
+@media (min-width:1200px) and (max-width:1400px) {
+	a.btn  {
+	font-size: .75em;
+	}
+}
+
+@media (max-width: 1080px) {
+	span.hideInSmall{
+	font-size:0; !important
+	color:transparent;
+	}
+    .navbar-header {
+        float: none;
+    }
+    .navbar-left,.navbar-right {
+        float: none!important;
+    }
+    .navbar-toggle {
+        display: block;
+    }
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .navbar-fixed-top {
+		top: 0;
+		border-width: 0 0 1px;
+	}
+    .navbar-collapse.collapse {
+        display: none!important;
+    }
+    .navbar-nav {
+        float: none!important;
+		margin-top: 7.5px;
+	}
+	.navbar-nav>li {
+        float: none;
+    }
+    .navbar-nav>li>a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .collapse.in{
+  		display:block !important;
+	}
+}
+
+
+}
+/*
+Dropdowns
+*/
+.dropdown-menu .divider {
+	height:2px;
+}
+
+
+/* TAB styling */
+    .etabs { margin: 0; padding: 0; }
+    .tab { display: inline-block; zoom:1; *display:inline; background: #eee; border: solid 1px #999; border-bottom: none; -moz-border-radius: 4px 4px 0 0; border-radius: 4px 4px 0 0; }
+    .tab a { font-size: 14px; line-height: 2em; display: block; padding: 0 10px; outline: none; }
+    .tab a:hover { text-decoration: underline; }
+    .tab.active { background: #fff; padding-top: 6px; position: relative; top: 1px; border-color: #666; }
+    .tab a.active { font-weight: bold; }
+    .tab-container .panel-container { background: #fff; border: solid #666 1px; padding: 10px; -moz-border-radius: 0 4px 4px 4px; border-radius: 0 4px 4px 4px; }
+    .panel-container { margin-bottom: 10px; }
+    /*.tab a[href="#tabs-workRequest"] {background : #4ca454;}
+    .tab a[href="#tabs-maintenanceReport"] {background : #4472b9;}
+    .tab a[href="#tabs-planning"] {background : #4472b9;}*/
+/* Chart styling */
+.flotchart-container {
+	
+	display : block;
+	height : 400px;
+	
+}
+.flotchart-placeholder {
+	width: 100%;
+	height: 100%;
+	font-size: 14px;
+	line-height: 1.2em;
+}
+
+@media print {
+	
+  a[href]:after {
+    content: none !important;
+  }
+
+	nav, .btn, .form-control, .pager, ul.etabs, a#mySidebarToggle, .form-inline, .form-group, #filterForm {
+	display : none;
+	}
+	th {font-family : "titr";}
+	
+	table,td,tr,th {
+  	border: 2px double black;
+	}
+	 
+	div#tab-container div[id^="tabs"] {
+		display:block;
+	}
+	
+}

@@ -1,0 +1,51 @@
+@(id : Long, ieForm: Form[InventoryEvents])
+
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("Edit part") {@Html("")} {
+	<style>
+		body {
+			background-color: #EDEDED;
+		}
+	</style>
+	@form(action = routes.InventoryEventApplication.update(id),
+	'class->"form-horizontal",
+	'role->"form"
+	) {
+	<div class="form-group">
+			<div class="col-lg-4">
+				@inputText(ieForm("name"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("name"),
+				'_showConstraints->true
+				)
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-lg-4">
+				@inputText(ieForm("otherLanguageName"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("name2"),
+				'_showConstraints->true
+				)
+			</div>
+		</div>
+		<div class="form-group">	
+			<div class="col-lg-6">
+				@inputText(ieForm("comments"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("comments")
+				)
+			</div>
+		</div>
+		
+		<div align="center">
+			<input type="submit" value="@LanguageApplication.message("update")" class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.InventoryEventApplication.list()" 
+				class="btn btn-danger btn-lg" role="button">
+			@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+}

@@ -1,0 +1,194 @@
+@(user : Users)
+
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import be.objectify.deadbolt.java.views.html._
+
+@main("User info:"+user.userName) {@Html("")} {
+	<br />
+	<div class="row">
+		<div class="col-lg-8">
+		<div class="btn btn-group">
+		@dynamic("editProfile") {
+			<a class="btn btn-warning btn-lg" href="@routes.UserApplication.editUser(user.id)">@LanguageApplication.message("edit")
+			<span class="glyphicon glyphicon-edit"></span></a>
+			
+			<a class="btn btn-default btn-lg" href="@routes.UserApplication.editPassword(user.id)">
+			@LanguageApplication.message("changePassword")</a>
+			}
+		@restrict(la(as("admin"))) {
+			<a class="btn btn-danger btn-lg" href="@routes.UserApplication.resetPassword(user.id)">
+				@LanguageApplication.message("resetPassword")</a>
+			
+			<a class="btn btn-danger btn-lg" href="@routes.UserApplication.disableLogin(user.id)">
+			@LanguageApplication.message("disableLogin")</a>
+			
+			<a class="btn btn-default btn-lg" href="@routes.UserApplication.editSecurity(user.id)">
+			@LanguageApplication.message("roles")</a>			
+		}	
+			<a class="btn btn-default btn-lg" href="@routes.ShiftApplication.shiftCalendar(user.id)">
+			@LanguageApplication.message("workShift")</a>
+		
+			<a
+			class="btn btn-default btn-lg" href="@routes.UserApplication.list()">
+			<span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span></a>
+		</div>
+		</div>
+		<div class="col-lg-offset-8">
+			<img src="@routes.UserBlobApplication.renderImage(user.id)"
+			height=150 width=150 alt="User photo"></img>
+		</div>
+	</div>
+	
+	<br/>
+	@if(flash.containsKey("success")) {
+        <div class="alert alert-success">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+	    }
+	    @if(flash.containsKey("error")) {
+	       <div class="alert alert-danger">
+	           <strong>ERROR: </strong> @flash.get("error")
+	       </div>
+	       <br />
+	  		}
+	
+	<div id="tab-container" class="tab-container">
+			<ul class="etabs">
+				<li class="tab"><a href="#tabs-basicInfo">@LanguageApplication.message("basicInfo")</a></li>
+				<li class="tab"><a href="#tabs-workInfo">@LanguageApplication.message("workInfo")</a></li>
+				<li class="tab"><a href="#tabs-contactInfo">@LanguageApplication.message("contactInfo")</a></li>
+				<li class="tab"><a href="#tabs-uploadImage">@LanguageApplication.message("uploadImage")</a></li>
+			</ul>
+			<div id="tabs-basicInfo">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>@LanguageApplication.message("userId")</th>
+							<th>@LanguageApplication.message("firstName")</th>
+							<th>@LanguageApplication.message("lastName")</th>
+							<th>@LanguageApplication.message("personnelNumber")</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>@user.userName</td>
+							<td>@user.firstName</td>
+							<td>@user.lastName</td>
+							<td>@user.personnelNumber</td>
+						</tr>
+					</tbody>
+				</table>
+				<br />
+				<label>@LanguageApplication.message("setPageSize")</label>
+				<form class="form-horizontal" action="@routes.UserApplication.setPageSize(user.id)">
+				<input name="uid" value="@user.id" type="hidden">
+				<input name="pgSize">
+				<input value=@LanguageApplication.message("submit") type="submit">
+				</form>
+			</div>
+			
+			<div id="tabs-workInfo">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>@LanguageApplication.message("hiringCompany")</th>
+							<th>@LanguageApplication.message("discipline")</th>
+							<th>@LanguageApplication.message("organizationalGrade")</th>
+							<th>@LanguageApplication.message("organizationalPost")</th>
+							<th>@LanguageApplication.message("hiringType")</th>
+							<th>@LanguageApplication.message("shiftPersonnel")</th>
+							<th>@LanguageApplication.message("skillLevel")</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>@if(user.hiringCompany==null) {<em>-</em>} else {@user.hiringCompany.name}
+							<td>@if(user.discipline==null) {<em>-</em>} else {@user.discipline.name}</td>
+							<td>@user.organizationalGrade</td>
+							<td>@user.organizationalPost</td>
+							<td>@if(user.hiringType==null) {<em>-</em>} else {@user.hiringType.hiringType}</td>
+							<td>@if(user.isOnShift==true) {@LanguageApplication.message("yes")} else {@LanguageApplication.message("no")}</td>
+							@restrict(la(as("admin"),as("planner"))) {
+							<td>@user.skill</td>
+							}
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
+			<div id="tabs-contactInfo">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>@LanguageApplication.message("residenceCity")</th>
+							<th>@LanguageApplication.message("flightOrigin")</th>
+							<th>@LanguageApplication.message("mobilePhone")</th>
+							<th>@LanguageApplication.message("mobilePhone2")</th>
+							<th>@LanguageApplication.message("homePhone")</th>
+							<th>@LanguageApplication.message("homePhone2")</th>		
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>@user.residenceCity</td>
+							<td>@user.flightOrigin</td>
+							<td>@user.mobilePhone</td>
+							<td>@user.mobilePhone2</td>
+							<td>@user.homePhone</td>
+							<td>@user.mobilePhone2</td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<label>@LanguageApplication.message("address")</label>
+				<pre>@user.address</pre>
+				<label>@LanguageApplication.message("email")</label>
+				<p>@user.email</p>
+				
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>@LanguageApplication.message("camp")</th>
+							<th>@LanguageApplication.message("suite")</th>
+							<th>@LanguageApplication.message("suitePhoneNumber")</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>@user.camp</td>
+							<td>@user.suite</td>
+							<td>@user.suitePhoneNumber</td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<label>@LanguageApplication.message("comments")</label>
+				<pre>@user.comments</pre>
+			</div>
+			
+			<div id="tabs-uploadImage">
+				<!-- Upload image form -->
+				@dynamic("editProfile") {
+				<h3>@LanguageApplication.message("uploadImage")</h3>
+				<form class="form-inline" role="form" method="POST" enctype="multipart/form-data"
+					action="@routes.UserBlobApplication.upload(user.id)">
+					<div class="form-group">
+						<input type="file" name="file" class="btn btn-default">
+					</div>
+					<button type="submit" class="btn btn-default btn-md" title="upload">
+						<span class="fa fa-upload"></span>
+					</button>
+				</form>
+				}
+			</div>
+			
+			
+			
+	</div> <!-- end of tab-container -->
+	
+	
+	
+	
+	
+	
+}

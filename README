@@ -1,0 +1,25 @@
+JACS stands for Just Another CMMIS Software. It is  a computerized maintenance management software based on ISO-14229.
+dfdff
+Features:
+	*Can define equipments based on ISO-14224 taxonomy
+	*Vast equipment attributes
+	*Maintenance management
+	*Failure registration based on ISO-14224 failure language
+	*Basic stock and storage management
+	*Procurement management
+	*Personnel mangement
+
+The software is written in JAVA and SCALA languages with use of Play Framework 2.4.
+
+There is a demo for this app currently at https://www.cmmsjacs.ir
+you can login with the following credentials:
+	Username: guest
+	Password: guest
+	
+and browse some of the features of the application. Please note that file uploading, reports, and websockets does not
+work correctly on cloud app.
+
+Have fun and Try my FREE CMMIS!
+
+IMPORTANT NOTICE: THE APPLICATION IN ITS CURRENT FORM HAS A BUNCH OF SECURITY FLOWS. I HAVEN'T DESIGNED THIS APPLICATION
+FOR SECURITY. THE DEMO IS HERE JUST TO SHOW THE CAPABAILITIES OF THE SOFTWARE AS A CMMS.

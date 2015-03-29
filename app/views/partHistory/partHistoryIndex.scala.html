@@ -1,0 +1,89 @@
+@(historyId : Long, history : PartHistory)
+
+
+
+@main("History sheet") {<div id='tree'></div>} {
+	<div class="btn btn-group">
+		<a class="btn btn-warning btn-lg" href="@routes.PartHistoryApplication.editPartHistory(historyId)">@LanguageApplication.message("edit")
+		<span class="glyphicon glyphicon-edit"></span></a>
+		<a class="btn btn-default btn-lg" href="@routes.PartApplication.partIndex(history.parentPart.id)">
+		<span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span></a>	
+	</div>
+	<br/>
+	@if(flash.containsKey("success")) {
+	        <div class="alert alert-success">
+	            <strong>Done!</strong> @flash.get("success")
+	        </div>
+		    }
+	 	@if(flash.containsKey("error")) {
+	      <div class="alert alert-danger">
+	          <strong>ERROR: </strong> @flash.get("error")
+	      </div>
+	    }
+	
+	 <table class="table table-bordered">
+	 	<tr>
+	 		<th>@LanguageApplication.message("date")</th>
+	 		<th>@LanguageApplication.message("eventType")</th>
+	 		<th>@LanguageApplication.message("workRequestSerial")</th>
+	 		<th>@LanguageApplication.message("requester")</th>
+	 		<th>@LanguageApplication.message("receiptNumber")</th>
+	 		<th>@LanguageApplication.message("requestNumber")</th>
+	 		<th>@LanguageApplication.message("offeredUnitPrice")</th>
+	 		<th>@LanguageApplication.message("quantity")</th>
+	 		<th>@LanguageApplication.message("stockQuantity")</th>
+	 		<th>@LanguageApplication.message("registrar")</th>
+	 	</tr>
+	 	<tr>
+	 		<td>@myUtils.DateTimeUtils.getIranianDate(history.commenceDate)</td>
+	 		<td>@history.eventType.name</td>
+	 		<td>@if(history.parentMaintenance==null) {<em>-</em>} else {@history.parentMaintenance.workOrderSerial}</td>
+	 		<td>@if(history.requester==null) {<em>-</em>} else {@history.requester.lastName}</td>
+	 		<td>@if(history.receiptNumber==null) {<em>-</em>} else {@history.receiptNumber}</td>
+	  		<td>@if(history.requestNumber==true) {<em>-</em>} else {@history.requestNumber}</td>
+	  		<td>@history.offeredUnitPrice</td>
+	  		<td>@history.stockBalance</td>
+	  		<td>@history.remainingStock</td>
+	  		<td>@if(history.registrar!=null) {@history.registrar.userName}</td>
+	 	</tr>
+	
+	 </table>
+	 <p>@LanguageApplication.message("comments")</p>
+	 <pre>@history.comments</pre>
+ 
+	 <!-- Data sources -->
+	 	<table class="table table-bordered">
+	 		<thead>
+	 			<tr class="success">
+	 				<th>@LanguageApplication.message("name")</th>
+	 				<th>@LanguageApplication.message("type")</th>
+	 				<th></th>
+	 			</tr>
+	 		</thead>
+	 		@if(history.attachedDoc != null) {
+	 		<tbody>
+	 			<tr>
+	 				<td><a href="@routes.Application.download(history.attachedDoc.id)">@history.attachedDoc.name</a></td>
+	 				<td>@history.attachedDoc.tag</td>
+	 				<td><a class="glyphicon glyphicon-remove" title=@LanguageApplication.message("remove")
+	 				href="@routes.PartHistoryApplication.deleteAssociation(history.id,history.attachedDoc.id)">
+	 				</a></td>
+	 			<tr>
+	 		</tbody>
+			 	
+			 }
+		</table>
+			@if(history.attachedDoc == null) {
+					<br />
+					<h4>@LanguageApplication.message("upload")</h4>
+					<form class="form-inline" role="form" method="POST" enctype="multipart/form-data"
+						action="@routes.PartHistoryApplication.upload(history.id)" >
+							<div class="form-group">
+									<input type="file" name="file" class="btn btn-default">
+							</div>
+							<button type="submit" class="btn btn-default btn-md" title="upload">
+								<span class="fa fa-upload"></span>
+							</button>
+					</form>
+					}
+ 	}

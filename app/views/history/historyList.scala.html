@@ -1,0 +1,258 @@
+@(parentLevel : java.lang.Integer, parentId : Long, currentPage : com.avaje.ebean.Page[History], currentSortBy: String, currentOrder: String, currentFilter: String, isPlanning : Boolean, lastRoutines : List[History])
+@import helper.historyParentNameGiver
+@****************************************
+* Helper generating navigation links    *
+****************************************@
+@link(newPage:Int, newSortBy:String) = @{
+    
+    var sortBy = currentSortBy
+    var order = currentOrder
+    
+    if(newSortBy != null) {
+        sortBy = newSortBy
+        if(currentSortBy == newSortBy) {
+            if(currentOrder == "asc") {
+                order = "desc"
+            } else {
+                order = "asc"
+            }
+        } else {
+            order = "asc"
+        }
+    }
+    
+    // Generate the link
+    if(isPlanning==false)
+    	routes.HistoryApplication.list(parentLevel, parentId, newPage, sortBy, order, currentFilter)
+    else
+    	routes.HistoryApplication.plannedMaintsHistoryList(newPage,sortBy,order)
+}
+
+@**********************************
+* Helper generating table headers *
+***********************************@
+@header(key:String, title:String) = {
+    <th class="col-lg-1">
+        <a href="@link(0, key)">@title
+        <span class="glyphicon @if(currentSortBy == key) {
+        	@if(currentOrder == "asc") {glyphicon-sort-by-attributes} else {glyphicon-sort-by-attributes-alt}
+        	} else {glyphicon-sort}"></span>
+        </a>
+    </th>
+}
+@**********************************
+* Helper generating pager         *
+***********************************@
+@pager={
+<div id="pager" class="pager">
+	            <ul>
+	           		<li class="previous">
+	           		<a href="@link(0,null)"><span @if(session.get("play_user_lang") == "0") {class="fa fa-fast-backward"} else {class ="fa fa-fast-forward"}></span>
+	           		</a></li>
+	            	@if(currentPage.hasPrev) {
+	                    <li class="previous">
+	                        <a href="@link(currentPage.getPageIndex - 1, null)">
+	                        @if(session().get("play_user_lang") == "0") {&larr; @LanguageApplication.message("previous")} else {&rarr; @LanguageApplication.message("previous") }
+	                        </a>
+	                    </li>
+	                } else {
+	                    <li class="previous disabled">
+	                        <a>
+	                        @if(session.get("play_user_lang") == "0") {&larr; @LanguageApplication.message("previous")} else {&rarr; @LanguageApplication.message("previous") }
+	                        </a>
+	                    </li>
+	                }
+	                <li class="current">
+	                    <a>@LanguageApplication.message("displaying") @currentPage.getDisplayXtoYofZ(" " + LanguageApplication.message("to")+" "," "+LanguageApplication.message("of")+" ")</a>
+	                </li>
+	                <li class="next"><a href="@link(currentPage.getTotalPageCount-1,null)">
+	                <span @if(session().get("play_user_lang") == "1") {class="fa fa-fast-backward"} else {class ="fa fa-fast-forward"}></span></a></li>
+	                @if(currentPage.hasNext) {
+	                    <li class="next">
+	                        <a href="@link(currentPage.getPageIndex + 1, null)">
+	                        @if(session.get("play_user_lang") == "1") {@LanguageApplication.message("next") &larr;} else {@LanguageApplication.message("next") &rarr;}
+	                        </a>
+	                    </li>
+	                } else {
+	                    <li class="next disabled">
+	                        <a>
+	                        @if(session.get("play_user_lang") == "1") {@LanguageApplication.message("next") &larr;} else {@LanguageApplication.message("next") &rarr;}
+	                        </a>
+	                    </li>
+	                }
+	                
+	            </ul>
+	        </div>
+	        }
+@main("History list:" + currentFilter) {
+	@if(lastRoutines!=null) {
+	<h3>@LanguageApplication.message("latestRoutines")</h3>
+	<table class="table table-responsive">
+	@lastRoutines.map { rt =>
+			<tr class="info"><th>@LanguageApplication.message("workOrderSerial")</th>
+				<td>@rt.maint.workOrderSerial</td>
+			</tr>
+			<tr>
+				<th>@if(rt.maint.pmRoutine!=null) {<a href="@routes.PreventiveMaintenanceApplication.pmIndex(rt.maint.pmRoutine.id)">@rt.maint.pmRoutine.name</a>} 
+				@if(rt.maint.classLevelPMRoutine!=null) {<a href="@routes.PreventiveMaintenanceApplication.pmIndex(rt.maint.classLevelPMRoutine.id)">@rt.maint.classLevelPMRoutine.name</a>}</th>
+			</tr>
+			<tr>
+				<th>@LanguageApplication.message("date")</th>
+				<td>@myUtils.DateTimeUtils.getIranianDateTime(rt.end)</td>
+			</tr>
+			<tr>
+				<th>@LanguageApplication.message("upTimeSinceRoutine")</th>
+				<td>@History.upTime(parentLevel,parentId, rt.end,new Date())</td>
+			</tr>
+	}
+	</table>
+	} else {<h3>NO ROUTINE HISTORY FOUND!</h3>}
+	
+	} {
+
+		@if(parentLevel==3) {<h2>@Installations.find.byId(1L).name</h2>}
+		<div class="btn btn-group">
+			@if(parentLevel==3) {<a class="btn btn-default btn-lg" href="@routes.InstallationApplication.installationIndex()">@Installations.find.byId(1L).name</a>}
+			@if(parentLevel==4) {<a class="btn btn-default btn-lg" href="@routes.PlantApplication.plantIndex(parentId)">@Plants.find.byId(parentId).name</a>}
+			@if(parentLevel==5) {<a class="btn btn-default btn-lg" href="@routes.SectionApplication.sectionIndex(parentId)">@Sections.find.byId(parentId).name</a>}
+			@if(parentLevel==6) {<a class="btn btn-default btn-lg" href="@routes.EquipmentApplication.equipmentIndex(parentId)">@equipment.Equipments.find.byId(parentId).name</a>}
+			@if(parentLevel==7) {<a class="btn btn-default btn-lg" href="@routes.SubunitApplication.subunitIndex(parentId)">@Subunits.find.byId(parentId).name</a>}
+			@if(parentLevel==8) {<a class="btn btn-default btn-lg" href="@routes.ComponentApplication.componentIndex(parentId)">@Components.find.byId(parentId).name</a>}
+			
+			<a class="btn btn-primary btn-lg"
+			href="@routes.HistoryApplication.createHistory(parentLevel,parentId)">@LanguageApplication.message("addLog")
+			<i class="fa fa-history"></i>
+			<i class="fa fa-plus"></i>			
+			</a>
+			
+			<a class="btn btn-default btn-lg"
+			href="@routes.HistoryApplication.calendar(parentLevel,parentId,"")">@LanguageApplication.message("viewCalendar")
+			<i class="fa fa-calendar"></i></a>
+			
+			<a class="btn btn-default btn-lg"
+			href="@routes.HistoryApplication.calendar(parentLevel,parentId,"PREVENTIVE_MAINTENANCE")">@LanguageApplication.message("viewPmCalendar")
+  			<i class="fa fa-calendar"></i>
+ 			<i class="fa fa-check"></i>
+			
+			</a>
+		</div>
+		
+		<br /><br />
+		@if(flash.containsKey("success")) {
+	        <div class="alert alert-success">
+	            <strong>Done!</strong> @flash.get("success")
+	        </div>
+		    }
+		@if(flash.containsKey("error")) {
+	       <div class="alert alert-danger">
+	           <strong>ERROR: </strong> @flash.get("error")
+	       </div>
+	       <br />
+		  	}
+	
+	<form class="form-inline" role="form" action="@link(0, "name")" method="GET">
+		<div class="form-group">
+			<input type="hidden" value="@parentId" name="pxid">
+			<input type="hidden" value="@parentLevel" name="level">			
+			<input class="form-control" type="search" id="searchbox" name="f" value="@currentFilter" placeholder="@LanguageApplication.message("filterBy")">
+		</div>
+		<div class="form-group">
+			<input type="submit" id="searchsubmit" value=@LanguageApplication.message("filter") class="btn btn-success">
+		</div>
+	</form>
+	<br />
+	
+	@if(currentPage.getTotalRowCount == 0) {
+		<div class="well well-lg">
+	  		<em>@LanguageApplication.message("nothingToDisplay")</em>
+	    </div> 
+	   } else {
+	   		@pager
+			<table class="table table-striped">			
+				<thead>
+					<tr>
+						@header("start", LanguageApplication.message("start"))
+						@header("end" , LanguageApplication.message("end"))
+						@header("isHappened",LanguageApplication.message("actualPlanned"))
+						@header("eventType", LanguageApplication.message("eventType"))
+						@header("state", LanguageApplication.message("state"))
+						@header("maint.workOrderSerial",LanguageApplication.message("workOrderSerial"))
+						@header("maint.responsibleDiscipline",LanguageApplication.message("discipline"))
+						@header("fail.comments",LanguageApplication.message("failure"))
+						<th class="col-lg-1">Level</th>
+						
+					</tr>
+				</thead>
+				<tbody>	
+					@currentPage.getList.map { cl =>
+					<tr>
+						<td>
+							<a href="@routes.HistoryApplication.historyIndex(cl.id)">
+							@if(cl.allDay==false) {
+								@myUtils.DateTimeUtils.getIranianDateTime(cl.start)
+							} else {
+								@myUtils.DateTimeUtils.getIranianDate(cl.start)
+							}
+							</a>
+						</td>
+						
+						<td>
+							<a href="@routes.HistoryApplication.historyIndex(cl.id)">
+							@if(cl.allDay==false) {
+								@myUtils.DateTimeUtils.getIranianDateTime(cl.end)
+							} else {
+								@myUtils.DateTimeUtils.getIranianDate(cl.end)
+							}
+							</a>
+						</td>
+						<td>
+							@if(cl.isHappened==true) {
+								@LanguageApplication.message("actual")
+							} else {@LanguageApplication.message("planned")}
+						</td>
+						<td>
+							@if(cl.eventType==null) {
+								<em>-</em>
+							} else {@cl.eventType}
+						</td>
+						
+						
+							@if(cl.state==null) {
+								<td><em>-</em></td>
+							} else {<td class="@if(cl.state.getState()==true) {success} else {danger}">@cl.state</td>}
+						
+						
+						<td>
+							@if(cl.maint==null) {
+								<em>-</em>
+							} else {
+							<a href="@routes.MaintenanceApplication.maintenanceIndex(cl.maint.id)">
+							@cl.maint.workOrderSerial
+							</a>}
+						</td>
+						
+						<td>
+							@if(cl.maint==null) {
+								<em>-</em>
+							} else {@cl.maint.responsibleDiscipline.name}
+						</td>
+						
+						<td>
+						@if(cl.fail==null) {
+						<em>-</em>
+						} else {
+							@if(cl.fail.comments!=null && cl.fail.failureMode!=null) {@cl.fail.failureMode.failureModeCode --- @cl.fail.comments}
+						}
+						</td>
+						
+						<td class="ltrInRtl">
+							@historyParentNameGiver(cl)
+						</td>
+
+					</tr>
+				}
+				</tbody>
+			</table>
+			@pager			
+	}
+}

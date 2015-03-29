@@ -1,0 +1,148 @@
+@(currentPage : com.avaje.ebean.Page[Companies], currentSortBy: String, currentOrder: String, currentFilter: String)
+
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import be.objectify.deadbolt.java.views.html._
+
+@****************************************
+* Helper generating navigation links    *
+****************************************@
+@link(newPage:Int, newSortBy:String) = @{
+    
+    var sortBy = currentSortBy
+    var order = currentOrder
+    
+    if(newSortBy != null) {
+        sortBy = newSortBy
+        if(currentSortBy == newSortBy) {
+            if(currentOrder == "asc") {
+                order = "desc"
+            } else {
+                order = "asc"
+            }
+        } else {
+            order = "asc"
+        }
+    }
+    
+    // Generate the link
+    routes.CompanyApplication.list(newPage, sortBy, order, currentFilter)    
+}
+
+@**********************************
+* Helper generating table headers *
+***********************************@
+@header(key:String, title:String) = {
+    <th class="@if(key=="name") {col-lg-4} else {col-lg-3}">
+        <a href="@link(0, key)">@title
+        <span class="glyphicon @if(currentSortBy == key) {
+        	@if(currentOrder == "asc") {glyphicon-sort-by-attributes} else {glyphicon-sort-by-attributes-alt}
+        	} else {glyphicon-sort}"></span>
+        </a>
+    </th>
+}
+
+@main("Company list: "+currentFilter) {@Html("")} {
+	<br />
+	@restrict(la(as("admin"))) {
+	<a class="btn btn-primary btn-lg" 
+	href="@routes.CompanyApplication.createCompany()">@LanguageApplication.message("newCompany")
+	<i class="fa fa-building-o"></i><i class="fa fa-plus"></i></a>
+	<br /><br />
+	}
+	<br />
+	@if(flash.containsKey("success")) {
+        <div class="alert alert-success">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+	    }
+ 	@if(flash.containsKey("error")) {
+      <div class="alert alert-danger">
+          <strong>ERROR: </strong> @flash.get("error")
+      </div>
+    }
+	<br />
+	<form class="form-inline" role="form" action="@link(0, "name")" method="GET">
+		<div class="form-group">			
+			<input class="form-control" type="search" id="searchbox" name="f" value="@currentFilter" placeholder="@LanguageApplication.message("companyPlaceHolder")">
+		</div>
+		<div class="form-group">
+			<input type="submit" id="searchsubmit" value="@LanguageApplication.message("filter")" class="btn btn-success">
+		</div>
+	</form>
+	
+	@if(currentPage.getTotalRowCount == 0) {
+		<div class="well well-lg">
+	  		<em>@LanguageApplication.message("nothingToDisplay")</em>
+	    </div> 
+	   } else {   
+			<table class="table table-striped">			
+				<thead>
+					<tr>
+						@header("name", LanguageApplication.message("name"))
+						@header("name", LanguageApplication.message("country"))
+						@header("companyType", LanguageApplication.message("companyType"))
+						@header("email", LanguageApplication.message("email"))
+					</tr>
+				</thead>
+				<tbody>	
+					@currentPage.getList.map { cl =>
+					<tr>
+						<td><a href="@routes.CompanyApplication.companyIndex(cl.id)">@cl.name</a></td>
+						
+						<td>
+							@if(cl.country==null) {
+								<em>-</em>
+							} else {@cl.country}
+						</td>
+						
+						<td>
+							@if(cl.companyType==null) {
+								<em>-</em>
+							} else {@cl.companyType}
+						</td>
+						
+						<td>
+							@if(cl.email==null) {
+								<em>-</em>
+							} else {@cl.email}
+						</td>	
+					</tr>
+				}
+				</tbody>
+			</table>
+			
+			<div id="pager" class="pager">
+	            <ul>
+	            	@if(currentPage.hasPrev) {
+	                    <li class="previous">
+	                        <a href="@link(currentPage.getPageIndex - 1, null)">
+	                        @if(session().get("play_user_lang") == "0") {&larr; @LanguageApplication.message("previous")} else {&rarr; @LanguageApplication.message("previous") }
+	                        </a>
+	                    </li>
+	                } else {
+	                    <li class="previous disabled">
+	                        <a>
+	                        @if(session().get("play_user_lang") == "0") {&larr; @LanguageApplication.message("previous")} else {&rarr; @LanguageApplication.message("previous") }
+	                        </a>
+	                    </li>
+	                }
+	                <li class="current">
+	                    <a>@LanguageApplication.message("displaying") @currentPage.getDisplayXtoYofZ(" " + LanguageApplication.message("to")+" "," "+LanguageApplication.message("of")+" ")</a>
+	                </li>
+	                @if(currentPage.hasNext) {
+	                    <li class="next">
+	                        <a href="@link(currentPage.getPageIndex + 1, null)">
+	                        @if(session().get("play_user_lang") == "1") {@LanguageApplication.message("next") &larr;} else {@LanguageApplication.message("next") &rarr;}
+	                        </a>
+	                    </li>
+	                } else {
+	                    <li class="next disabled">
+	                        <a>
+	                        @if(session().get("play_user_lang") == "1") {@LanguageApplication.message("next") &larr;} else {@LanguageApplication.message("next") &rarr;}
+	                        </a>
+	                    </li>
+	                }
+	            </ul>
+	        </div>
+	}
+}

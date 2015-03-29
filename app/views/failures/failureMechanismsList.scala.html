@@ -1,0 +1,23 @@
+@(fcs : List[failure.FailureMechanisms])
+
+@main("Failure mechanisms") {@Html("")} {
+	<table class="table table-striped">
+		<tr>
+			<th>Code number</th>
+			<th>Notation</th>
+			<th>Subdivision code number</th>
+			<th>Subdivision notation</th>
+			<th>Description</th>
+		</tr>
+	@fcs.map {failureMech =>
+		<tr>
+			<td>@failureMech.codeNumber</td>
+			<td>@failureMech.notation</td>
+			<td>@failureMech.subdivisionCodeNumber</td>
+			<td>@failureMech.subdivisionNotation</td>
+			<td>@failureMech.description</td>
+		</tr>
+	 	
+	 }
+	</table>
+ }

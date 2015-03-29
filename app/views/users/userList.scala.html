@@ -1,0 +1,184 @@
+@(currentPage : com.avaje.ebean.Page[Users], currentSortBy: String, currentOrder: String, currentFilter: String)
+
+@****************************************
+* Helper generating navigation links    *
+****************************************@
+@link(newPage:Int, newSortBy:String) = @{
+    
+    var sortBy = currentSortBy
+    var order = currentOrder
+    
+    if(newSortBy != null) {
+        sortBy = newSortBy
+        if(currentSortBy == newSortBy) {
+            if(currentOrder == "asc") {
+                order = "desc"
+            } else {
+                order = "asc"
+            }
+        } else {
+            order = "asc"
+        }
+    }
+    
+    // Generate the link
+    routes.UserApplication.list(newPage, sortBy, order, currentFilter)    
+}
+
+@**********************************
+* Helper generating table headers *
+***********************************@
+@header(key:String, title:String) = {
+    <th class="@if(key=="userName") {col-lg-2} else {col-lg-1}">
+        <a href="@link(0, key)">@title
+        <span class="glyphicon @if(currentSortBy == key) {
+        	@if(currentOrder == "asc") {glyphicon-sort-by-attributes} else {glyphicon-sort-by-attributes-alt}
+        	} else {glyphicon-sort}"></span>
+        </a>
+    </th>
+}
+
+@**********************************
+* Helper genearting pager         *
+***********************************@
+@pager = {<div id="pager" class="pager">
+	            <ul>
+	           		<li class="previous">
+	           		<a href="@link(0,null)"><span @if(session().get("play_user_lang") == "0") {class="fa fa-fast-backward"} else {class ="fa fa-fast-forward"}></span>
+	           		</a></li>
+	            	@if(currentPage.hasPrev) {
+	                    <li class="previous">
+	                        <a href="@link(currentPage.getPageIndex - 1, null)">
+	                        @if(session().get("play_user_lang") == "0") {&larr; @LanguageApplication.message("previous")} else {&rarr; @LanguageApplication.message("previous") }
+	                        </a>
+	                    </li>
+	                } else {
+	                    <li class="previous disabled">
+	                        <a>
+	                        @if(session().get("play_user_lang") == "0") {&larr; @LanguageApplication.message("previous")} else {&rarr; @LanguageApplication.message("previous") }
+	                        </a>
+	                    </li>
+	                }
+	                <li class="current">
+	                    <a>@LanguageApplication.message("displaying") @currentPage.getDisplayXtoYofZ(" " + LanguageApplication.message("to")+" "," "+LanguageApplication.message("of")+" ")</a>
+	                </li>
+	                <li class="next"><a href="@link(currentPage.getTotalPageCount-1,null)">
+	                <span @if(session().get("play_user_lang") == "1") {class="fa fa-fast-backward"} else {class ="fa fa-fast-forward"}></span></a></li>
+	                @if(currentPage.hasNext) {
+	                    <li class="next">
+	                        <a href="@link(currentPage.getPageIndex + 1, null)">
+	                        @if(session().get("play_user_lang") == "1") {@LanguageApplication.message("next") &larr;} else {@LanguageApplication.message("next") &rarr;}
+	                        </a>
+	                    </li>
+	                } else {
+	                    <li class="next disabled">
+	                        <a>
+	                        @if(session().get("play_user_lang") == "1") {@LanguageApplication.message("next") &larr;} else {@LanguageApplication.message("next") &rarr;}
+	                        </a>
+	                    </li>
+	                }
+	                
+	            </ul>
+	        </div>
+	 }
+	 
+@main("User list: "+currentFilter) {@Html("")} {
+	<br />
+	<div class="btn btn-group">
+		<a 
+		class="btn btn-primary btn-lg" href="@routes.UserApplication.createUser()">@LanguageApplication.message("newUser")
+		<span class="glyphicon glyphicon-plus"></span></a>
+		
+		<a 
+		class="btn btn-default btn-lg" href="@routes.UserBlobApplication.uploadForm()">
+		@LanguageApplication.message("persFiles")<i class="fa fa-file-o"></i></a>
+		
+	</div>
+	<br /><br/>
+	
+	<form class="form-inline" role="form" action="@link(0, "name")" method="GET">
+		<div class="form-group">			
+			<input class="form-control" type="search" id="searchbox" name="f" value="@currentFilter" placeholder="@LanguageApplication.message("filterBy")">
+		</div>
+		<div class="form-group">
+			<input type="submit" id="searchsubmit" value=@LanguageApplication.message("filter") class="btn btn-success">
+		</div>
+	</form>
+	<br />
+	@if(flash.containsKey("success")) {
+        <div class="alert alert-success">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+	    }
+ 	@if(flash.containsKey("error")) {
+      <div class="alert alert-danger">
+          <strong>ERROR: </strong> @flash.get("error")
+      </div>
+    }
+	<br />
+	
+	@if(currentPage.getTotalRowCount == 0) {
+		<div class="well well-lg">
+	  		<em>@LanguageApplication.message("nothingToDisplay")</em>
+	    </div> 
+	   } else {
+			@pager			
+			<table class="table table-striped">			
+				<thead>
+					<tr>
+						@header("userName", LanguageApplication.message("userId"))
+						@header("firstName", LanguageApplication.message("firstName"))
+						@header("lastName", LanguageApplication.message("lastName"))
+						@header("personnelNumber", LanguageApplication.message("personnelNumber"))
+						@header("discipline.name", LanguageApplication.message("discipline"))
+						@header("email", LanguageApplication.message("email"))
+						@header("hiringCompany.name", LanguageApplication.message("hiringCompany"))
+					</tr>
+				</thead>
+				<tbody>	
+					@currentPage.getList.map { cl =>
+					<tr>
+						<td><a href="@routes.UserApplication.userIndex(cl.id)">@cl.userName</a></td>
+					
+						<td>
+							@if(cl.firstName==null) {
+								<em>-</em>
+							} else {@cl.firstName}
+						</td>
+						
+						<td>
+							@if(cl.lastName==null) {
+								<em>-</em>
+							} else {@cl.lastName}
+						</td>
+						
+						<td>
+							@if(cl.personnelNumber==null) {
+								<em>-</em>
+							} else {@cl.personnelNumber}
+						</td>
+						
+						<td>
+							@if(cl.discipline==null) {
+								<em>-</em>
+							} else {@cl.discipline.name}
+						</td>
+						
+						<td>
+							@if(cl.email==null) {
+								<em>-</em>
+							} else {@cl.email}
+						</td>	
+						
+						<td>
+							@if(cl.hiringCompany==null) {
+								<em>-</em>
+							} else {@cl.hiringCompany.name}
+						</td>
+					</tr>
+				}
+				</tbody>
+			</table>
+			@pager
+	}
+}

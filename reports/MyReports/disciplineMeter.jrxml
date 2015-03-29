@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
+<!-- 2015-03-13T20:20:13 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="disciplineMeter" pageWidth="320" pageHeight="200" columnWidth="280" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="46864059-3f8c-4fc6-8b56-844210ff9e88">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<subDataset name="Dataset1" uuid="0453a4f5-995a-4f29-b5fb-3eef53b3bb0b">
+		<parameter name="finishedMaints" class="java.lang.Integer"/>
+		<parameter name="allMaints" class="java.lang.Integer"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="Field_1" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="finishedMaints" class="java.lang.Integer"/>
+	<parameter name="allMaints" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<title>
+		<band height="159">
+			<meterChart>
+				<chart isShowLegend="false" evaluationTime="Report">
+					<reportElement mode="Transparent" x="0" y="-10" width="270" height="169" uuid="8b65008d-2db8-4d51-b6d7-cf28a3bc7177"/>
+					<chartTitle color="#B30F0C"/>
+					<chartSubtitle/>
+					<chartLegend>
+						<font size="0"/>
+					</chartLegend>
+				</chart>
+				<valueDataset>
+					<dataset resetType="Report">
+						<datasetRun subDataset="Dataset1" uuid="6a9f4686-c06a-4556-b05d-f28d0a763332">
+							<datasetParameter name="allMaints">
+								<datasetParameterExpression><![CDATA[$P{allMaints}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="finishedMaints">
+								<datasetParameterExpression><![CDATA[$P{finishedMaints}]]></datasetParameterExpression>
+							</datasetParameter>
+							<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource()]]></dataSourceExpression>
+						</datasetRun>
+					</dataset>
+					<valueExpression><![CDATA[$P{finishedMaints}]]></valueExpression>
+				</valueDataset>
+				<meterPlot units="W.O" tickInterval="50.0" meterColor="#9EF20C" needleColor="#0000FF" tickColor="#0000FF">
+					<plot backcolor="#FFFFFF" backgroundAlpha="1.0" foregroundAlpha="1.0"/>
+					<tickLabelFont>
+						<font size="14"/>
+					</tickLabelFont>
+					<valueDisplay color="#F50A25">
+						<font size="14" isBold="true" isItalic="false"/>
+					</valueDisplay>
+					<dataRange>
+						<lowExpression><![CDATA[0]]></lowExpression>
+						<highExpression><![CDATA[$P{allMaints}]]></highExpression>
+					</dataRange>
+					<meterInterval label="Interval Name" color="#FF0000" alpha="1.0">
+						<dataRange>
+							<lowExpression><![CDATA[0]]></lowExpression>
+							<highExpression><![CDATA[Math.ceil(.3*Double.valueOf($P{allMaints} ))]]></highExpression>
+						</dataRange>
+					</meterInterval>
+					<meterInterval label="Medium" color="#FFFF00" alpha="1.0">
+						<dataRange>
+							<lowExpression><![CDATA[Math.ceil(.3*Double.valueOf($P{allMaints} ))]]></lowExpression>
+							<highExpression><![CDATA[Math.ceil(.8*Integer.valueOf($P{allMaints}))]]></highExpression>
+						</dataRange>
+					</meterInterval>
+					<meterInterval label="Good" color="#00FF00" alpha="1.0">
+						<dataRange>
+							<lowExpression><![CDATA[Math.ceil(.8*Integer.valueOf($P{allMaints}))]]></lowExpression>
+							<highExpression><![CDATA[Double.valueOf($P{allMaints})]]></highExpression>
+						</dataRange>
+					</meterInterval>
+				</meterPlot>
+			</meterChart>
+		</band>
+	</title>
+</jasperReport>

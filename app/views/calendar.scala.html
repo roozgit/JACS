@@ -1,0 +1,46 @@
+@(parentLevel: java.lang.Integer, parentId : Long, pageTitle: String)
+
+@main(pageTitle) {@Html("")} {
+	<a class="btn btn-default btn-lg" href="@routes.HistoryApplication.list(parentLevel,parentId)">
+	<span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span>
+	</a>
+	<select id="occurSelect">
+		<option value="actual">@LanguageApplication.message("actual")</option>
+		<option value="planned">@LanguageApplication.message("planned")</option>
+		<option value="">ALL</option>
+	</select>
+	<a id="occurLink" href="#" class="btn btn-xs btn-success">Submit</a>
+	<br />
+	@if(flash.containsKey("success")) {
+        <div class="alert alert-success">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+    }
+    @if(flash.containsKey("error")) {
+       <div class="alert alert-danger">
+           <strong>ERROR: </strong> @flash.get("error")
+       </div>
+  		}
+  	<br />
+	<div style="display: none;">
+
+    <form action="@routes.HistoryApplication.move()" method="POST" id="eventFormMove">
+        <input type="text" name="id" id="moveId"/>
+        <input type="text" name="dayDelta" id="moveDayDelta"/>
+        <input type="text" name="minuteDelta" id="moveMinuteDelta"/>
+        <input type="text" name="allDay" id="moveAllDay"/>
+    </form>
+
+
+    <form action="@routes.HistoryApplication.resize()" method="POST" id="eventFormResize">
+        <input type="text" name="id" id="resizeId"/>
+        <input type="text" name="dayDelta" id="resizeDayDelta"/>
+        <input type="text" name="minuteDelta" id="resizeMinuteDelta"/>
+    </form>
+</div>
+
+    <div id='calendar'></div>
+	<script type="text/javascript" src="@routes.Assets.at("javascripts/contextMenu.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("jfullcalendar/fullcalendar/fullcalendar.min.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/renderCalendar.js")"></script>
+}

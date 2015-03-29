@@ -1,0 +1,160 @@
+@(parentPlantId : Long, currentPage : com.avaje.ebean.Page[Sections], currentSortBy: String, currentOrder: String, currentFilter: String)
+
+@****************************************
+* Helper generating navigation links    *
+****************************************@
+@link(newPage:Int, newSortBy:String) = @{
+    
+    var sortBy = currentSortBy
+    var order = currentOrder
+    
+    if(newSortBy != null) {
+        sortBy = newSortBy
+        if(currentSortBy == newSortBy) {
+            if(currentOrder == "asc") {
+                order = "desc"
+            } else {
+                order = "asc"
+            }
+        } else {
+            order = "asc"
+        }
+    }
+    
+    // Generate the link
+    routes.SectionApplication.list(parentPlantId,newPage, sortBy, order, currentFilter)    
+}
+
+@**********************************
+* Helper generating table headers *
+***********************************@
+@header(key:String, title:String) = {
+    <th class="@if(key=="name") {col-lg-3} @if(key=="description") {col-lg-5} @if(key=="sectionCategory") {col-sm-2}">
+        <a href="@link(0, key)">@title
+        <span class="glyphicon @if(currentSortBy == key) {
+        	@if(currentOrder == "asc") {glyphicon-sort-by-attributes} else {glyphicon-sort-by-attributes-alt}
+        	} else {glyphicon-sort}"></span>
+        </a>
+    </th>
+}
+
+@**********************************
+*Pager helper                     *
+**********************************@
+@pager = {<div id="pager" class="pager">
+	            <ul>
+	           		<li class="previous">
+	           		<a href="@link(0,null)"><span @if(session().get("play_user_lang") == "0") {class="fa fa-fast-backward"} else {class ="fa fa-fast-forward"}></span>
+	           		</a></li>
+	            	@if(currentPage.hasPrev) {
+	                    <li class="previous">
+	                        <a href="@link(currentPage.getPageIndex - 1, null)">
+	                        @if(session().get("play_user_lang") == "0") {&larr; @LanguageApplication.message("previous")} else {&rarr; @LanguageApplication.message("previous") }
+	                        </a>
+	                    </li>
+	                } else {
+	                    <li class="previous disabled">
+	                        <a>
+	                        @if(session().get("play_user_lang") == "0") {&larr; @LanguageApplication.message("previous")} else {&rarr; @LanguageApplication.message("previous") }
+	                        </a>
+	                    </li>
+	                }
+	                <li class="current">
+	                    <a>@LanguageApplication.message("displaying") @currentPage.getDisplayXtoYofZ(" " + LanguageApplication.message("to")+" "," "+LanguageApplication.message("of")+" ")</a>
+	                </li>
+	                <li class="next"><a href="@link(currentPage.getTotalPageCount-1,null)">
+	                <span @if(session().get("play_user_lang") == "1") {class="fa fa-fast-backward"} else {class ="fa fa-fast-forward"}></span></a></li>
+	                @if(currentPage.hasNext) {
+	                    <li class="next">
+	                        <a href="@link(currentPage.getPageIndex + 1, null)">
+	                        @if(session().get("play_user_lang") == "1") {@LanguageApplication.message("next") &larr;} else {@LanguageApplication.message("next") &rarr;}
+	                        </a>
+	                    </li>
+	                } else {
+	                    <li class="next disabled">
+	                        <a>
+	                        @if(session().get("play_user_lang") == "1") {@LanguageApplication.message("next") &larr;} else {@LanguageApplication.message("next") &rarr;}
+	                        </a>
+	                    </li>
+	                }
+	                
+	            </ul>
+	        </div>
+	       }
+	       
+@main("Section list: "+currentFilter) {<div id='tree'></div>} {
+@if(currentPage.getTotalRowCount != 0) {
+<ol class="breadcrumb">
+	<li><a href="@routes.InstallationApplication.installationIndex()"><strong>@Plants.find.byId(parentPlantId).installation.name</strong></a></li>
+	<li><a href="@routes.PlantApplication.list(0,"name","asc","")"><small>@LanguageApplication.message("plants")</small></a></li>
+	<li><a href="@routes.PlantApplication.plantIndex(parentPlantId)"><strong>@Plants.find.byId(parentPlantId).name</strong></a></li>
+	<li><small>@LanguageApplication.message("sections")</small></li>
+</ol>
+}
+
+	<br />
+	<a title="New section"
+	class="btn btn-primary btn-lg" href="@routes.SectionApplication.createSection(parentPlantId)">@LanguageApplication.message("addSection")
+			<span class="glyphicon glyphicon-plus"></span></a>
+	<br />	
+	@if(flash.containsKey("success")) {
+        <div class="alert alert-success">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+	    }
+    @if(flash.containsKey("error")) {
+       <div class="alert alert-danger">
+           <strong>ERROR: </strong> @flash.get("error")
+       </div>
+  		}
+	<br />
+	<form class="form-inline" role="form" action="@link(0, "name")" method="GET">
+		<div class="form-group">
+			<input type="hidden" value="@parentPlantId" name="ppid">			
+			<input class="form-control" type="search" id="searchbox" name="f" value="@currentFilter" placeholder="@LanguageApplication.message("filterBy")">
+		</div>
+		<div class="form-group">
+			<input type="submit" id="searchsubmit" value=@LanguageApplication.message("filter") class="btn btn-success">
+		</div>
+	</form>
+	<br />
+	@if(currentPage.getTotalRowCount == 0) {
+		<div class="well well-lg">
+	  		<em>@LanguageApplication.message("nothingToDisplay")</em>
+	    </div> 
+	   } else {
+	   		@pager
+			<table class="table table-striped">			
+				<thead>
+					<tr class="success">
+						@header("name", LanguageApplication.message("name"))
+						@header("description", LanguageApplication.message("description"))
+						@header("sectionCategory", LanguageApplication.message("category"))
+					</tr>
+				</thead>
+				<tbody>	
+					@currentPage.getList.map { cl =>
+					<tr>
+						<td>
+							<a
+							href="@routes.SectionApplication.sectionIndex(cl.id)">@cl.name</a>
+						</td>
+						
+						<td>
+							@if(cl.description==null) {
+								<em>-</em>
+							} else {@cl.description}
+						</td>
+						
+						<td>
+							@if(cl.sectionCategory==null) {
+								<em>-</em>
+							} else {@cl.sectionCategory}
+						</td>
+					</tr>
+				}
+				</tbody>
+			</table>
+			@pager
+	}
+}

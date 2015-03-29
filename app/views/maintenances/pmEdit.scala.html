@@ -1,0 +1,80 @@
+@(pmId : Long, editPM: Form[maintenance.PreventiveMaintenances])
+
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("Edit PM") {@Html("")} {
+	<style>
+		body {
+			background-color: #EDEDED;
+		}
+	</style>
+	@form(action = routes.PreventiveMaintenanceApplication.update(pmId),
+	'class->"form-horizontal",
+	'role->"form") {
+		<div class="form-group">
+			<div class="col-lg-3">
+				@inputText(editPM("name"),						
+				'class->"form-control",
+				'_showConstraints->false,
+				'_label->LanguageApplication.message("name")
+				)
+			</div>
+		</div>
+					
+		<div class="form-group">
+			<div class="col-lg-2">
+				@select(editPM("actingDiscipline.id"),
+				options(Disciplines.options()),
+				'class->"form-control",
+				'_label->LanguageApplication.message("responsibleDiscipline")
+				)
+			</div>
+		</div>			
+		
+		<div class="form-group">
+			<div class="col-lg-2">
+				@inputText(editPM("intervalDays"),						
+				'class->"form-control",
+				'_showConstraints->true,
+				'_label->LanguageApplication.message("intervalDays")
+				)
+			</div>
+					
+			<div class="col-lg-2">
+				@inputText(editPM("intervalOperationHours"),						
+				'class->"form-control",
+				'_showConstraints->true,
+				'_label->LanguageApplication.message("intervalOpHours")
+				)
+			</div>
+					
+			<div class="col-lg-2">
+				@select(editPM("onShutDown"),
+				options(("false","NO"),("true","YES")),
+				'class->"form-control",
+				'_showConstraints->true,
+				'_label->LanguageApplication.message("onShutdown")
+				)
+			</div>
+		</div>			
+		
+		<div class="form-group">
+			<div class="col-lg-6">
+				@textarea(editPM("description"),
+					'class->"form-control",
+					'rows->"5",
+					'_label->LanguageApplication.message("routineDescription")
+					)
+			</div>
+		</div>
+		
+		<div align="center">
+			<input type="submit" value="@LanguageApplication.message("update")" class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.PreventiveMaintenanceApplication.pmIndex(pmId)" 
+				class="btn btn-danger btn-lg" role="button">
+			@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+}

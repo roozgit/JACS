@@ -1,0 +1,74 @@
+@(mid : Long, muForm: Form[maintenance.MaintenancesUsers])
+
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("New maintenance<->user") {@Html("")} {
+	<style>
+		body {
+			background-color: #EDEDED;
+		}
+	</style>
+	@form(action = routes.MaintenanceApplication.saveMaintenancesUsers(mid),
+	'class->"form-horizontal",
+	'role->"form"
+	) {
+		<div class="form-group">
+			
+			<div class="col-lg-2">
+				@select(muForm("user.id"),
+				options(Users.options()),
+				'class->"form-control",
+				'_label->LanguageApplication.message("personInvolved"),
+				'_default->""
+				)
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-lg-2">
+				@inputText(muForm("hours"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("workHours"),
+				'_showConstraints->true
+				)
+			</div>
+		</div>
+
+		<div align="center">
+			<input type="submit" value=@LanguageApplication.message("create") 
+			class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="/maint?maintID=@mid#tabs-maintenanceReport" 
+				class="btn btn-danger btn-lg" role="button">
+				@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+	
+	<div style="display:none" class="col-lg-2" id="disciplineFilterer">
+		<select class="form-control" id="disciplineSelector">
+			@Disciplines.options().map { op =>
+			<option value="@op._1">@op._2</option>
+			}
+		</select>
+	</div>
+	<script type="text/javascript" src="@routes.Assets.at("javascripts/fcf")"></script>
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("select2.min.js"))'></script>
+	@if(session().get("play_user_lang") == "1") {
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("select2_locale_fa.js"))'></script>}
+	<script>
+	$(document).ready(function() {
+		$("div#disciplineFilterer").hide();
+		$("label[for='user_id']").click(function() {
+			var ps = $(this).offset();
+			$("div#disciplineFilterer").css({
+			    position: "absolute",
+			    top: ps.top,
+			    left: @if(session().get("play_user_lang") == "1") {ps.left -120} else {ps.left +120}
+			});
+			$("div#disciplineFilterer").toggle();
+		});
+		
+		$("#user_id").select2();
+	});
+	</script>
+}

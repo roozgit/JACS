@@ -1,0 +1,550 @@
+@(parentMaintenance: maintenance.Maintenances,mStart : String, mEnd : String, mpStart : String, mpEnd : String, prereqMaints : List[maintenance.Maintenances])
+
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import be.objectify.deadbolt.java.views.html._
+
+@getParentLevel = @{
+	if(parentMaintenance.maintainedEquipment!=null) 6 else 5
+}
+
+@getParentId = @{
+	if(parentMaintenance.maintainedEquipment!=null) parentMaintenance.maintainedEquipment.id else parentMaintenance.maintainedSection.id
+}
+
+@getActualHistoryId = @{
+	var ix = -1001L
+	if(History.find.where().eq("maint.id",parentMaintenance.id).eq("isHappened",true).findUnique() != null) {
+		ix = History.find.where().eq("maint.id",parentMaintenance.id).eq("isHappened",true).findUnique().id
+	}
+	ix
+}
+
+@paramLink = @{
+	routes.DatasheetApplication.createDatasheet(getParentLevel,getParentId, getActualHistoryId)
+}
+
+@maintainedItem = @{
+	if(parentMaintenance.maintainedEquipment!=null) {
+		parentMaintenance.maintainedEquipment.name
+	} else {
+	if(parentMaintenance.maintainedSection!=null) {
+		parentMaintenance.maintainedSection.name
+		} else {"N/A"}
+	}
+}
+
+@main("Maintenance data") {@Html("")} {
+	
+  		<div class ="row">
+  				<h2 align="center"><span @if(parentMaintenance.maintenanceStatus!=null) {class="label @parentMaintenance.maintenanceStatus"}>@parentMaintenance.workOrderSerial</span>
+  				</h2>
+  				
+  			<div class="btn btn-group">
+	  				<a class="btn btn-warning btn-lg" title="Edit maintenance"
+					href="@routes.MaintenanceApplication.editMaintenance(parentMaintenance.id)">@LanguageApplication.message("edit")
+					<span class="glyphicon glyphicon-edit"></span></a>
+					
+				@if(parentMaintenance.maintenanceStatus != maintenance.MaintenanceStatus.CANCEL && parentMaintenance.maintenanceStatus != maintenance.MaintenanceStatus.HOLD) {
+					@if(parentMaintenance.maintainedEquipment != null) {
+						<a class="btn btn-primary btn-lg" title="Log this maintenance"
+						href="@routes.HistoryApplication.createHistory(6,parentMaintenance.maintainedEquipment.id,parentMaintenance.id,-1L)">
+						@LanguageApplication.message("newLog")<span class="glyphicon glyphicon-plus"></span></a>
+					} else {
+							<a class="btn btn-primary btn-lg" title="Log this maintenance"
+							href="@routes.HistoryApplication.createHistory(5,parentMaintenance.maintainedSection.id,parentMaintenance.id,-1L)">
+							@LanguageApplication.message("newLog")<span class="glyphicon glyphicon-plus"></span></a>
+						}
+					}
+				@if(parentMaintenance.maintenanceCategory==maintenance.MaintenanceCategories.CORRECTIVE_MAINTENANCE) {
+				<a class="btn btn-default btn-lg" title="Print Work order form"
+					href="@routes.ReportApplication.workOrderForm(parentMaintenance.id)">@LanguageApplication.message("print")
+					<span class="fa fa-print"></span></a>}
+					
+				@restrict(la(as("admin"))) {
+				<a class="btn btn-danger btn-lg" title="Delete maintenance"
+				href="@routes.MaintenanceApplication.delete(parentMaintenance.id)">@LanguageApplication.message("deleteMaintenance")
+				<span class="fa fa-trash"></span></a>}
+				
+				<a class="btn btn-default btn-lg" title="Back to maintenance list"
+				href="@routes.MaintenanceApplication.list()">
+				<span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span></span></a>
+			</div>
+			
+			@if(flash.containsKey("success")) {
+        <div class="alert alert-success">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+        <br />
+	    }
+	    @if(flash.containsKey("error")) {
+	       <div class="alert alert-danger">
+	           <strong>ERROR: </strong> @flash.get("error")
+	       </div>
+	       <br />
+  		}
+			
+		
+			<div class="col-lg-offset-9">
+			@if(parentMaintenance.workflowStage !=null) {
+  			<h4><span class="label label-info">@LanguageApplication.message("portfolio")</span></h4>
+	  			<a href="@routes.MaintenanceApplication.workflowIndex(parentMaintenance.id)">
+	  				@parentMaintenance.workflowStage.description</a>
+	  				@restrict(la(as("admin"), as("planner"))) {
+	  			<a class="btn btn-danger"
+	  			href="@routes.MaintenanceApplication.deleteWorkflow(parentMaintenance.id)">@LanguageApplication.message("deletePortfolio")</a>}
+  			} else {@restrict(la(as("admin"), as("planner"))) {<a href="@routes.MaintenanceApplication.createWorkflow(parentMaintenance.id)">@LanguageApplication.message("createPortfolio")</a>}}
+  			</div>
+  		</div>
+  		
+	<table class="table table-bordered">
+					<tbody>
+						<tr>
+							<td colspan="4" align="center" class=@parentMaintenance.maintenanceCategory>
+							@parentMaintenance.maintenanceCategory</td>
+						</tr>
+						<tr>
+							<td colspan="2" style="width:30%">@LanguageApplication.message("requestDate"): @myUtils.DateTimeUtils.getIranianDate(parentMaintenance.requestDate)</td>
+							<td style="width:40%; background-image:url(@routes.Assets.at("images/gear1.png"));" class="active" rowspan="2">
+								<h2>
+								@if(parentMaintenance.maintainedEquipment!=null) {
+									
+									@LanguageApplication.message("equipmentTag") :
+									<div class="ltrInRtl @if(session().get("play_user_lang") == "0") {text-right} else {text-left}">
+									<a class="btn btn-default btn-lg ltrInRtl" style="display: inline"
+									href="@routes.EquipmentApplication.equipmentIndex(parentMaintenance.maintainedEquipment.id)">
+									@parentMaintenance.maintainedEquipment.name</a>
+									</div>} else {
+										@if(parentMaintenance.maintainedSection!=null) {
+											@LanguageApplication.message("section") : 
+											<div class="ltrInRtl @if(session().get("play_user_lang") == "0") {text-right} else {text-left}">
+											<a class="btn btn-default btn-lg ltrInRtl" style="display: inline"
+											href="@routes.SectionApplication.sectionIndex(parentMaintenance.maintainedSection.id)">
+											@parentMaintenance.maintainedSection.name</a>
+											</div>} else {
+									INVALID MAINTENANCE. CONTACT SYSTEM ADMINISTRATOR!}}
+								</h2>
+							</td>
+							<td style="width:30%">@LanguageApplication.message("discipline"):
+							@if(parentMaintenance.responsibleDiscipline!=null) {@parentMaintenance.responsibleDiscipline.name}</td>
+						</tr>
+						<tr>
+						<td>
+						<p>@LanguageApplication.message("actual")
+						@if(History.find.where().eq("maint.id",parentMaintenance.id).eq("isHappened",true).findUnique() !=null) {
+						<a title=@LanguageApplication.message("viewLog")
+						href="@routes.HistoryApplication.historyIndex(History.find.where().eq("maint.id",parentMaintenance.id).eq("isHappened",true).findUnique().id)">
+						<i class="fa fa-eye"></i></a>
+						}
+						</p>
+						@if(mStart.length!=0) {
+							@LanguageApplication.message("start") : @mStart <br />
+							@LanguageApplication.message("end") : @mEnd
+						} else {@LanguageApplication.message("datesNotRegistered")}
+						</td>
+						<td>
+						<p>@LanguageApplication.message("planned")
+						@if(getActualHistoryId > 0) {
+							<a title=@LanguageApplication.message("viewPlannedLog")
+							href="@routes.HistoryApplication.historyIndex(getActualHistoryId)">
+							<i class="fa fa-eye"></i></a>}</p>
+							@if(mpStart.length!=0) {
+							@LanguageApplication.message("start") : @mpStart <br />
+							@LanguageApplication.message("end") : @mpEnd
+						} else {@LanguageApplication.message("datesNotRegistered")}
+						</td>
+						<td>@LanguageApplication.message("maintenancePriority"): 
+							@if(parentMaintenance.maintenancePriority!=null) {@parentMaintenance.maintenancePriority}</td>
+						</tr>
+					</tbody>
+				</table>	
+	<!-- tabs -->
+		<div id="tab-container" class="tab-container">
+			<ul class="etabs">
+				<li class="tab"><a href="#tabs-workRequest">@LanguageApplication.message("requestInfo")</a></li>
+				<li class="tab"><a href="#tabs-maintainedItems">@LanguageApplication.message("maintainedItems")</a></li>
+				<li class="tab"><a href="#tabs-maintenanceReport">@LanguageApplication.message("maintenanceReport")</a></li>
+				<li class="tab"><a href="@routes.DatasheetApplication.maintParameters(getActualHistoryId)" data-target="#tabs-ajax-params">@LanguageApplication.message("measurements")</a></li>
+				<li class="tab"><a href="#tabs-tools">@LanguageApplication.message("toolsInfo")</a></li>
+				<li class="tab"><a href="#tabs-planning">@LanguageApplication.message("planningInfo")</a></li>
+				<li class="tab"><a href="#tabs-failure">@LanguageApplication.message("failureInfo")</a></li>
+				<li class="tab"><a href="#tabs-dataSources">@LanguageApplication.message("dataSources")</a></li>
+			</ul>
+			
+	<!-- Work request -->
+			<div id="tabs-workRequest">
+				<br />
+				<strong><em>@parentMaintenance.maintenanceStatus</em></strong>
+				@if(parentMaintenance.holdReason!=null) {
+				<p>@LanguageApplication.message("holdReason") : @parentMaintenance.holdReason</p>
+				@if(parentMaintenance.holdReasonComment!=null && parentMaintenance.holdReasonComment.size!=0) {
+				<pre>@parentMaintenance.holdReasonComment</pre>}
+				}
+				
+				<br />
+				@if(parentMaintenance.pmRoutine!=null) {
+					<p>@LanguageApplication.message("maintPMRoutine") :</p>
+					<a href="@routes.PreventiveMaintenanceApplication.pmIndex(parentMaintenance.pmRoutine.id)">@parentMaintenance.pmRoutine.name</a>
+				}
+				@if(parentMaintenance.classLevelPMRoutine!=null) {
+					<p>@LanguageApplication.message("classLevelPMRoutine") :</p>
+					<a href="@routes.PreventiveMaintenanceApplication.pmIndex(parentMaintenance.classLevelPMRoutine.id)">@parentMaintenance.classLevelPMRoutine.name</a>
+				}
+
+				<h3>@LanguageApplication.message("description")</h3>
+				@if(parentMaintenance.workOrderDescription!=null && parentMaintenance.workOrderDescription.size!=0) {
+				<pre>@parentMaintenance.workOrderDescription</pre>
+				} else {<em>-</em>}
+				
+			</div> <!-- end of work request -->
+			
+		<!-- Maintained items -->
+			<div id="tabs-maintainedItems">
+				<br/>
+				<div class="outliner">
+				<div class="row">
+					<div class="col-lg-4">
+						<div align="center"><a class="btn btn-default">@LanguageApplication.message("maintainedItem")</a></div>
+						<br/><br/>
+						<div class="list-group">
+							<h4 class="list-group-item-heading ltrInRtl">@maintainedItem</h4>
+							<a class="list-group-item">@LanguageApplication.message("ttr"): @parentMaintenance.timeToRepair</a>
+							<a class="list-group-item" href="@paramLink">@LanguageApplication.message("registerParameter")</a>
+						</div>
+					</div>
+					@** If this is a unit maintenance there is no need to add subunits or components **@
+					@if(parentMaintenance.maintainedEquipment!=null) {
+						<div class="col-lg-4">
+							<div align="center"><a class="btn btn-default" 
+							href="@routes.MaintenanceApplication.createMaintenanceSubunit(parentMaintenance.id)">
+							@LanguageApplication.message("subunits") &nbsp <i class="fa fa-plus"></i></a></div>
+							<br /><br />
+							@defining(maintenance.MaintenancesSubunits.find.where().eq("maintenance.id", parentMaintenance.id).findList()) { msList =>
+								@if(msList!=null) {
+									<div class="list-group">
+									@msList.map { ms =>						
+										<h4><a href="@routes.SubunitApplication.subunitIndex(ms.subunit.id)" class="list-group-item-heading ltrInRtl">@ms.subunit.name</a></h4>
+											<a href="@routes.MaintenanceApplication.editMaintenanceSubunit(ms.id, parentMaintenance.id)"
+											class="list-group-item">Activity: @ms.maintenanceActivity</a>
+											<a href="@routes.MaintenanceApplication.editMaintenanceSubunit(ms.id, parentMaintenance.id)"
+											class="list-group-item">@LanguageApplication.message("ttr"): @ms.timeToRepair</a>
+											<a href="@routes.DatasheetApplication.createDatasheet(7,ms.subunit.id, getActualHistoryId)"
+											class="list-group-item">@LanguageApplication.message("registerParameter")</a>
+											<a href="@routes.MaintenanceApplication.deleteMaintenanceSubunit(ms.id,parentMaintenance.id)"
+											class="list-group-item list-group-item-danger">@LanguageApplication.message("remove")</a>
+										
+									}
+									</div>
+								}
+								
+							}
+						</div>
+				
+						<div class="col-lg-4">
+							<div align="center"><a class="btn btn-default" 
+							href="@routes.MaintenanceApplication.createMaintenanceComponent(parentMaintenance.id)">
+							@LanguageApplication.message("components") &nbsp; <i class="fa fa-plus"></i></a></div>
+							<br /><br />
+							@defining(maintenance.MaintenancesComponents.find.where().eq("maintenance.id", parentMaintenance.id).findList()) { msList =>
+								@if(msList!=null) {
+									<div class="list-group">
+									@msList.map { ms =>						
+										<h4><a href="@routes.ComponentApplication.componentIndex(ms.component.id)" class="list-group-item-heading ltrInRtl">@ms.component.name</a></h4>
+											<a href="@routes.MaintenanceApplication.editMaintenanceComponent(ms.id, parentMaintenance.id)"
+											class="list-group-item">Activity: @ms.maintenanceActivity</a>
+											<a href="@routes.MaintenanceApplication.editMaintenanceComponent(ms.id, parentMaintenance.id)"
+											class="list-group-item">@LanguageApplication.message("ttr"): @ms.timeToRepair</a>
+											<a href="@routes.DatasheetApplication.createDatasheet(8,ms.component.id, getActualHistoryId)"
+											class="list-group-item">@LanguageApplication.message("registerParameter")</a>
+											<a href="@routes.MaintenanceApplication.deleteMaintenanceComponent(ms.id,parentMaintenance.id)"
+											class="list-group-item list-group-item-danger">@LanguageApplication.message("remove")</a>
+									}
+									</div>
+								}
+								
+							}
+						</div>
+					}
+				</div>
+				 @** End of check for being a unit or equipment maintenance **@
+				</div>
+				
+			</div> <!-- End of maintained items -->
+			
+		<!-- Maintenance report -->
+			<div id="tabs-maintenanceReport">
+				<br />
+				<h4>@LanguageApplication.message("responsiblePerson")
+				@if(parentMaintenance.responsiblePerson!=null) {
+					<a href="@routes.UserApplication.userIndex(parentMaintenance.responsiblePerson.id)" target="_blank">
+					<span class="label label-info">
+					@{parentMaintenance.responsiblePerson.firstName + " "+parentMaintenance.responsiblePerson.lastName}
+					</span></a>
+				}
+				&nbsp;&nbsp;&nbsp;
+				@LanguageApplication.message("maintActivity") 
+				<span class="label label-info">@parentMaintenance.maintenanceActivity</span>
+				</h4>
+				<div class="col-lg-8">
+				@if(parentMaintenance.maintenanceReport!=null && parentMaintenance.maintenanceReport.size!=0) {
+					<pre>@parentMaintenance.maintenanceReport</pre>
+					} else {<em>-</em>}
+				</div>
+				<div class="col-lg-4">
+					<table class="table table-bordered">
+						<tr>
+						<th>@LanguageApplication.message("tttr")</th>
+						<th>@LanguageApplication.message("manHour")</th>
+						</tr>
+						
+						<tr>
+						<td>@parentMaintenance.calculatedTotalTimeToRepair</td>
+						<td>@parentMaintenance.calculatedTotalManHours</td>
+						</tr>	
+						
+					</table>
+					<br />
+					@if(parentMaintenance.equipmentResources.size!=0) {
+					<p>@LanguageApplication.message("equipmentResources")</p>
+					<ul class="list-group">@parentMaintenance.equipmentResources.map {er =>
+						<li class="list-group-item"><a style="display:inline" 
+												href="@routes.EquipmentApplication.equipmentIndex(er.id)">@er.name</a>
+						</li>
+						}
+					</ul>
+					}
+				</div>
+				<br />
+				
+				<div class="outliner">
+				<br />
+				<div class="row">
+					<div class="col-lg-5">
+						<div align="center"><a class="btn btn-default" 
+						href="@routes.MaintenanceApplication.createMaintenanceUser(parentMaintenance.id)">
+						@LanguageApplication.message("personnel") &nbsp; <i class="fa fa-user-plus"></i></a></div>
+						<br /><br/>
+						@defining(maintenance.MaintenancesUsers.find.where().eq("maintenance.id", parentMaintenance.id).findList()) { msList =>
+							@if(msList!=null) {
+								<div class="list-group">
+								@msList.map { ms =>						
+									<h4><a href="@routes.UserApplication.userIndex(ms.user.id)" class="list-group-item-heading">@{ms.user.firstName +" "+ms.user.lastName}</a></h4>
+										<a href="@routes.MaintenanceApplication.editMaintenanceUser(ms.id, parentMaintenance.id)"
+										class="list-group-item">@LanguageApplication.message("workHours") : @ms.hours</a>
+										<a href="@routes.MaintenanceApplication.deleteMaintenanceUser(ms.id,parentMaintenance.id)"
+										class="list-group-item list-group-item-danger">@LanguageApplication.message("remove")</a>
+								}
+								</div>
+							}
+							
+						}
+					</div>
+					
+					<div class="col-lg-5">
+						<div align="center"><a class="btn btn-default" 
+						href="@routes.MaintenanceApplication.createMaintenancePart(parentMaintenance.id)">
+						@LanguageApplication.message("parts") &nbsp; <i class="fa fa-plus"></i></a></div>
+						<br /><br />
+						@defining(maintenance.MaintenancesParts.find.where().eq("maintenance.id", parentMaintenance.id).findList()) { msList =>
+							@if(msList!=null) {
+								<div class="list-group">
+								@msList.map { ms =>
+									<h4><a href="@routes.PartApplication.partIndex(ms.part.id)" class="list-group-item-heading">@ms.part.name</a></h4>
+										<a href="@routes.MaintenanceApplication.editMaintenancePart(ms.id, parentMaintenance.id)"
+										class="list-group-item">@LanguageApplication.message("quantity") : @ms.quantity @ms.part.measurementUnit.unitCode</a>
+										
+										<a href="@routes.PartHistoryApplication.updateStockParts(ms.id, parentMaintenance.id)"
+										class="list-group-item">@LanguageApplication.message("receivedFromWarehouse") : @if(ms.stockFlag==true) {@LanguageApplication.message("yes")} else {@LanguageApplication.message("no")} </a>
+										
+										<a href="@routes.MaintenanceApplication.deleteMaintenancePart(ms.id,parentMaintenance.id)"
+										class="list-group-item list-group-item-danger">@LanguageApplication.message("remove")</a>
+								}
+								</div>
+							}
+							
+						}
+					</div>
+		
+				</div>
+				</div>
+			</div> <!-- End of maintenance report tab -->
+			
+			<!-- Parameters tab -->
+			<div id="tabs-ajax-params"></div>
+			 <!-- End of parameters tab -->
+			 
+			<!-- tools tab -->
+			<div id="tabs-tools">
+				<table class="table">
+					@parentMaintenance.tools.map { too =>
+					<tr><td><a href="@routes.RepairToolApplication.repairToolIndex(too.id)">@too.name</a></td></tr>
+					}
+				</table>
+				
+			</div>
+			<!-- Planning tab -->	
+			<div id="tabs-planning">
+				<br />
+				@if(parentMaintenance.maintenanceGroup!=null) {
+				<p>@LanguageApplication.message("maintProject")
+				<a 
+				href="@routes.MaintenanceGroupApplication.maintenanceGroupIndex(parentMaintenance.maintenanceGroup.id)">
+				@parentMaintenance.maintenanceGroup.name</a>
+				</p>
+				}
+				@if(parentMaintenance.dependentMaintenances.size>0) {
+					<label>@LanguageApplication.message("dependentMaints")</label>
+					@parentMaintenance.dependentMaintenances.map {prm =>
+					<ul>
+					<li><a href="@routes.MaintenanceApplication.maintenanceIndex(prm.id)">
+					@prm.workOrderSerial</a></li>
+					</ul>}<br />
+				}
+				@if(prereqMaints.size>0) {
+				<label>@LanguageApplication.message("prereqMaints")</label>
+				@prereqMaints.map {dprm =>
+				<ul>
+				<li><a href="@routes.MaintenanceApplication.maintenanceIndex(dprm.id)">
+				@dprm.workOrderSerial</a></li>
+				</ul>}<br />
+				}
+				<div class="col-lg-6">
+				<h3>@LanguageApplication.message("planningComment")</h3>
+				@if(parentMaintenance.planningComment!=null && parentMaintenance.planningComment.size!=0) {
+				<pre>@parentMaintenance.planningComment</pre>
+				} else {<em>-</em>}
+				</div>
+			</div> <!-- End of planning tab -->
+			
+			<!-- Failure tab -->
+			<div id="tabs-failure">
+				<br />
+				@if(parentMaintenance.correspondingFailure!=null) {
+				@parentMaintenance.correspondingFailure.map {csf =>
+				<table class="table">
+				 	<tr>
+				 		<th>@LanguageApplication.message("severity")</th>
+				 		<th>@LanguageApplication.message("functionImpact")</th>
+				 		<th>@LanguageApplication.message("operationImpact")</th>
+				 		<th>@LanguageApplication.message("safetyImpact")</th>
+				 		<th>@LanguageApplication.message("failureModeCode")</th>
+				 		<th>@LanguageApplication.message("failureMechanism")</th>
+				 		<th>@LanguageApplication.message("detectionMethod")</th>
+				 	</tr>
+				 	<tr>
+				 		<td>@csf.severity</td>
+				 		<td>@csf.functionImpact</td>
+				 		<td>@csf.operationImpact</td>
+				 		<td>@csf.safetyImpact</td>
+				 		<td>@csf.failureMode.failureModeCode</td>
+				 		<td>@csf.failureMechanism.notation</td>
+				 		<td>@csf.detectionMethod</td>
+				 	</tr>
+	
+	 			</table>
+	 			
+					<dl>
+					<dt>@LanguageApplication.message("start"):@myUtils.DateTimeUtils.getIranianDateTime(csf.failHistory.start)</dt>
+	 				<dt>@LanguageApplication.message("end"):@myUtils.DateTimeUtils.getIranianDateTime(csf.failHistory.end)</dt>
+	 				</dl>
+	 				
+	 			}
+				} else {<p>@LanguageApplication.message("noFailureRegistered")</p>}
+				
+			</div> <!-- End of failure tab -->
+			
+			<!-- Data sources tab -->
+			<div id="tabs-dataSources">
+					<table class="table table-bordered">
+				 		<thead>
+				 			<tr class="success">
+				 				<th>@LanguageApplication.message("name")</th>
+				 				<th>@LanguageApplication.message("type")</th>
+				 				<th></th>
+				 			</tr>
+				 		</thead>
+	 				@if(parentMaintenance.files != null) {
+			 			@parentMaintenance.files.map { fi =>
+					 		<tbody>
+					 			<tr>
+					 				<td><a href="@routes.Application.download(fi.id)">@fi.name</a></td>
+					 				<td>@fi.tag</td>
+					 				<td><a class="glyphicon glyphicon-remove" 
+					 				href="@routes.MaintenanceApplication.deleteAssociation(parentMaintenance.id,fi.id)">
+					 				</a></td>
+					 			<tr>
+					 		</tbody>
+					 	}
+					 }
+				 	</table>
+					<br />		
+				<h3>@LanguageApplication.message("upload")</h3>
+				<form class="form-inline" role="form" method="POST" enctype="multipart/form-data"
+					action="@routes.MaintenanceApplication.upload(parentMaintenance.id)">
+					<div class="form-group">
+						<input type="file" name="file" class="btn btn-default">
+					</div>
+					<button type="submit" class="btn btn-default btn-md" title="upload">
+						<span class="fa fa-upload"></span>
+					</button>						
+				</form>
+			</div>
+			
+		</div>
+		
+		<script type="text/javascript">
+		$(document).ready(function() {
+			$("#tab-container").bind('easytabs:ajax:complete', function(e, clicked, panel, response, status, xhr) {
+				var jsonObject = $.parseJSON(response);
+					$("#tabs-ajax-params").html('<br/><table id="paramTable" class="table table-responsive table-bordered"><thead><tr>' +
+					'<th>@LanguageApplication.message("parameter")</th>' +
+					'<th>@LanguageApplication.message("section")</th>' +
+					'<th>@LanguageApplication.message("equipment")</th>' +
+					'<th>@LanguageApplication.message("subunit")</th>' +
+					'<th>@LanguageApplication.message("component")</th>' +
+					'<th>@LanguageApplication.message("value")</th>' +
+					'<th>@LanguageApplication.message("measurementUnit")</th>' +
+					'<th></th>' +
+					'<th></th></tr></thead><tbody></tbody></table>');
+				for(i=0;i<jsonObject.length;i++) {
+					$("table#paramTable tr:last").after('<tr class='+jsonObject[i].compare+'><td>'+ jsonObject[i].parameter+'</td>'+
+							
+                            '<td class="ltrInRtl">'+jsonObject[i].section+'</td>' +
+							
+                            '<td class="ltrInRtl">'+jsonObject[i].equipment+'</td>' +
+							
+							'<td class="ltrInRtl">'+jsonObject[i].subunit+'</td>' +
+							
+							'<td class="ltrInRtl">'+jsonObject[i].component+'</td>' +
+							
+							'<td class="ltrInRtl">'+'<a href="#" data-pk='+jsonObject[i].did+ ' data-url="/datasheet/update" data-type="text" id=valueField'+
+							jsonObject[i].did +' data-title="New value" data-name=value>'+jsonObject[i].value+'</a></td>'+
+							
+							'<td align="right" class="ltrInRtl">'+jsonObject[i].measurementUnit+'</td>' +
+							
+							'<td>'+jsonObject[i].compare+'</td>' +
+							
+							'<td>'+'<a id="delDsItem" data-pk='+jsonObject[i].did+'><i class="fa fa-trash"></i></a></td></tr>');
+				}
+				$("a#delDsItem").bind("click",delDs);
+				$.fn.editable.defaults.mode = 'popup';
+				$.fn.editable.defaults.ajaxOptions = {
+						type: "PUT"
+						};
+
+
+				$('a[id^="valueField"]').each(function() {
+				    $(this).editable();
+				});
+			});
+			function delDs() {
+				$.ajax({
+				    url: jsRoutes.controllers.DatasheetApplication.deleteItem(this.getAttribute("data-pk")).url,
+				    type: 'DELETE',
+				    success: function(result) {
+				        location.reload();
+				    }
+				});
+			}
+		});
+	</script>
+	}

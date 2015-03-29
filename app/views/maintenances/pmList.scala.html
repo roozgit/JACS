@@ -1,0 +1,54 @@
+@(parentLevel : java.lang.Integer, parentId : Long, classLevelPMs : List[maintenance.PreventiveMaintenances], itemPMs : List[maintenance.PreventiveMaintenances])
+
+@backName = @{
+	if(parentLevel==4)	{
+		Plants.find.byId(parentId).name
+		} else if(parentLevel==5) {
+			Sections.find.byId(parentId).name
+			} else if(parentLevel==6) {
+					equipment.Equipments.find.byId(parentId).name
+				} else {
+					'*'
+					}
+	
+}
+
+@main(backName+" Routine list") {@Html("")} {
+	<div align="center"><h1 class="ltrInRtl"><span class="label label-default">@backName</span>  Routine list</h1></div>
+		<div class="btn btn-group">
+			<a class="btn btn-primary btn-lg"
+			href="@routes.PreventiveMaintenanceApplication.createPM(parentLevel,parentId)">@LanguageApplication.message("newRoutine")
+			<span class="glyphicon glyphicon-plus"></span></a>
+			@if(parentLevel==4) {<a class="btn btn-default btn-lg" href="@routes.PlantApplication.plantIndex(parentId)"><span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span></a>}
+			@if(parentLevel==5) {<a class="btn btn-default btn-lg" href="@routes.SectionApplication.sectionIndex(parentId)"><span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span></a>}
+			@if(parentLevel==6) {<a class="btn btn-default btn-lg" href="@routes.EquipmentApplication.equipmentIndex(parentId)"><span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span></a>}
+			
+		</div>
+	<br />
+	@if(flash.containsKey("success")) {
+	        <div class="alert alert-success">
+	            <strong>Done!</strong> @flash.get("success")
+	        </div>
+		    }
+		 @if(flash.containsKey("error")) {
+	       <div class="alert alert-danger">
+	           <strong>ERROR: </strong> @flash.get("error")
+	       </div>
+	  		}
+	<br />
+	<label><em>@LanguageApplication.message("classLevelPMRoutine")</em></label>
+	@if(parentLevel==6) {
+		<ol>
+		@classLevelPMs.map {ecr =>
+		<li><a href="@routes.PreventiveMaintenanceApplication.pmIndex(ecr.id)">@ecr.name</a></li>
+		}
+		</ol>
+	}
+	<label><em>@LanguageApplication.message("maintPMRoutine")</em></label>
+		<ol>
+		@itemPMs.map {ecr =>
+		<li><a href="@routes.PreventiveMaintenanceApplication.pmIndex(ecr.id)">@ecr.name</a></li>
+		}
+		</ol>	
+	
+}

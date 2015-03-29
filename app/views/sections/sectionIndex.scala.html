@@ -1,0 +1,167 @@
+@(parentSection: Sections)
+
+@import play.api.Play.resource
+@import play.api.Play.current
+
+@main("Section " + parentSection.name) {<div id='tree'></div>} {
+		<ol class="breadcrumb">
+			<li><a href="@routes.InstallationApplication.installationIndex()"><strong>@parentSection.plant.installation.name</strong></a></li>
+			<li><a href="@routes.PlantApplication.list(0,"name","asc","")"><small>@LanguageApplication.message("plants")</small></a></li>
+			<li><a href="@routes.PlantApplication.plantIndex(parentSection.plant.id)"><strong>@parentSection.plant.name</strong></a></li>
+			<li><a href="@routes.SectionApplication.list(parentSection.plant.id)"><small>@LanguageApplication.message("sections")</small></a></li>
+		</ol>
+		<div align="center"><h1 class="ltrInRtl"><span class="label label-default">@parentSection.name</span></h1></div>
+		<br />
+		<div class="col-lg-5">
+			<div class="btn btn-group btn-group-justified">
+			   	
+				 <a class="btn btn-warning btn-lg" title="@LanguageApplication.message("edit")"
+				 		href="@routes.SectionApplication.editSection(parentSection.id)"><span class="hideInSmall">@LanguageApplication.message("edit")</span>
+				 		<span class="glyphicon glyphicon-edit"></span></a>
+				 		
+				 <!-- Register failure button -->
+			 		<a class="btn btn-danger btn-lg" title="@LanguageApplication.message("registerFailure")"
+			 		href="@routes.FailureApplication.createFailure(5,parentSection.id)"><span class="hideInSmall">@LanguageApplication.message("registerFailure")</span>
+			 		<span class="fa fa-bolt"></span></a>
+				 
+				 <a class="btn btn-default btn-lg" title="Back to section list"
+				href="@routes.SectionApplication.list(parentSection.plant.id)">
+				<span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span></a>
+			</div>
+			 <br />
+			<div class="btn btn-group btn-group-justified">
+				
+				<a class="btn btn-default btn-lg" title="@LanguageApplication.message("equipments")"
+				href="@routes.EquipmentApplication.list(parentSection.id)">
+				<span class="hideInSmall">@LanguageApplication.message("equipments")</span><i class="fa fa-link"></i></a>
+				
+		 		<a class="btn btn-default btn-lg" title="@LanguageApplication.message("history")"
+				href="@routes.HistoryApplication.list(5,parentSection.id)">
+				<span class="hideInSmall">@LanguageApplication.message("history")</span><i class="fa fa-history"></i></a>
+				
+				<a class="btn btn-default btn-lg" title="@LanguageApplication.message("pmRoutines")"
+				href="@routes.PreventiveMaintenanceApplication.list(5,parentSection.id)">
+				<span class="hideInSmall">@LanguageApplication.message("pmRoutines")</span><i class="fa fa-check"></i></a>
+				
+				<a class="btn btn-default btn-lg" title="@LanguageApplication.message("dataSheet")"
+					href="@routes.DatasheetApplication.list(5,parentSection.id)">
+					<span class="hideInSmall">@LanguageApplication.message("dataSheet")</span><i class="fa fa-info-circle"></i></a>
+			 </div>
+			 <br />
+			 @if(flash.containsKey("success")) {
+	         <div class="alert alert-success">
+	            <strong>Done!</strong> @flash.get("success")
+	         </div>
+	    	 }
+	   	    @if(flash.containsKey("error")) {
+	        <div class="alert alert-danger">
+	           <strong>ERROR: </strong> @flash.get("error")
+	        </div>
+	  		}
+	  		<br />
+	  		<div class="well well-sm"><h4>@parentSection.description</h4></div>
+	  	</div>
+	  	<div class="col-lg-7">
+		  	<!-- tabs -->
+			<div id="tab-container" class="tab-container">
+				<ul class="etabs">
+					<li class="tab"><a href="#tabs-diagram">PFD</a>
+					<li class="tab"><a href="#tabs-comments">@LanguageApplication.message("comments")</a></li>
+					<li class="tab"><a href="@routes.SectionApplication.allSectionMaints(parentSection.id)" data-target="#tabs-ajax-maints">@LanguageApplication.message("maintenanceStatus")</a></li>
+					<li class="tab"><a href="#tabs-failureCauseTree">@LanguageApplication.message("failureCauseTree")</a></li>
+					<li class="tab"><a href="#tabs-sources">@LanguageApplication.message("dataSources")</a></li>
+		  		</ul>
+		  		
+		  		<!-- PFD tab -->
+			  	<div id="tabs-diagram">
+			  		@if(resource("public/images/plants/"+parentSection.plant.name+"/sections/"+parentSection.name+"/PFD.jpg").isDefined) {
+			  			<img 
+						src ="@routes.Assets.at("images/plants/"+parentSection.plant.name+"/sections/"+parentSection.name+"/PFD.jpg")" 
+						width="858" height="421" border="0" usemap="#map" />
+			  				<map name="map">
+							<!-- #$-:Image map file created by GIMP Image Map plug-in -->
+							<!-- #$-:GIMP Image Map plug-in by Maurits Rijk -->
+							<!-- #$-:Please do not edit lines starting with "#$" -->
+							<!-- #$VERSION:2.3 -->
+							<!-- #$AUTHOR:roozbit -->
+							<area shape="rect" coords="245,263,285,311" href="/equipment?id=21" />
+							<area shape="rect" coords="301,254,334,306" href="/equipment?id=20" />
+							<area shape="rect" coords="90,283,135,393" href="/equipment?id=2188" />
+							<area shape="rect" coords="540,222,586,266" href="/equipment?id=2416" />
+							<area shape="rect" coords="706,194,755,308" href="/equipment?id=2189" />
+							</map>
+			  			}
+			  	</div>
+		  		<!-- Comments tab -->
+			  	<div id="tabs-comments">
+			  		@if(parentSection.comments!=null && parentSection.comments!="") {	
+						<h4>@LanguageApplication.message("comments")</h4>
+				 		<pre>@parentSection.comments</pre>
+				 	}
+			  	</div>
+			  	
+			  	<!-- Maint AJAX tab -->
+			  	<div id="tabs-ajax-maints"></div>
+			  	
+			  	<!-- Failure cause tree tab -->
+			  	<div id="tabs-failureCauseTree"><div data-value="5_@parentSection.id" id="failTree"></div></div>
+			  	
+			  	<!-- data sources tab -->
+			  	<div id="tabs-sources">
+			  		<h3>@LanguageApplication.message("dataSources")</h3>
+				<table class="table table-bordered">
+		 		<thead>
+		 			<tr class="success">
+		 				<th>@LanguageApplication.message("name")</th>
+		 				<th>@LanguageApplication.message("type")</th>
+		 				<th></th>
+		 			</tr>
+		 		</thead>
+		 		@if(parentSection.files != null) {
+		 			@parentSection.files.map { fi =>
+				 		<tbody>
+				 			<tr>
+				 				<td><a href="@routes.Application.download(fi.id)">@fi.name</a></td>
+				 				<td>@fi.tag</td>
+				 				<td><a class="btn btn-danger btn-sm" 
+				 				href="@routes.SectionApplication.deleteAssociation(parentSection.id,fi.id)">
+				 				<span class="fa fa-trash"></span></a></td>
+				 			<tr>
+				 		</tbody>
+				 	}
+				 }
+			 	</table>
+				<br />
+				<h3>@LanguageApplication.message("upload")</h3>
+				<form class="form-inline" role="form" method="POST" enctype="multipart/form-data"
+					action="@routes.SectionApplication.upload(parentSection.id)">
+					<div class="form-group">
+						<input type="file" name="file" class="btn btn-default">
+					</div>
+					<button type="submit" class="btn btn-default btn-md" title="upload">
+						<span class="fa fa-upload"></span>
+					</button>						
+				</form>
+			  	</div>
+		  	
+		  	</div>
+	  </div>
+	  
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("#tab-container").bind('easytabs:ajax:complete', function(e, clicked, panel, response, status, xhr) {
+				var jsonObject = $.parseJSON(response);
+				$("#tabs-ajax-maints").html('<table id="maintTable" class="table"><thead><tr>'+
+					'<th>@LanguageApplication.message("date")</th>'+
+					'<th>@LanguageApplication.message("workOrderSerial")</th>' +
+					'<th>@LanguageApplication.message("maintenanceStatus")</th></tr></thead><tbody></tbody></table>');
+				for(i=0;i<jsonObject.length;i++) {
+					$("table#maintTable tr:last").after('<tr><td>'+ jsonObject[i].date+'</td>'+
+							'<td>'+'<a href='+jsonObject[i].maintLink+ '>'+jsonObject[i].orderNumber+'</a></td>'+
+							'<td>'+jsonObject[i].maintStatus+'</td></tr>');
+				}
+				
+			});
+		});
+	</script>
+}	

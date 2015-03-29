@@ -1,0 +1,56 @@
+@(mid : Long, mpForm: Form[maintenance.MaintenancesSubunits])
+
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("New maintenance<->subunit") {@Html("")} {
+	<style>
+		body {
+			background-color: #EDEDED;
+		}
+	</style>
+	@form(action = routes.MaintenanceApplication.saveMaintenancesSubunits(mid),
+	'class->"form-horizontal",
+	'role->"form"
+	) {	
+		<div class="form-group">
+					
+			<div class="col-lg-3">
+				@select(mpForm("subunit.id"),
+				options(Subunits.options(maintenance.Maintenances.find.byId(mid).maintainedEquipment.id)),
+				'class->"form-control",
+				'_label->LanguageApplication.message("subunit"),
+				'_default->""
+				)
+			</div>
+			
+			<div class="col-lg-3">
+				@select(mpForm("maintenanceActivity"),
+				options(maintenance.MaintenanceActivities.values().toList.map(_.toString)),
+				'class->"form-control",
+				'_label->LanguageApplication.message("maintActivity"),
+				'_showConstraints->false
+				)
+			</div>
+		
+			<div class="col-lg-3">
+				@inputText(mpForm("timeToRepair"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("ttr"),
+				'_showConstraints->true
+				)
+			</div>
+					
+		</div>
+		
+		<div align="center">
+			<input type="submit" value=@LanguageApplication.message("create") 
+			class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="/maint?maintID=@mid#tabs-maintainedItems" 
+				class="btn btn-danger btn-lg" role="button">
+				@LanguageApplication.message("cancel")</a>
+		</div>
+		
+	}
+}

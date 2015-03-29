@@ -1,0 +1,132 @@
+@(parentLevel : Integer, parentId : Long, failureId : Long, editFailureForm: Form[failure.Failures])
+
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("Edit failure") {@Html("")} {
+	<style>
+		body {
+			background-color: #EDEDED;
+		}
+	</style>
+	@form(action = routes.FailureApplication.update(parentLevel , parentId, failureId),
+	'class->"form-horizontal",
+	'role->"form") {
+		<div class="form-group">
+					<div class="col-lg-2">
+						@select(editFailureForm("severity"),
+						options(failure.Severity.values().toList.map(_.toString)),
+						'class->"form-control",
+						'_showConstraints->true,
+						'_label->LanguageApplication.message("severity")
+						)
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<div class="col-lg-2">
+					    @select(editFailureForm("functionImpact"),
+					    options(Impacts.values().toList.map(_.toString)),
+					    'class->"form-control",
+					    '_label->LanguageApplication.message("functionImpact")
+					    )
+					</div>
+				
+					<div class="col-lg-2">
+					    @select(editFailureForm("operationImpact"),
+					    options(Impacts.values().toList.map(_.toString)),
+					    'class->"form-control",
+					    '_label->LanguageApplication.message("operationImpact")
+					    )
+					  </div>
+					
+					<div class="col-lg-2">
+					    @select(editFailureForm("safetyImpact"),
+					    options(Impacts.values().toList.map(_.toString)),
+					    'class->"form-control",
+					    '_label->LanguageApplication.message("safetyImpact")
+					    )
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<div class="col-lg-4">
+					    @select(editFailureForm("parentFailure.id"),
+					    options(failure.Failures.options()),
+					    '_default->"",
+					    'class->"form-control",
+					    '_label->LanguageApplication.message("causingFailure")
+					    )
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<div class="col-lg-3">
+					    @select(editFailureForm("failureMode.id"),
+					    options(failure.FailureModes.options()),
+					    'class->"form-control",
+					    '_label->LanguageApplication.message("failureMode")
+					    )
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<div class="col-lg-3">
+					    @select(editFailureForm("failureMechanism.id"),
+					    options(failure.FailureMechanisms.options()),
+					    'class->"form-control",
+					    '_label->LanguageApplication.message("failureMechanism")
+					    )
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<div class="col-lg-6">
+					    @multiSelect(editFailureForm("failureCauses"),
+					    options(failure.FailureCauses.options()),
+					    'class->"form-control",
+					    'size->12,
+					    '_label->LanguageApplication.message("failureCauses")
+					    )
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<div class="col-lg-4">
+					    @select(editFailureForm("detectionMethod"),
+					    options(failure.DetectionMethods.values().toList.map(_.toString)),
+					    'class->"form-control",
+					    '_label->LanguageApplication.message("detectionMethod")
+					    )
+					</div>
+				</div>
+				
+
+				<div class="form-group">
+					<div class="col-lg-6">
+						@inputText(editFailureForm("comments"),
+						'class->"form-control",
+						'_label->LanguageApplication.message("comments")
+						)
+					</div>
+				</div>
+		
+		<div align="center">
+			<input type="submit" value="@LanguageApplication.message("update")" class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.FailureApplication.failureIndex(parentLevel , parentId, failureId)" 
+				class="btn btn-danger btn-lg" role="button">
+			@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("select2.min.js"))'></script>
+	@if(session().get("play_user_lang") == "1") {
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("select2_locale_fa.js"))'></script>}
+	<script>
+	$(document).ready(function() {
+		$("#parentFailure_id").select2({
+		    allowClear: true
+		});
+	});
+	</script>
+}

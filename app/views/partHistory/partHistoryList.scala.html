@@ -1,0 +1,261 @@
+@(parentId : Long, currentPage : com.avaje.ebean.Page[PartHistory], currentSortBy: String, currentOrder: String, currentFilter1: String, currentFilter2: String, currentFilter3: String, currentFilter4: String, currentFilter5: String, currentFilter6: String, currentFilter7: String, currentFilter8: String)
+
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import be.objectify.deadbolt.java.views.html._
+
+@****************************************
+* Helper generating navigation links    *
+****************************************@
+@link(newPage:Int, newSortBy:String) = @{
+    
+    var sortBy = currentSortBy
+    var order = currentOrder
+    
+    if(newSortBy != null) {
+        sortBy = newSortBy
+        if(currentSortBy == newSortBy) {
+            if(currentOrder == "asc") {
+                order = "desc"
+            } else {
+                order = "asc"
+            }
+        } else {
+            order = "asc"
+        }
+    }
+    
+    // Generate the link
+    routes.PartHistoryApplication.list(parentId, newPage, sortBy, order, currentFilter1: String, currentFilter2: String, currentFilter3: String, currentFilter4: String, currentFilter5: String, currentFilter6: String, currentFilter7: String, currentFilter8: String)    
+}
+
+@**********************************
+* Helper generating table headers *
+***********************************@
+@header(key:String, title:String) = {
+    <th style="font-size:.8em"
+    class="@if(key=="stockBalance" || key=="remainingStock" || key=="receiptNumber" || key=="requestNumber" || key=="registrar.lastName" || key=="registrar.discipline.name" || key=="registrar.hiringCompany.name") {col-lg-1} else {col-lg-2}">
+        <span id="@key">@title</span>
+        <a href="@link(0, key)">
+        <span class="glyphicon @if(currentSortBy == key) {
+        	@if(currentOrder == "asc") {glyphicon-sort-by-attributes} else {glyphicon-sort-by-attributes-alt}
+        	} else {glyphicon-sort}"></span>
+        </a>
+    </th>
+}
+
+@**********************************
+* Helper generating the pager     *
+***********************************@
+@pager = {<div id="pager" class="pager">
+	            <ul>
+	           		<li class="previous">
+	           		<a href="@link(0,null)"><span @if(session().get("play_user_lang") == "0") {class="fa fa-fast-backward"} else {class ="fa fa-fast-forward"}></span>
+	           		</a></li>
+	            	@if(currentPage.hasPrev) {
+	                    <li class="previous">
+	                        <a href="@link(currentPage.getPageIndex - 1, null)">
+	                        @if(session().get("play_user_lang") == "0") {&larr; @LanguageApplication.message("previous")} else {&rarr; @LanguageApplication.message("previous") }
+	                        </a>
+	                    </li>
+	                } else {
+	                    <li class="previous disabled">
+	                        <a>
+	                        @if(session().get("play_user_lang") == "0") {&larr; @LanguageApplication.message("previous")} else {&rarr; @LanguageApplication.message("previous") }
+	                        </a>
+	                    </li>
+	                }
+	                <li class="current">
+	                    <a>@LanguageApplication.message("displaying") @currentPage.getDisplayXtoYofZ(" " + LanguageApplication.message("to")+" "," "+LanguageApplication.message("of")+" ")</a>
+	                </li>
+	                <li class="next"><a href="@link(currentPage.getTotalPageCount-1,null)">
+	                <span @if(session().get("play_user_lang") == "1") {class="fa fa-fast-backward"} else {class ="fa fa-fast-forward"}></span></a></li>
+	                @if(currentPage.hasNext) {
+	                    <li class="next">
+	                        <a href="@link(currentPage.getPageIndex + 1, null)">
+	                        @if(session().get("play_user_lang") == "1") {@LanguageApplication.message("next") &larr;} else {@LanguageApplication.message("next") &rarr;}
+	                        </a>
+	                    </li>
+	                } else {
+	                    <li class="next disabled">
+	                        <a>
+	                        @if(session().get("play_user_lang") == "1") {@LanguageApplication.message("next") &larr;} else {@LanguageApplication.message("next") &rarr;}
+	                        </a>
+	                    </li>
+	                }
+	                
+	            </ul>
+	        </div>
+	       }
+
+@main("History list") {@Html("")} {
+	@if(parentId != -1L) {
+	<div class="btn-group">
+		<a class="btn btn-primary btn-lg"
+			href="@routes.PartHistoryApplication.createPartHistory(parentId)">@LanguageApplication.message("newSinglePartHistory")
+			<span class="glyphicon glyphicon-plus"></span></a>
+		<a class="btn btn-default btn-lg" href="@routes.PartApplication.partIndex(parentId)">
+		<span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span></a>
+	</div>} else {
+	<div class="btn-group">
+		<a class="btn btn-primary btn-lg"
+			href="@routes.PartHistoryApplication.createRequestHistory()">@LanguageApplication.message("newMulitplePartHistory")
+			<span class="glyphicon glyphicon-plus"></span></a>
+		
+		<a class="btn btn-default btn-lg" href="@routes.PartApplication.list()">
+		<span class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}"></span></a>
+	</div>
+	}
+	<br />
+	@if(flash.containsKey("success")) {
+        <div class="alert alert-success">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+	    }
+	 @if(flash.containsKey("error")) {
+       <div class="alert alert-danger">
+           <strong>ERROR: </strong> @flash.get("error")
+       </div>
+  		}
+	<br />
+	<form id="filterForm" class="form-inline" role="form" action="@link(0, "name")" method="GET">
+		<div class="form-group">
+			<input type="hidden" value="@parentId" name="pid">
+			@if(parentId == -1){<input class="form-control" type="search" id="parentPart_name" name="f1" value="@currentFilter1" placeholder="part">}
+			<input class="form-control" type="search" id="commenceDate" name="f2" value="@currentFilter2" placeholder="date">
+			<select id="eventType_name" class="form-control" name="f3">
+			    <option></option>
+			    @InventoryEvents.options().map {ie =>
+			        <option @if(ie._2==currentFilter3) {selected}>@ie._2</option>
+			    }
+			</select>
+			<input class="form-control" type="search" id="requester_hiringCompany_name" name="f4" value="@currentFilter4" placeholder=@LanguageApplication.message("buyingCompany")>
+			<input class="form-control" type="search" id="requester_lastName" name="f5" value="@currentFilter5" placeholder="requester">
+			<input class="form-control" type="search" id="requester_discipline_name" name="f6" value="@currentFilter6" placeholder=@LanguageApplication.message("discipline")>
+			<input class="form-control" type="search" id="receiptNumber" name="f7" value="@currentFilter7" placeholder="receipt">
+			<input class="form-control" type="search" id="requestNumber" name="f8" value="@currentFilter8" placeholder="request">
+		</div>
+		<div class="form-group">
+			<input type="submit" id="searchsubmit" value=@LanguageApplication.message("filter") class="btn btn-success">
+			@LanguageApplication.message("filterGuide")
+		</div>
+	</form>
+	<br />
+	
+	@if(currentPage.getTotalRowCount == 0) {
+		<div class="well well-lg">
+	  		<em>@LanguageApplication.message("nothingToDisplay")</em>
+	    </div> 
+	   } else {
+	   		@pager
+			<table class="table table-striped">			
+				<thead>
+					<tr>
+						@header("parentPart.name",LanguageApplication.message("partName"))
+						@header("commenceDate", LanguageApplication.message("date"))
+						@header("eventType.name", LanguageApplication.message("eventType"))
+						@header("requester.hiringCompany.name",LanguageApplication.message("buyingCompany"))
+						@header("requester.lastName",LanguageApplication.message("requester"))
+						@header("requester.discipline.name",LanguageApplication.message("discipline"))
+						@header("receiptNumber", LanguageApplication.message("receiptNumber"))
+						@header("requestNumber", LanguageApplication.message("requestNumber"))
+						@header("stockBalance", LanguageApplication.message("quantity"))
+					</tr>
+				</thead>
+				<tbody>	
+					@currentPage.getList.map { cl =>
+					<tr>
+						<td>
+							<a href="@routes.PartApplication.partIndex(cl.parentPart.id)">
+							@cl.parentPart.name
+							</a>
+						</td>
+						
+						<td>
+							<a href="@routes.PartHistoryApplication.partHistoryIndex(cl.id)">
+							@myUtils.DateTimeUtils.getIranianDate(cl.commenceDate)
+							</a>
+						</td>
+						
+						<td>
+							@if(cl.eventType==null) {
+								<em>-</em>
+							} else {@cl.eventType.name}
+						</td>
+						
+						<td>
+							@if(cl.requester.hiringCompany==null) {
+								<em>-</em>
+							} else {@cl.requester.hiringCompany.name}
+						</td>
+						
+						<td>
+							@if(cl.requester==null) {
+								<em>-</em>
+								} else {@cl.requester.lastName}
+						</td>
+						
+						<td>
+							@if(cl.requester.discipline==null) {
+								<em>-</em>
+								} else {@cl.requester.discipline.name}
+						</td>
+						
+						
+						<td>
+							@if(cl.receiptNumber==null) {
+								<em>-</em>
+							} else {@cl.receiptNumber}
+						</td>
+						
+						<td>
+							@if(cl.requestNumber==null) {
+								<em>-</em>
+							} else {@cl.requestNumber}
+						</td>
+						
+						<td>
+							@if(cl.stockBalance==null) {
+								<em>-</em>
+							} else {@cl.stockBalance}
+						</td>
+						@restrict(la(as("admin"), as("warehouse"))) {
+						<td><a class="btn btn-danger btn-sm"
+						href="@routes.PartHistoryApplication.delete(parentId,cl.id)">
+						<span class="fa fa-trash"></span></a></td>}
+					</tr>
+				}
+				</tbody>
+			</table>
+			
+			@pager
+	}
+	<script>
+	$(document).ready(function() {
+		@if(currentPage.getTotalRowCount != 0) {
+		var allInputs = $("#filterForm *").filter(":input");
+		allInputs.hide();
+		}
+		$(":input[type='submit']").show();
+		$(document).on('click', 'th > span:first-child', function () {
+			var ps = $(this).parent().offset();
+			var iwidth = $(this).parent().width();
+			
+			//contains() is not supported in chrome
+			var spanId = this.id;
+			if(spanId.indexOf('.') > -1)
+					spanId= spanId.replace(/\./g,'_');
+			var spanInput = $(':input#'+spanId);
+			$(spanInput).css({
+			    position: "absolute",
+			    top: ps.top-80,
+			    left: ps.left,
+			    width : iwidth
+			});
+		   $(spanInput).toggle();
+		});
+		$("#filterForm select").change(function() {
+			  this.form.submit(); 
+		   });
+	});
+	</script>
+}

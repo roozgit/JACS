@@ -1,0 +1,348 @@
+@(sid : Long, eid : Long, mForm: Form[maintenance.Maintenances])
+
+
+@import helper._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+@import be.objectify.deadbolt.java.views.html._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@findEqName =  @{
+	if(eid>0) equipment.Equipments.find.byId(eid).name.toString
+	else if(sid>0) Sections.find.byId(sid).name.toString
+	else "new"
+}
+
+
+@main("Work order: " + findEqName) {@Html("")} {
+	<style>
+		body {
+			background-color: #EDEDED;
+		}
+		li.select2-result {
+		direction : ltr;}
+	</style>
+	<!-- tabs -->
+	@form(action = routes.MaintenanceApplication.save(sid, eid),
+			'class->"form-horizontal",
+			'role->"form"
+			) {
+		<div id="tab-container" class="tab-container">
+			<ul class="etabs">
+				<li class="tab"><a href="#tabs-basic">@LanguageApplication.message("basicInfo")</a></li>
+				<li class="tab"><a href="#tabs-feed">@LanguageApplication.message("workOrderFeed")</a></li>
+			</ul>
+			
+			<!-- Basic info -->
+			<div id="tabs-basic">
+				<div class="form-group">
+				@restrictOr(la(as("admin"), as("planner"))) {
+					<div class="col-lg-3">
+						@inputText(mForm("workRequestSerial"),
+						'class->"form-control",
+						'_showConstraints->true,
+						'_label->LanguageApplication.message("workRequestSerial")
+						)
+					</div>
+
+					<div class="col-lg-3">
+						@inputText(mForm("workOrderSerial"),
+						'class->"form-control",
+						'_showConstraints->true,
+						'_label->LanguageApplication.message("workOrderSerial")
+						)
+					</div>
+				} {
+				<div class="col-lg-3">
+						@inputText(mForm("workRequestSerial"),
+						'class->"form-control",
+						'_showConstraints->true,
+						'readonly->"readonly",
+						'_label->LanguageApplication.message("workRequestSerial")
+						)
+					</div>
+				<div class="col-lg-3">
+						@inputText(mForm("workOrderSerial"),
+						'class->"form-control",
+						'_showConstraints->true,
+						'readonly->"readonly",
+						'_label->LanguageApplication.message("workOrderSerial")
+						)
+					</div>
+				}
+				</div>
+	
+				<div class="form-group">
+					<div class="col-lg-2">
+						@select(mForm("maintainedSection.id"),
+						options(Sections.options(1L)),
+						'class->"form-control",
+						'_showConstraints->true,
+						'_label->LanguageApplication.message("section")
+						)
+					</div>
+					<div class="col-lg-3">
+						@select(mForm("maintainedEquipment.id"),
+						options(equipment.Equipments.options()),
+						'class->"form-control",
+						'_showConstraints->true,
+						'_label->LanguageApplication.message("equipmentTag"),
+						'_default->""
+						)
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<div class="col-lg-6">
+						@multiSelect(mForm("correspondingFailure"),
+						options(failure.Failures.options(eid)),
+						'class->"form-control",
+						'_default->"",
+						'_label->LanguageApplication.message("correspondingFailure")
+						)
+					</div>
+					<a id="failureCreateLink" href="#" target="_blank" class="btn btn-link disabled">@LanguageApplication.message("registerFailure")</a>
+				</div>
+				
+				<div class="form-group">
+					<div class="col-lg-2">
+						@select(mForm("responsibleDiscipline.id"),
+						options(Disciplines.options()),
+						'class->"form-control",
+						'_label->LanguageApplication.message("responsibleDiscipline")
+						)
+					</div>
+				
+					<div class="col-lg-2">
+						@inputText(mForm("maintenancePriority"),
+						'class->"form-control",
+						'_label->LanguageApplication.message("maintenancePriority"),
+						'_showConstraints->true
+						)
+					</div>
+					
+					<div class="col-lg-2">
+						@select(mForm("maintenanceCategory"),
+						options(maintenance.MaintenanceCategories.values().toList.map(_.toString)),
+						'class->"form-control",
+						'_label->LanguageApplication.message("maintenanceCategory")
+						)
+					</div>
+					
+					<div class="col-lg-2">
+						@select(mForm("pmRoutine.id"),
+						options(maintenance.PreventiveMaintenances.options(-1,eid)),
+						'class->"form-control",
+						'_label->LanguageApplication.message("maintPMRoutine"),
+						'_default->""
+						)
+					</div>
+					<div class="col-lg-2">
+						@select(mForm("classLevelPMRoutine.id"),
+						options(maintenance.PreventiveMaintenances.optionsClassLevel(eid)),
+						'class->"form-control",
+						'_label->LanguageApplication.message("classLevelPMRoutine"),
+						'_default->""
+						)
+					</div>
+					
+				</div>
+				
+				<div class="form-group">
+					<div class="col-lg-6">
+						@textarea(mForm("workOrderDescription"),
+						'class->"form-control",
+						'rows->5,
+						'_label->LanguageApplication.message("description")
+						)
+					</div>
+					<div class="col-lg-6">
+					@*************
+					@restrictOr(la(as("admin"), as("planner"))) {
+						@inputRadioGroup(mForm("workflowStage.id"),
+						options( maintenance.WorkflowTree.options(0) ),
+						'class->"form-control",
+						'_label->"Heelo"
+						)
+						} {
+						@inputRadioGroup(mForm("workflowStage.id"),
+						options( maintenance.WorkflowTree.options(0) ),
+						'class->"form-control",
+						'checked->"checked",
+						'_label->"Heelo"
+						)
+						}  -->
+						*****************@
+						
+						<label>@LanguageApplication.message("referTo")</label><br/>
+						@for((key, value) <- maintenance.WorkflowTree.options(0)) {
+						<input type="radio" name="workflowStage.id" value=@key>@value<br>
+						}
+						
+					</div>
+				</div>
+			</div>
+			
+			<!-- Full work order feed -->
+			<div id="tabs-feed">
+				<!--Section for creating old maintenances  -->
+				@restrict(la(as("admin"), as("planner"))) {
+				<div class="form-group">
+					<div class="col-lg-2">
+						@inputText(mForm("requestDate"),						
+						'class->"form-control",
+						'_showConstraints->false,
+						'_label->LanguageApplication.message("requestDate"),
+						'placeholder->"YYYY/MM/DD"
+						)
+					</div>
+				<button id="requestDate-button"><span class="fa fa-calendar"></span></button>
+					<script type="text/javascript">
+					Calendar.setup({
+					inputField     :    "requestDate",   // id of the input field
+					button         :    "requestDate-button",   // trigger for the calendar (button ID)
+		       		ifFormat       :    "%Y/%m/%d",       // format of the input field
+		       		showsTime      :    false,
+        			dateType	   :	'jalali',
+					weekNumbers    : false
+					});
+					</script>
+				</div>
+				<div class="form-group">
+				
+					<div class="col-lg-2">
+					@select(mForm("maintenanceStatus"),
+					options(maintenance.MaintenanceStatus.values().toList.map(_.toString)),
+					'class->"form-control",
+					'_label->LanguageApplication.message("maintenanceStatus")
+						)
+					</div>
+				
+					<div class="col-lg-2">
+						@select(mForm("holdReason"),
+						options(maintenance.HoldReasons.values().toList.map(_.toString)),
+						'class->"form-control",
+						'_default->"",
+						'_label->LanguageApplication.message("holdReason")
+							)
+					</div>
+				
+					<div class="col-lg-4">
+						@inputText(mForm("holdReasonComment"),
+						'class->"form-control",
+						'_showConstraints->false,
+						'_label->LanguageApplication.message("holdReasonComment")
+						)
+					</div>
+				
+					
+				</div>
+				
+				<div class="form-group">
+				
+					<div class="col-lg-2">
+						@select(field = mForm("responsiblePerson.id"),
+						options = options(Users.options()),
+						'class->"form-control",
+						'_label->LanguageApplication.message("responsiblePerson"),
+						'_default->""
+						)
+					</div>
+					<div class="col-lg-2">
+						@select(field = mForm("maintenanceActivity"),
+						options = options(maintenance.MaintenanceActivities.values().toList.map(_.toString)),
+						'class->"form-control",
+						'_label->LanguageApplication.message("maintActivity")
+						)
+					</div>
+					
+					<div class="col-lg-5">
+						@inputText(mForm("timeToRepair"),
+						'class->"form-control",
+						'_showConstraints->true,
+						'_label->LanguageApplication.message("equipmenTTR")
+						)
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<div class="col-lg-6">
+					@textarea(mForm("maintenanceReport"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("maintenanceReport")
+					)
+					</div>
+				</div>
+				} <!--  end of extra form fields -->
+			
+			</div>
+		</div>
+		<div align="center">
+			<input type="submit" value=@LanguageApplication.message("create") 
+			class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.MaintenanceApplication.list()" 
+				class="btn btn-danger btn-lg" role="button">
+				@LanguageApplication.message("cancel")</a>
+		</div>
+	} <!-- end of form -->
+	
+	<!-- Select element to filter discipline personnel -->
+	<div style="display:none" class="col-lg-2" id="disciplineFilterer">
+	<select id="disciplineSelector">
+		@Disciplines.options().map { op =>
+		<option value="@op._1">@op._2</option>
+		}
+	</select>
+	</div>
+	<script type="text/javascript" src="@routes.Assets.at("javascripts/fcf.js")"></script>
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("select2.min.js"))'></script>
+	@if(session().get("play_user_lang") == "1") {
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("select2_locale_fa.js"))'></script>}
+	<script>
+	$(document).ready(function() {
+
+	$("div#classLevelPMRoutine_id_field").hide();
+	$("div#pmRoutine_id_field").hide();
+	$("div#disciplineFilterer").hide();
+	$("div#holdReason_field").hide();
+	$("div#holdReasonComment_field").hide();
+	
+	$("select#maintenanceCategory").change(function() {
+		if(this.value!="CORRECTIVE_MAINTENANCE") {
+			$("div#classLevelPMRoutine_id_field").show();
+			$("div#pmRoutine_id_field").show();
+		} else {
+			$("div#classLevelPMRoutine_id_field").hide();
+			$("div#pmRoutine_id_field").hide();
+		}
+	});
+	
+	$("select#maintenanceStatus").change(function() {
+		if(this.value=="HOLD" || this.value=="CANCEL") {
+			$("div#holdReason_field").show();
+			$("div#holdReasonComment_field").show();
+		} else {
+			$("div#holdReason_field").hide();
+			$("div#holdReasonComment_field").hide();
+		}
+			
+	});
+	$("label[for='responsiblePerson_id']").click(function() {
+		var ps = $(this).offset();
+		$("div#disciplineFilterer").css({
+		    position: "absolute",
+		    top: ps.top,
+		    left: @if(session().get("play_user_lang") == "1") {ps.left -120} else {ps.left +120}
+		});
+		$("div#disciplineFilterer").toggle();
+	});
+	
+	
+	$("#responsiblePerson_id").select2();
+	$("#maintainedEquipment_id").select2({
+	    allowClear : true
+	});
+	$("#correspondingFailure").select2();
+	});
+	</script>
+}

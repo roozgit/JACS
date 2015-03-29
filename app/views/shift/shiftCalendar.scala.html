@@ -1,0 +1,38 @@
+@(userId : Long, pageTitle: String)
+
+@main(pageTitle) {@Html("")} {
+	<a class="btn btn-primary btn-sm"
+	href="@routes.ShiftApplication.createShift(userId)">
+	<span class="glyphicon glyphicon-plus"></span></a>
+	<br />
+	@if(flash.containsKey("success")) {
+        <div class="alert alert-success">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+    }
+    @if(flash.containsKey("error")) {
+       <div class="alert alert-danger">
+           <strong>ERROR: </strong> @flash.get("error")
+       </div>
+  		}
+	<div style="display: none;">
+
+    <form action="@routes.ShiftApplication.move()" method="POST" id="eventFormMove">
+        <input type="text" name="id" id="moveId"/>
+        <input type="text" name="dayDelta" id="moveDayDelta"/>
+        <input type="text" name="minuteDelta" id="moveMinuteDelta"/>
+        <input type="text" name="allDay" id="moveAllDay"/>
+    </form>
+
+
+    <form action="@routes.ShiftApplication.resize()" method="POST" id="eventFormResize">
+        <input type="text" name="id" id="resizeId"/>
+        <input type="text" name="dayDelta" id="resizeDayDelta"/>
+        <input type="text" name="minuteDelta" id="resizeMinuteDelta"/>
+    </form>
+</div>
+
+    <div id='shiftCalendar'></div>
+    <script type="text/javascript" src="@routes.Assets.at("jfullcalendar/fullcalendar/fullcalendar.min.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/renderCalendar.js")"></script>
+}

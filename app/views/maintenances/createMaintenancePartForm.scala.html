@@ -1,0 +1,58 @@
+@(mid : Long, mpForm: Form[maintenance.MaintenancesParts])
+
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("New maintenance-part") {@Html("")} {
+	<style>
+		body {
+			background-color: #EDEDED;
+		}
+	</style>
+	@form(action = routes.MaintenanceApplication.saveMaintenancesParts(mid),
+	'class->"form",
+	'role->"form"
+	) {	
+		<div class="form-group">
+				<div class="row">
+					
+					<div class="col-lg-4">
+						@select(mpForm("part.id"),
+						options(Parts.options()),
+						'class->"form-control",
+						'_label->LanguageApplication.message("usedPart"),
+						'_default->""
+						)
+					</div>
+				
+					<div class="col-lg-4">
+						@inputText(mpForm("quantity"),
+						'class->"form-control",
+						'_label->LanguageApplication.message("quantity"),
+						'_showConstraints->true
+						)
+					</div>
+					
+				</div>
+		</div>
+		
+		<div align="center">
+			<input type="submit" value=@LanguageApplication.message("create") 
+			class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="/maint?maintID=@mid#tabs-maintenanceReport" 
+				class="btn btn-danger btn-lg" role="button">
+				@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("select2.min.js"))'></script>
+	@if(session().get("play_user_lang") == "1") {
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("select2_locale_fa.js"))'></script>}
+	<script>
+	$(document).ready(function() {
+		$("#part_id").select2({
+			minimumInputLength : 2
+		});
+	});
+	</script>
+}

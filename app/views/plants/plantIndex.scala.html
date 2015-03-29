@@ -1,0 +1,153 @@
+@(parentPlant : Plants)
+
+@import play.api.Play.resource
+@import play.api.Play.current
+
+@main(parentPlant.name) {<div id='tree'></div>} {
+	<ol class="breadcrumb">
+		<li><a href="@routes.InstallationApplication.installationIndex()"><strong>@parentPlant.installation.name</strong></a></li>
+		<li><a href="@routes.PlantApplication.list(0,"name","asc","")"><small>@LanguageApplication.message("plants")</small></a></li>
+	</ol>
+		<div align="center"><h1 class="ltrInRtl"><span class="label label-default">@parentPlant.name</span></h1></div>
+    	
+    	<div class="row"><div class="col-lg-6">
+	    		<div class="btn btn-group btn-group-justified">
+	    		
+			    	<a class="btn btn-warning btn-lg" title="Edit plant"
+					 		href="@routes.PlantApplication.editPlant(parentPlant.id)"><span class="hideInSmall">@LanguageApplication.message("edit")</span>
+					 		<span class="glyphicon glyphicon-edit"></span></a>
+					 		
+					 <!-- Register failure button -->
+						 		<a class="btn btn-danger btn-lg" title="Register failure"
+						 		href="@routes.FailureApplication.createFailure(4,parentPlant.id)"><span class="hideInSmall">@LanguageApplication.message("registerFailure")</span>
+						 		<span class="fa fa-bolt"></span></a>
+					 </div>
+					 <br />
+					 <div class="btn btn-group btn-group-justified">
+						
+						<a class="btn btn-default"
+						href="@routes.SectionApplication.list(parentPlant.id)">
+						<span class="hideInSmall">@LanguageApplication.message("sections")</span><i class="fa fa-link"></i></a>
+						
+				 		<a class="btn btn-default"
+						href="@routes.HistoryApplication.list(4,parentPlant.id)">
+						<span class="hideInSmall">@LanguageApplication.message("history")</span><i class="fa fa-history"></i></a>
+			
+						<a class="btn btn-default"
+							href="@routes.DatasheetApplication.list(4,parentPlant.id)">
+							<span class="hideInSmall">@LanguageApplication.message("dataSheet")</span><i class="fa fa-info-circle"></i></a>
+				</div>
+    			@if(flash.containsKey("success")) {
+		        <div class="alert alert-success">
+		            <strong>Done!</strong> @flash.get("success")
+		        </div>
+		    	}
+		 	    @if(flash.containsKey("error")) {
+			       <div class="alert alert-danger">
+			           <strong>ERROR: </strong> @flash.get("error")
+			       </div>
+		   		}
+				<br/>
+				<div class="well well-sm"><p>@parentPlant.description</p></div>
+    	</div>
+    	<div class="col-gl-6">
+    		<h3>@LanguageApplication.message("failureCauseTree")</h3>
+			<div data-value="4_@parentPlant.id" id="failTree"></div>
+    	</div>
+    	
+    	</div>
+		
+		@if(resource("public/images/plants/"+parentPlant.name+"/layout.jpg").isDefined) {
+			<img
+		src ="@routes.Assets.at("images/plants/"+parentPlant.name+"/layout.jpg")" 
+		width="1040" height="720" border="0" usemap="#map" />
+			<map name="map">
+		<!-- #$-:Image map file created by GIMP Image Map plug-in -->
+		<!-- #$-:GIMP Image Map plug-in by Maurits Rijk -->
+		<!-- #$-:Please do not edit lines starting with "#$" -->
+		<!-- #$VERSION:2.3 -->
+		<!-- #$AUTHOR:Roozbit  -->
+		<area shape="rect" coords="161,104,196,171" href="/section?id=44" />
+		<area shape="rect" coords="167,232,202,296" href="/section?id=40" />
+		<area shape="rect" coords="239,105,284,129" href="/section?id=39" />
+		<area shape="rect" coords="201,174,225,190" href="/section?id=42" />
+		<area shape="rect" coords="240,561,269,601" href="/section?id=34" />
+		<area shape="rect" coords="505,348,559,401" href="/section?id=35" />
+		<area shape="rect" coords="251,229,317,266" href="/section?id=33" />
+		<area shape="rect" coords="25,245,91,280" href="/section?id=37" />
+		<area shape="rect" coords="982,470,1009,512" href="/section?id=38" />
+		<area shape="rect" coords="61,310,94,401" href="/section?id=3" />
+		<area shape="rect" coords="12,305,45,400" href="/section?id=4" />
+		<area shape="rect" coords="330,557,390,612" href="/section?id=5" />
+		<area shape="rect" coords="395,555,476,615" href="/section?id=6" />
+		<area shape="rect" coords="395,348,429,402" href="/section?id=7" />
+		<area shape="rect" coords="326,415,380,471" href="/section?id=2" />
+		<area shape="rect" coords="433,348,501,404" href="/section?id=9" />
+		<area shape="rect" coords="395,417,557,472" href="/section?id=10" />
+		<area shape="rect" coords="974,381,1031,523" href="/section?id=12" />
+		<area shape="rect" coords="482,485,558,612" href="/section?id=13" />
+		<area shape="poly" coords="573,244,570,612,838,591,838,470,689,466,689,243" href="/section?id=11" />
+		<area shape="rect" coords="233,557,326,613" href="/section?id=14" />
+		<area shape="rect" coords="694,332,837,463" href="/section?id=15" />
+		<area shape="rect" coords="278,486,328,541" href="/section?id=16" />
+		<area shape="rect" coords="395,290,446,336" href="/section?id=17" />
+		<area shape="rect" coords="322,309,381,337" href="/section?id=18" />
+		<area shape="rect" coords="323,274,382,305" href="/section?id=19" />
+		<area shape="rect" coords="963,304,1026,367" href="/section?id=20" />
+		<area shape="rect" coords="233,485,273,540" href="/section?id=21" />
+		<area shape="circle" coords="194,342,8" href="/section?id=23" />
+		<area shape="rect" coords="297,631,395,675" href="/section?id=24" />
+		<area shape="poly" coords="124,301,221,302,221,473,171,472" href="/section?id=25" />
+		<area shape="rect" coords="496,213,559,272" href="/section?id=26" />
+		<area shape="rect" coords="14,588,133,705" href="/section?id=27" />
+		<area shape="rect" coords="159,641,251,684" href="/section?id=28" />
+		<area shape="rect" coords="394,485,477,540" href="/section?id=29" />
+		<area shape="rect" coords="369,212,491,269" href="/section?id=30" />
+		<area shape="rect" coords="845,441,958,702" href="/section?id=27" />
+		<area shape="rect" coords="331,220,362,262" href="/section?id=31" />
+		<area shape="rect" coords="294,122,331,181" href="/section?id=43" />
+		<area shape="rect" coords="333,485,382,540" href="/section?id=28" />
+		<area shape="poly" coords="235,350,236,473,322,471,323,403,383,400,382,348" href="/section?id=8" />
+		</map>
+		}
+		<br />
+		@if(parentPlant.comments!=null && parentPlant.comments!="") {			
+			<h4>@LanguageApplication.message("comments")</h4>
+		 		<pre>@parentPlant.comments</pre><br/>
+		 	}
+		
+		<h3>@LanguageApplication.message("dataSources")</h3>
+		<table class="table table-bordered">
+ 		<thead>
+ 			<tr class="success">
+ 				<th>@LanguageApplication.message("name")</th>
+ 				<th>@LanguageApplication.message("type")</th>
+ 				<th></th>
+ 			</tr>
+ 		</thead>
+ 		@if(parentPlant.files != null) {
+ 			@parentPlant.files.map { fi =>
+		 		<tbody>
+		 			<tr>
+		 				<td><a href="@routes.Application.download(fi.id)">@fi.name</a></td>
+		 				<td>@fi.tag</td>
+		 				<td><a class="btn btn-danger btn-sm"
+		 				href="@routes.PlantApplication.deleteAssociation(parentPlant.id,fi.id)">
+		 				<span class="fa fa-trash"></span></a></td>
+		 			<tr>
+		 		</tbody>
+		 	}
+		 }
+	 	</table>
+		<br />
+		<h3>@LanguageApplication.message("upload")</h3>
+		<form class="form-inline" role="form" method="POST" enctype="multipart/form-data"
+			action="@routes.PlantApplication.upload(parentPlant.id)">
+			<div class="form-group">
+				<input type="file" name="file" class="btn btn-default">
+			</div>
+			<button type="submit" class="btn btn-default btn-md" title="upload">
+				<span class="fa fa-upload"></span>
+			</button>						
+		</form>
+ 	}

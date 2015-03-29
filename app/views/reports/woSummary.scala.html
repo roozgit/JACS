@@ -1,0 +1,19 @@
+@(rep : List[java.util.ArrayList[String]])
+
+@main("Work order summary") {@Html("")} {
+<style>
+#langChanger {
+	display :none;
+}
+</style>
+<h2>Status summary</h2>
+<table class="table table-bordered">
+	@rep.map {rim =>
+	<tr @if(rim.get(0)=="Sums") {class="success"} @if(rim.get(0)=="Status\\Discipline") {class="info"}>
+		@rim.map { rs =>
+		<td>@rs</td>
+		}
+	</tr>
+	}
+</table>
+}

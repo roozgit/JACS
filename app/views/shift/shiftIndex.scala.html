@@ -1,0 +1,35 @@
+@(userId : Long, shift : Shifts)
+
+@main("Shift") {@Html("")} {
+	<div class="btn btn-group">
+		<a class="btn btn-success btn-lg" href="@routes.ShiftApplication.editShift(shift.id)">
+		<span class="glyphicon glyphicon-edit"></span></a>
+	</div>
+	
+	@if(flash.containsKey("success")) {
+        <div class="alert alert-success">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+        <br />
+    }
+    @if(flash.containsKey("error")) {
+       <div class="alert alert-danger">
+           <strong>ERROR: </strong> @flash.get("error")
+       </div>
+       <br />
+  		}
+	
+	 <table class="table">
+	 	<tr>
+	 		<th>@LanguageApplication.message("start")</th>
+	 		<th>@LanguageApplication.message("end")</th>
+	 		<th>@LanguageApplication.message("workType")</th>
+	 	</tr>
+	 	<tr>
+	 		<td>@myUtils.DateTimeUtils.getIranianDate(shift.start)</td>
+	 		<td>@myUtils.DateTimeUtils.getIranianDate(shift.end)</td>
+	 		<td>@shift.workType.workType</td>
+	 	</tr>
+	
+	 </table>
+ }

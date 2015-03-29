@@ -1,0 +1,59 @@
+@(newDisciplineForm : Form[Disciplines])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("New discipline") {@Html("")} {
+	<style>
+	body {
+		background-color: #EDEDED;
+	}
+	</style>
+	@form(action = routes.DisciplineApplication.save(),
+	'class->"form",
+	'role->"form"
+	) {
+		
+		<fieldset>
+		<div class="form-group">
+			<div class="row">
+			
+				<div class="col-lg-4">
+				@inputText(newDisciplineForm("name"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("name"),
+					'_showConstraints->true
+					)
+				</div>
+				
+				<div class="col-lg-4">
+				@select(newDisciplineForm("headDiscipline.id"),
+					options(Disciplines.options()),
+					'_label->LanguageApplication.message("headDiscipline"),
+					'_default->"",
+					'class->"form-control",
+					'_showConstraints->true
+					)
+				</div>
+				
+				<div class="col-lg-2">
+				@select(newDisciplineForm("organizationPlant.id"),
+					options(Plants.options(1)),
+					'_label->LanguageApplication.message("plant"),
+					'class->"form-control"
+					)
+				</div>
+			</div>
+		</div>
+		</fieldset>
+		
+		<div align="center">
+			<input type="submit" value=@LanguageApplication.message("create") 
+			class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+				href="@routes.DisciplineApplication.list()"
+				class="btn btn-danger btn-lg" role="button">
+				@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+}
+

@@ -1,0 +1,176 @@
+@(id : Long, ecForm : Form[equipment.EquipmentClass])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("Edit equipment class") {@Html("")} {
+<style>
+	body {
+		background-color: #EDEDED;
+	}
+	</style>
+	@form(action = routes.EquipmentClassApplication.update(id),
+	'class->"form-horizontal",
+	'role->"form"
+	) {
+		<fieldset>
+			<legend><span class="label label-default">@LanguageApplication.message("basicInfo")</span></legend>
+			<div class="form-group">
+				<div class="col-lg-4">
+					@inputText(ecForm("name"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("name"),
+					'_showConstraints->true
+					)
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<div class="col-lg-4">
+					@inputText(ecForm("nameCode"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("classCode"),
+					'_showConstraints->true
+					)
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<div class="col-lg-4">
+					@inputText(ecForm("ecType"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("classSubType"),
+					'_showConstraints->true
+					)
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<div class="col-lg-4">
+					@inputText(ecForm("ecTypeCode"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("classSubTypeCode"),
+					'_showConstraints->true
+					)
+				</div>
+			</div>
+				
+			<div class="form-group">
+				<div class="col-lg-4">
+					@select(ecForm("equipmentCategory.id"),
+					options(equipment.EquipmentCategory.options()),
+					'_showConstraints->true,
+					'class->"form-control",
+					'_label->LanguageApplication.message("category")
+					)
+				</div>
+			</div>
+			<div class="form-group">
+			<div class="col-lg-6">
+				@textarea(ecForm("ecTypeDescription"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("description"),
+					'_showConstraints->true
+					)
+			</div>
+			</div>
+			
+		</fieldset>
+		
+		<fieldset>
+			<legend><span class="label label-default">@LanguageApplication.message("failureModes")</span></legend>
+			<div class="form-group">
+			<div class="col-lg-4">
+				@multiSelect(field = ecForm("possibleFailureModes"),
+					options = options(failure.FailureModes.options()),
+					'class->"form-control",
+					'size->10,
+					'_label->LanguageApplication.message("possibleFailureModes")
+					)
+			</div>
+			</div>
+		</fieldset>
+		
+		<fieldset>
+			<legend><span class="label label-default">@LanguageApplication.message("maintAspects")</span></legend>
+			<div class="form-group">
+			<div class="col-lg-6">
+				@textarea(ecForm("generalMaintenaceMethod"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("generalMaintMethod"),
+					'_showConstraints->true
+					)
+			</div>
+			</div>
+			
+			<div class="form-group">
+			<div class="col-lg-6">
+				@textarea(ecForm("generalMaintenaceSafetyRequirements"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("generalMaintSafety"),
+					'_showConstraints->false
+					)
+			</div>
+			</div>
+			
+			<div class="form-group">
+			<div class="col-lg-6">
+				@textarea(ecForm("generalMaintenanceRequiredCourses"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("generalMaintCourses"),
+					'_showConstraints->false
+					)
+			</div>
+			</div>
+		</fieldset>
+		
+		<fieldset>
+			<legend><span class="label label-default">@LanguageApplication.message("operationAspects")</span></legend>
+			<div class="form-group">
+			<div class="col-lg-6">
+				@textarea(ecForm("generalOperationMethod"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("generalOperationMethod"),
+					'_showConstraints->false
+					)
+			</div>
+			</div>
+			
+			<div class="form-group">
+			<div class="col-lg-6">
+				@textarea(ecForm("generalOperationSafetyRequirements"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("generalOperationSafety"),
+					'_showConstraints->false
+					)
+			</div>
+			</div>
+			
+			<div class="form-group">
+			<div class="col-lg-6">
+				@textarea(ecForm("generalOperatorRequiredCourses"),
+					'class->"form-control",
+					'_label->LanguageApplication.message("generalOperationCourses"),
+					'_showConstraints->false
+					)
+			</div>
+			</div>
+		</fieldset>
+	
+		<div align="center">
+			<input type="submit" value="@LanguageApplication.message("update")" class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.EquipmentClassApplication.equipmentClassIndex(id)"
+				class="btn btn-danger btn-lg" role="button">
+			@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+	script type="text/javascript" src="@routes.Assets.at("javascripts/fcf.js")"></script>
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("select2.min.js"))'></script>
+	@if(session().get("play_user_lang") == "1") {
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("select2_locale_fa.js"))'></script>}
+	<script>
+	$(document).ready(function() {
+		$("#possibleFailureModes").select2();
+	});
+	</script>
+}

@@ -1,0 +1,53 @@
+@(id : Long, failureModeForm : Form[failure.FailureModes])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("Edit failure mode") {@Html("")} {
+	<style>
+		body {
+			background-color: #EDEDED;
+		}
+	</style>
+	@form(action = routes.FailureApplication.failureModeUpdate(id),
+	'class->"form-horizontal",
+	'role->"form"
+	) {
+		<div class="form-group">
+			<div class="col-lg-3">
+				@inputText(failureModeForm("typeNumber"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("failureModeTypeNumber"),
+				'_showConstraints->true
+				)
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-lg-3">
+				@inputText(failureModeForm("failureModeCode"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("failureModeCode"),
+				'_showConstraints->true
+				)
+			</div>
+		</div>
+			
+		<div class="form-group">
+			<div class="col-lg-3">
+				@inputText(failureModeForm("description"),
+				'class->"form-control",
+				'_label->LanguageApplication.message("description"),
+				'_showConstraints->true
+				)
+			</div>
+		</div>
+		
+		<div align="center">
+			<input type="submit" value="@LanguageApplication.message("update")" class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+			href="@routes.FailureApplication.failureModeList()" 
+				class="btn btn-danger btn-lg" role="button">
+			@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+}

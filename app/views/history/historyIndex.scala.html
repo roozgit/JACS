@@ -1,0 +1,169 @@
+@(historyId : Long, history : History)
+@import helper.historyParentNameGiver
+
+@backLink = @{
+	var pl:Integer=3
+	var pi:Long=1
+	if(history.parentInstallation!=null) {
+		pl=3
+		pi=1		
+		} else {
+		if(history.parentPlant!=null) {
+			pl=4
+			pi=history.parentPlant.id
+			} else {
+			if(history.parentSection!=null) {
+				pl=5
+				pi = history.parentSection.id
+				} else {
+				if(history.parentEquipment!=null) {
+					pl=6
+					pi=history.parentEquipment.id
+					} else {
+					if(history.parentSubunit!=null) {
+						pl=7
+						pi=history.parentSubunit.id
+						} else {
+						if(history.parentComponent!=null) {
+							pl=8
+							pi=history.parentComponent.id
+							}
+						}
+					}
+				}
+			}
+		}
+		routes.HistoryApplication.list(pl,pi)
+	}
+	
+	@delLink = @{
+	var pl:Integer=3
+	var pi:Long=1
+	if(history.parentInstallation!=null) {
+		pl=3
+		pi=1		
+		} else {
+		if(history.parentPlant!=null) {
+			pl=4
+			pi=history.parentPlant.id
+			} else {
+			if(history.parentSection!=null) {
+				pl=5
+				pi = history.parentSection.id
+				} else {
+				if(history.parentEquipment!=null) {
+					pl=6
+					pi=history.parentEquipment.id
+					} else {
+					if(history.parentSubunit!=null) {
+						pl=7
+						pi=history.parentSubunit.id
+						} else {
+						if(history.parentComponent!=null) {
+							pl=8
+							pi=history.parentComponent.id
+							}
+						}
+					}
+				}
+			}
+		}
+		routes.HistoryApplication.deleteH(historyId,pl,pi,"all")
+	}
+	
+@failLink(idav : Long) = @{
+	var pl:Integer=3
+	var pi:Long=1
+	if(history.parentInstallation!=null) {
+		pl=3
+		pi=1		
+		} else {
+		if(history.parentPlant!=null) {
+			pl=4
+			pi=history.parentPlant.id
+			} else {
+			if(history.parentSection!=null) {
+				pl=5
+				pi = history.parentSection.id
+				} else {
+				if(history.parentEquipment!=null) {
+					pl=6
+					pi=history.parentEquipment.id
+					} else {
+					if(history.parentSubunit!=null) {
+						pl=7
+						pi=history.parentSubunit.id
+						} else {
+						if(history.parentComponent!=null) {
+							pl=8
+							pi=history.parentComponent.id
+							}
+						}
+					}
+				}
+			}
+		}
+		routes.FailureApplication.failureIndex(pl,pi, idav)
+	}
+		
+@main("Log sheet") {<div id='tree'></div>} {
+	<div align="center"><h1 class="ltrInRtl">@historyParentNameGiver(history)</h1></div>
+	<div class="btn btn-group">
+		<a class="btn btn-warning btn-lg" href="@routes.HistoryApplication.editHistory(historyId,"Edit")">@LanguageApplication.message("edit")
+		<span class="glyphicon glyphicon-edit"></span></a>
+		
+		<a class="btn btn-default btn-lg" href=@backLink>
+		<span 
+		class="@if(session().get("play_user_lang") == "0") {glyphicon glyphicon-arrow-left} else {glyphicon glyphicon-arrow-right}">
+		</span></a>
+	</div>
+	<br />
+	@if(flash.containsKey("success")) {
+        <div class="alert alert-success">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+        <br />
+    }
+    @if(flash.containsKey("error")) {
+       <div class="alert alert-danger">
+           <strong>ERROR: </strong> @flash.get("error")
+       </div>
+       <br />
+  		}
+	
+	 <table class="table">
+	 	<tr>
+	 		<th>@LanguageApplication.message("start")</th>
+	 		<th>@LanguageApplication.message("end")</th>
+	 		<th>@LanguageApplication.message("eventType")</th>
+	 		<th>@LanguageApplication.message("actualPlanned")</th>
+	 		<th>@LanguageApplication.message("maintenance")</th>
+	 		<th>@LanguageApplication.message("failure")</th>
+	 		<th>@LanguageApplication.message("registrar")</th>
+	 		<th></th>
+	 	</tr>
+	 	<tr>
+	 		@if(history.allDay==true) {
+	 		<td>@myUtils.DateTimeUtils.getIranianDate(history.start)</td>
+	 		<td>@myUtils.DateTimeUtils.getIranianDate(history.end)</td>
+	 		}
+	 		@if(history.allDay==false) {
+	 		<td>@myUtils.DateTimeUtils.getIranianDateTime(history.start)</td>
+	 		<td>@myUtils.DateTimeUtils.getIranianDateTime(history.end)</td>
+	 		}
+	 		<td>@history.eventType</td>
+	 		<td>@if(history.isHappened==true) {@LanguageApplication.message("actual")} else {@LanguageApplication.message("planned")}</td>
+	 		<td>@if(history.maint==null) {<em>-</em>} else {
+	 		<a href="@routes.MaintenanceApplication.maintenanceIndex(history.maint.id)">@history.maint.workOrderSerial</a>}</td>
+	 		<td>@if(history.fail==null) {<em>-</em>} else {
+	 		<a href=@failLink(history.fail.id)>
+	 		@history.fail.id</a>}</td>
+	 		<td><a href="@routes.UserApplication.userIndex(history.registrar.id)">@history.registrar.userName</a></td>
+	 		<td><a class="btn btn-danger btn-sm" title="@LanguageApplication.message("remove")"
+	 		href=@delLink><span class="fa fa-trash"></span></a></td>
+	 	</tr>
+	
+	 </table>
+	 <label>@LanguageApplication.message("comments")</label>
+	 <pre>@history.comments</pre>
+ }

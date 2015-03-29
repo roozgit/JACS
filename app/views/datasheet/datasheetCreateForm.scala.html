@@ -1,0 +1,88 @@
+@(parentLevel : Integer, parentId : Long, historyId : Long, editDatasheetForm: Form[Datasheet])
+
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("New parameter") {@Html("")} {
+	<style>
+	body {
+		background-color: #EDEDED;
+	}
+	</style>
+	@form(action = routes.DatasheetApplication.save(parentLevel, parentId, historyId),
+	'class->"form",
+	'role->"form") {
+		<div class="form-group">
+			<fieldset>
+				<div class="row">
+					
+					<div class="col-lg-3">
+					@if(historyId<0) {
+						@inputText(editDatasheetForm("parameter"),
+						'class->"form-control",
+						'_showConstraints->true,
+						'_label->LanguageApplication.message("parameter")
+						)} else {
+							@select(editDatasheetForm("parameter"),
+							options(Datasheet.options(parentLevel,parentId)),
+							'class->"form-control",
+							'_label->LanguageApplication.message("parameter")
+							)
+						}
+					</div>
+					
+					<div class="col-lg-2">
+						@inputText(editDatasheetForm("value"),				
+						'class->"form-control",
+						'_showConstraints->true,
+						'_label->LanguageApplication.message("value")
+						)
+					</div>
+					@if(historyId < 0) {
+					<div class="col-lg-2">
+						@inputText(editDatasheetForm("minValue"),						
+						'class->"form-control",
+						'_showConstraints->true,
+						'_label->LanguageApplication.message("minAllowedValue")
+						)
+					</div>
+					
+					<div class="col-lg-2">
+						@inputText(editDatasheetForm("maxValue"),						
+						'class->"form-control",
+						'_showConstraints->true,
+						'_label->LanguageApplication.message("maxAllowedValue")
+						)
+					</div>}
+					
+					<div class="col-lg-3">
+						@select(editDatasheetForm("unit.id"),
+						options(MeasurementUnits.options()),
+						'class->"form-control",
+						'_label->LanguageApplication.message("measurementUnit"),
+						'_default->""
+						)
+					</div>
+										
+				</div>
+			</fieldset>
+		</div>
+		
+		<div align="center">
+			<input type="submit" value=@LanguageApplication.message("create") 
+			class="btn btn-success btn-lg">
+			<a style="margin-left : 2em;"
+				href="@if(historyId<0) {@routes.DatasheetApplication.list(parentLevel, parentId)} else {@session.get("refererPage")#tabs-maintainedItems}"
+				class="btn btn-danger btn-lg" role="button">
+				@LanguageApplication.message("cancel")</a>
+		</div>
+	}
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("select2.min.js"))'></script>
+	@if(session().get("play_user_lang") == "1") {
+	<script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("select2_locale_fa.js"))'></script>}
+	<script>
+		$(document).ready(function() {
+			$("#unit_id").select2();
+		});
+	</script>
+}

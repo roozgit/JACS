@@ -1,0 +1,67 @@
+@(id : Long,wfForm : Form[maintenance.WorkflowTree])
+@import helper._
+@implicitFieldConstructor = @{ FieldConstructor(myBootstrapFieldConstructor.f) }
+
+@main("Edit workflow") {@Html("")} {
+	@form(action = routes.WorkflowApplication.update(id),
+	'class->"form",
+	'role->"form"
+	) {
+		<div class="form-group">
+			<fieldset>
+				<div class="row">
+					<div class="col-sm-2">
+						@select(wfForm("treeCategory"),
+						options(maintenance.MaintenanceCategories.values().toList.map(_.toString)),
+						'_label->"Category",
+						'class->"form-control"
+						)
+					</div>
+					
+					<div class="col-sm-2">
+						@select(wfForm("decidingRole.id"),
+						options(SecurityRole.options()),
+						'_label->"Deciding role",
+						'class->"form-control"
+						)
+					</div>
+					
+					<div class="col-sm-2">
+						@select(wfForm("referringRole.id"),
+						options(SecurityRole.options()),
+						'_label->"Referring role",
+						'_default->"",
+						'class->"form-control"
+						)
+					</div>
+					
+					<div class="col-sm-2">
+						@select(wfForm("receivingRole.id"),
+						options(SecurityRole.options()),
+						'_label->"Receiving role",
+						'_default->"",
+						'class->"form-control"
+						)
+					</div>
+					
+					<div class="col-sm-2">
+						@inputText(wfForm("description"),
+						'_label->"Description",
+						'class->"form-control"
+						)
+					</div>
+					
+				</div>
+			</fieldset>
+		</div>
+		
+		<div align="center">
+				<input type="submit" value="UPDATE!" class="btn btn-success btn-lg">
+				<a style="margin-left : 2em;"
+				href="@routes.Application.index2()" 
+					class="btn btn-danger btn-lg" role="button">
+				CANCEL</a>
+			</div>
+	}
+}
+
