@@ -3,9 +3,11 @@
 /*	Basic Style 
 /* =================================== */
 
+@import url(http://fonts.googleapis.com/earlyaccess/notonaskharabic.css);
+
 body {
     background-color: #fff;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Noto Naskh Arabic', serif;
     line-height: 21px;
 	font-size: 13px;
     color: #6a737b;
@@ -42,6 +44,14 @@ a, a:focus, a:hover {
 
 a:focus, a:hover {
     color: #6CB670;
+}
+h1{
+     word-wrap: break-word;
+     -webkit-hyphens: auto;
+     -moz-hyphens: auto;
+     -ms-hyphens: auto;
+     -o-hyphens: auto;
+     hyphens: auto;
 }
 
 h1, h2, h3,
@@ -246,7 +256,21 @@ body > section,
   width: 8px;
 }
 
+/*=========================================
+	News
+==========================================*/
+.news {
+  background-color: #ffffff;
+  font-size:16px;
+}
+.news::after, .news::before {
+	content:"\a";
+    white-space: pre;
+}
 
+.table > tbody > tr > td.news {
+	border-top:0px;
+}
 
 /*=========================================
 	Features
@@ -510,11 +534,6 @@ body > section,
 	padding: 70px 0;
 }
 
-.parallax-overlay-demo {
-	background-color:rgba(6,32,51,.7);
-	padding: 70px 0;
-}
-
 .counters-item {
   color: #fff;
 }
@@ -544,6 +563,14 @@ body > section,
   text-transform: uppercase;
 }
 
+/*=========================================
+	Support
+==========================================*/
+.tg  {border-collapse:collapse;border-spacing:0;border-color:#bbb;}
+.tg td{font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#bbb;color:#594F4F;background-color:#E0FFEB;}
+.tg th{font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#bbb;color:#493F3F;background-color:#9DE0AD;}
+.tg .tg-asmn{font-weight:bold;font-size:18px;text-align:center}
+.tg .tg-s6z2{text-align:center}
 
 /*=========================================
 	Contact Us
