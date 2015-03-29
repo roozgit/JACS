@@ -20,8 +20,5 @@ and browse some of the features of the application. Please note that websockets 
 
 Have fun and Try my FREE CMMIS!
 
-IMPORTANT NOTICE: THE APPLICATION IN ITS CURRENT FORM HAS A BUNCH OF SECURITY FLOWS. I HAVEN'T DESIGNED THIS APPLICATION
-FOR SECURITY. THE DEMO IS HERE JUST TO SHOW THE CAPABAILITIES OF THE SOFTWARE AS A CMMS.
-
 COMPILE/SETUP Guide:
 Just start the app in play framework. This app needs a sql script to populate the database with initial values which is NOT INCLUDED currently.
